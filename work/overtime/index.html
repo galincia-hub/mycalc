@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>연장·야간·휴일 수당 계산기 2026 - 초과근무수당 자동계산 | mycalc</title>
+<meta name="description" content="2026년 연장근로, 야간근로, 휴일근로 수당을 자동 계산합니다. 중복 가산, 5인 미만 사업장 적용까지. 통상시급 기준.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.gi-tabs-wrap{background:#fff;border-bottom:2px solid #e2e8f0}
+.gi-tabs{list-style:none;display:flex;overflow-x:auto;margin:0;padding:0 12px;-ms-overflow-style:none;scrollbar-width:none}
+.gi-tabs::-webkit-scrollbar{display:none}
+.gi-tabs li a,.gi-tabs li span{display:inline-block;padding:9px 13px;font-size:.82rem;font-weight:600;color:#64748b;text-decoration:none;border-bottom:2px solid transparent;white-space:nowrap;margin-bottom:-2px}
+.gi-tabs li a.cur{color:#1e3a8a;border-bottom-color:#1e3a8a;font-weight:700}
+.gi-tabs li span{opacity:.45}
+.page-hero{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 60%,#2563eb 100%);color:#fff;padding:1.75rem 0 1.5rem;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.hero-content{position:relative}
+.breadcrumb-mini{display:flex;gap:6px;align-items:center;font-size:.75rem;opacity:.86;margin-bottom:.5rem}
+.breadcrumb-mini a{color:#fff;text-decoration:none}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.75rem;margin-bottom:.5rem}
+.page-hero h1{font-size:1.4rem;font-weight:800;margin:0 0 .3rem}
+.page-hero p{font-size:.83rem;opacity:.88;margin:0}
+.main-layout{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start;padding:16px 0 32px}
+.input-card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden}
+.input-card-header{padding:14px 16px;border-bottom:1px solid #dbeafe;background:#f0f7ff}
+.input-card-title{font-size:.88rem;font-weight:700;color:#0f172a;display:flex;align-items:center;gap:7px}
+.input-card-body{padding:16px}
+.mode-tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;background:#f1f5f9;border-radius:8px;padding:4px;margin-bottom:14px}
+.mode-tab{border:0;background:transparent;color:#64748b;border-radius:6px;padding:8px 6px;font-size:.78rem;font-weight:700;white-space:nowrap}
+.mode-tab.active{background:#fff;color:#1e3a8a;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.mode-form{display:none}
+.mode-form.active{display:block}
+.form-label{font-weight:600;font-size:.8rem;color:#374151;margin-bottom:4px;display:block}
+.form-control,.form-select{font-size:.85rem;border-color:#d1d5db;border-radius:7px}
+.form-control:focus,.form-select:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.input-group-text{background:#f1f5f9;border-color:#d1d5db;font-size:.8rem;color:#64748b;min-width:38px;justify-content:center}
+.section-divider{border:none;border-top:1px solid #f1f5f9;margin:14px 0}
+.check-row{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid #e2e8f0;background:#f8fafc;border-radius:8px;padding:10px 12px}
+.check-row label{font-weight:700;font-size:.82rem;color:#334155;margin:0}
+.result-panel{background:linear-gradient(160deg,#1e3a8a 0%,#2563eb 100%);border-radius:12px;color:#fff;padding:18px 20px;position:sticky;top:96px;box-shadow:0 4px 20px rgba(30,58,138,.35)}
+.result-panel.warn{background:linear-gradient(160deg,#991b1b 0%,#dc2626 100%);box-shadow:0 4px 20px rgba(153,27,27,.3)}
+.result-title{font-size:.88rem;font-weight:700;opacity:.85;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.total-box{background:rgba(255,255,255,.16);border-radius:12px;padding:14px;margin-bottom:12px}
+.total-label{font-size:.75rem;opacity:.78;margin-bottom:3px}
+.total-amount{font-size:1.65rem;font-weight:800;line-height:1.12;color:#dbeafe}
+.result-panel.warn .total-amount{color:#fee2e2}
+.status-note{background:rgba(255,255,255,.13);border-radius:8px;padding:9px 10px;margin:8px 0 12px;font-size:.76rem;line-height:1.55}
+.status-note.warn{background:rgba(254,226,226,.2);border-left:3px solid #fecaca}
+.result-row{display:flex;justify-content:space-between;gap:12px;border-top:1px solid rgba(255,255,255,.16);padding:9px 0;font-size:.78rem}
+.result-row strong{font-size:.88rem;color:#bfdbfe;text-align:right}
+.result-panel.warn .result-row strong{color:#fee2e2}
+.result-actions{display:grid;gap:8px;margin-top:12px}
+.btn-reset{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.28);font-weight:700;border-radius:8px;padding:9px 12px}
+.disclaimer{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.75rem;color:#713f12;margin-top:16px;display:flex;gap:8px;align-items:flex-start}
+.content-card,.table-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;margin-top:16px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.content-card{padding:18px 20px}
+.content-card h2,.table-card h2{font-size:1rem;font-weight:800;color:#0f172a;margin:0 0 10px}
+.content-card p{font-size:.82rem;color:#475569;line-height:1.65;margin:0}
+.table-card h2{padding:14px 16px;background:#f8fafc;border-bottom:1px solid #e2e8f0;margin:0}
+.rate-table{width:100%;border-collapse:collapse;font-size:.78rem;text-align:center}
+.rate-table th{background:#f8fafc;color:#475569;font-weight:800;padding:9px 8px;border-bottom:1px solid #e2e8f0;border-right:1px solid #e2e8f0;white-space:nowrap}
+.rate-table td{padding:9px 8px;border-bottom:1px solid #f1f5f9;border-right:1px solid #f1f5f9;color:#334155}
+.rate-table th:last-child,.rate-table td:last-child{border-right:0}
+.rate-table .highlight{background:#dbeafe;color:#1e40af;font-weight:900}
+footer{background:#1e3a8a;color:rgba(255,255,255,.65);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}
+footer a{color:rgba(255,255,255,.7);text-decoration:none}
+@media(max-width:991px){.main-layout{grid-template-columns:1fr}.result-panel{position:static}}
+@media(max-width:576px){
+  .page-hero h1{font-size:1.2rem}
+  .mode-tabs{grid-template-columns:1fr}
+  .total-amount{font-size:1.35rem}
+  .rate-table{font-size:.72rem}
+}
+</style>
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mycalc.co.kr/work/overtime/">
+  <meta property="og:title" content="연장·야간·휴일 수당 계산기 2026 - 초과근무수당 자동계산 | mycalc">
+  <meta property="og:description" content="2026년 연장근로, 야간근로, 휴일근로 수당을 자동 계산합니다. 중복 가산, 5인 미만 사업장 적용까지. 통상시급 기준.">
+  <meta property="og:url" content="https://mycalc.co.kr/work/overtime/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="마이캘크">
+<script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"연장·야간·휴일 수당 계산기 2026 - 초과근무수당 자동계산 | mycalc","url":"https://mycalc.co.kr/work/overtime/","applicationCategory":"BusinessApplication","operatingSystem":"All","inLanguage":"ko","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}}
+  </script>
+  </head>
+<body>
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../../tax/index.html">세금</a></li>
+<li><a href="../../work/index.html" class="on">급여·노동</a></li>
+<li><a href="../../tools/index.html">도구</a></li>
+<li><a href="../../realestate/index.html">부동산</a></li>
+<li><a href="../../money/index.html">금융·투자</a></li>
+<li><a href="../../student/index.html">학생</a></li>
+<li><a href="../../parent/index.html">학부모·육아</a></li>
+<li><a href="../../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="../annual-salary/index.html" class="mc-done">연봉계산기</a></li>
+<li><a href="../annual-salary-table/index.html" class="mc-done">실수령액표</a></li>
+<li><a href="../minimum-wage/index.html" class="mc-done">최저임금</a></li>
+<li><a href="../severance/index.html" class="mc-done">퇴직금</a></li>
+<li><a href="../hourly-wage/index.html" class="mc-done">시급계산</a></li>
+<li><a href="../insurance/index.html" class="mc-done">4대보험료</a></li>
+<li><a href="index.html" class="on mc-done">연장·야간·휴일수당</a></li>
+<li><a href="../weekly-holiday-pay/index.html" class="mc-done">주휴수당</a></li>
+<li><a href="../unemployment-benefit/index.html" class="mc-done">실업급여</a></li>
+<li><span class="wip">연차수당</span></li>
+</ul></div></div>
+</div>
+
+<div class="page-hero">
+  <div class="container hero-content">
+    <div class="breadcrumb-mini"><a href="../../index.html">mycalc</a><i class="bi bi-chevron-right"></i><a href="../../work/index.html">급여·노동</a><i class="bi bi-chevron-right"></i><span>연장·야간·휴일수당 계산기</span></div>
+    <div class="hero-badge">근로기준법 제56조 · 5인 이상/미만 분리 계산</div>
+    <h1><i class="bi bi-moon-stars me-2"></i>연장·야간·휴일 수당 계산기</h1>
+    <p>통상시급, 월급, 연장·야간·휴일 근로시간과 중복 시간을 입력해 초과근무수당을 계산합니다.</p>
+  </div>
+</div>
+
+<div class="gi-tabs-wrap"><div class="container"><ul class="gi-tabs">
+<li><a href="index.html" class="cur">계산기</a></li>
+<li><span>가산요율 요약</span></li>
+</ul></div></div>
+
+<div class="container">
+<div class="main-layout">
+<main>
+<section class="input-card">
+  <div class="input-card-header">
+    <div class="input-card-title"><i class="bi bi-sliders" style="color:#1e3a8a"></i> 초과근무수당 입력</div>
+  </div>
+  <div class="input-card-body">
+    <div class="mode-tabs" role="tablist" aria-label="입력 방식">
+      <button class="mode-tab active" type="button" data-mode="hourly"><i class="bi bi-cash me-1"></i>시급 입력</button>
+      <button class="mode-tab" type="button" data-mode="monthly"><i class="bi bi-wallet2 me-1"></i>월급 입력</button>
+    </div>
+
+    <div class="mode-form active" data-form="hourly">
+      <label class="form-label" for="hourlyWage">통상시급</label>
+      <div class="input-group">
+        <input class="form-control overtime-input" id="hourlyWage" type="number" min="0" step="10" value="10320" inputmode="numeric">
+        <span class="input-group-text">원</span>
+      </div>
+      <div class="form-text">직접 입력한 시급을 기준으로 계산합니다.</div>
+    </div>
+
+    <div class="mode-form" data-form="monthly">
+      <div class="row g-2">
+        <div class="col-sm-7">
+          <label class="form-label" for="monthlyWage">월 통상임금</label>
+          <div class="input-group">
+            <input class="form-control overtime-input" id="monthlyWage" type="number" min="0" step="10000" value="2090000" inputmode="numeric">
+            <span class="input-group-text">원</span>
+          </div>
+        </div>
+        <div class="col-sm-5">
+          <label class="form-label">산정 기준</label>
+          <div class="input-group">
+            <input class="form-control" type="number" value="209" disabled>
+            <span class="input-group-text">시간</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-text">월 통상임금을 209시간으로 나눈 시급으로 계산합니다.</div>
+    </div>
+
+    <div class="row g-3 mt-2">
+      <div class="col-sm-6">
+        <label class="form-label" for="overtimeHours">연장근로시간</label>
+        <div class="input-group">
+          <input class="form-control overtime-input" id="overtimeHours" type="number" min="0" step="0.5" value="0" inputmode="decimal">
+          <span class="input-group-text">시간</span>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="nightHours">야간근로시간</label>
+        <div class="input-group">
+          <input class="form-control overtime-input" id="nightHours" type="number" min="0" step="0.5" value="0" inputmode="decimal">
+          <span class="input-group-text">시간</span>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="holidayHours">휴일근로시간</label>
+        <div class="input-group">
+          <input class="form-control overtime-input" id="holidayHours" type="number" min="0" step="0.5" value="0" inputmode="decimal">
+          <span class="input-group-text">시간</span>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="overtimeNightOverlap">연장+야간 중복시간</label>
+        <div class="input-group">
+          <input class="form-control overtime-input" id="overtimeNightOverlap" type="number" min="0" step="0.5" value="0" inputmode="decimal">
+          <span class="input-group-text">시간</span>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="holidayNightOverlap">휴일+야간 중복시간</label>
+        <div class="input-group">
+          <input class="form-control overtime-input" id="holidayNightOverlap" type="number" min="0" step="0.5" value="0" inputmode="decimal">
+          <span class="input-group-text">시간</span>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label">사업장 규모</label>
+        <div class="check-row">
+          <label for="smallBusiness">5인 미만 사업장</label>
+          <input class="form-check-input overtime-input" id="smallBusiness" type="checkbox">
+        </div>
+      </div>
+    </div>
+    <div class="form-text mt-2">중복시간은 서로 겹치지 않는 구간으로 입력해 주세요. 휴일은 8시간 이내/초과로 분리 계산합니다.</div>
+  </div>
+</section>
+
+<div class="disclaimer">
+  <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1"></i>
+  <span>본 계산기는 참고용입니다. 실제 수당은 근로계약, 취업규칙, 야간·휴일, 근무시간 및 가산 적용 방식에 따라 달라질 수 있습니다.</span>
+</div>
+
+<section class="content-card">
+  <h2>연장·야간·휴일 수당이란?</h2>
+  <p>근로기준법 제56조에 따라 연장근로, 야간근로(22시~06시), 휴일근로에는 통상임금에 가산이 붙습니다. 같은 시간대가 중복되면 가산율도 중복 적용됩니다. 5인 미만 사업장은 가산수당 적용이 제외됩니다.</p>
+</section>
+
+<section class="table-card">
+  <h2>가산율 요약표</h2>
+  <div class="table-responsive">
+    <table class="rate-table">
+      <thead>
+        <tr>
+          <th>구분</th>
+          <th>5인 이상</th>
+          <th>5인 미만</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>연장근로</td><td class="highlight">150%</td><td>100%</td></tr>
+        <tr><td>야간근로</td><td class="highlight">150%</td><td>100%</td></tr>
+        <tr><td>휴일근로 8시간 이내</td><td class="highlight">150%</td><td>100%</td></tr>
+        <tr><td>휴일근로 8시간 초과</td><td class="highlight">200%</td><td>100%</td></tr>
+        <tr><td>연장+야간</td><td class="highlight">200%</td><td>100%</td></tr>
+        <tr><td>휴일+야간 8시간 이내</td><td class="highlight">200%</td><td>100%</td></tr>
+        <tr><td>휴일+야간 8시간 초과</td><td class="highlight">250%</td><td>100%</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+</main>
+
+<aside>
+  <div class="result-panel" id="resultPanel">
+    <div class="result-title"><i class="bi bi-cash-stack"></i> 초과근무수당 계산 결과</div>
+    <div class="status-note" id="statusNote">5인 이상 사업장의 기준으로 가산요율을 적용합니다.</div>
+    <div class="total-box">
+      <div class="total-label">총 추가수당</div>
+      <div class="total-amount" id="totalAllowance">0원</div>
+    </div>
+    <div class="result-row"><span>연장근로수당</span><strong id="overtimePay">0원</strong></div>
+    <div class="result-row"><span>야간근로수당</span><strong id="nightPay">0원</strong></div>
+    <div class="result-row"><span>휴일근로수당</span><strong id="holidayPay">0원</strong></div>
+    <div class="result-row"><span>연장+야간 중복</span><strong id="overtimeNightPay">0원</strong></div>
+    <div class="result-row"><span>휴일+야간 중복</span><strong id="holidayNightPay">0원</strong></div>
+    <div class="result-row"><span>적용 시급</span><strong id="appliedHourlyWage">0원</strong></div>
+    <div class="result-actions">
+      <button class="btn-reset" type="button" id="resetBtn"><i class="bi bi-arrow-counterclockwise me-1"></i>초기화</button>
+    </div>
+  </div>
+</aside>
+</div>
+</div>
+
+<footer><div class="container">© 2026 mycalc · 모의계산 결과이며 법적 효력이 없습니다. | <a href="../../index.html">메인으로</a></div></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const $ = (id) => document.getElementById(id);
+const state = { mode: 'hourly' };
+
+function formatWon(value) {
+  return `${Math.round(value || 0).toLocaleString('ko-KR')}원`;
+}
+
+function readNumber(id) {
+  return Math.max(parseFloat($(id).value) || 0, 0);
+}
+
+function getHourlyWage() {
+  if (state.mode === 'monthly') {
+    return readNumber('monthlyWage') / 209;
+  }
+  return readNumber('hourlyWage');
+}
+
+function clampHours(value) {
+  return Math.max(value || 0, 0);
+}
+
+function splitHolidayOverlap(holidayHours, overlapHours) {
+  const first = Math.min(holidayHours, 8);
+  const second = Math.max(holidayHours - 8, 0);
+  const overlapFirst = Math.min(overlapHours, first);
+  const overlapSecond = Math.max(overlapHours - overlapFirst, 0);
+  const plainFirst = Math.max(first - overlapFirst, 0);
+  const plainSecond = Math.max(second - overlapSecond, 0);
+  return { plainFirst, plainSecond, overlapFirst, overlapSecond };
+}
+
+function setMode(mode) {
+  state.mode = mode;
+  document.querySelectorAll('.mode-tab').forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.mode === mode);
+  });
+  document.querySelectorAll('.mode-form').forEach((form) => {
+    form.classList.toggle('active', form.dataset.form === mode);
+  });
+  calculate();
+}
+
+function calculate() {
+  const wage = getHourlyWage();
+  const overtimeHours = clampHours(readNumber('overtimeHours'));
+  const nightHours = clampHours(readNumber('nightHours'));
+  const holidayHours = clampHours(readNumber('holidayHours'));
+  const overtimeNightOverlap = clampHours(readNumber('overtimeNightOverlap'));
+  const holidayNightOverlap = clampHours(readNumber('holidayNightOverlap'));
+  const smallBusiness = $('smallBusiness').checked;
+  const hourlyLabel = state.mode === 'monthly' ? `월급÷209 = ${formatWon(wage)}` : formatWon(wage);
+
+  const overtimeOnly = Math.max(overtimeHours - overtimeNightOverlap, 0);
+  const nightOnly = Math.max(nightHours - overtimeNightOverlap - holidayNightOverlap, 0);
+  const holidayOnly = Math.max(holidayHours - holidayNightOverlap, 0);
+
+  const holidaySplit = splitHolidayOverlap(holidayOnly, 0);
+  const holidayOverlapSplit = splitHolidayOverlap(holidayNightOverlap, holidayNightOverlap);
+
+  let overtimePay = 0;
+  let nightPay = 0;
+  let holidayPay = 0;
+  let overtimeNightPay = 0;
+  let holidayNightPay = 0;
+  let totalAllowance = 0;
+
+  if (smallBusiness) {
+    overtimePay = overtimeOnly * wage;
+    nightPay = nightOnly * wage;
+    holidayPay = holidayOnly * wage;
+    overtimeNightPay = overtimeNightOverlap * wage;
+    holidayNightPay = holidayNightOverlap * wage;
+    totalAllowance = overtimePay + nightPay + holidayPay + overtimeNightPay + holidayNightPay;
+  } else {
+    overtimePay = overtimeOnly * wage * 1.5;
+    nightPay = nightOnly * wage * 1.5;
+    holidayPay = (holidaySplit.plainFirst * wage * 1.5) + (holidaySplit.plainSecond * wage * 2.0);
+    overtimeNightPay = overtimeNightOverlap * wage * 2.0;
+    holidayNightPay = (holidayOverlapSplit.plainFirst * wage * 2.0) + (holidayOverlapSplit.plainSecond * wage * 2.5);
+    totalAllowance = overtimePay + nightPay + holidayPay + overtimeNightPay + holidayNightPay;
+  }
+
+  $('resultPanel').classList.toggle('warn', smallBusiness);
+  $('statusNote').classList.toggle('warn', smallBusiness);
+  $('statusNote').innerHTML = smallBusiness
+    ? '<i class="bi bi-exclamation-triangle-fill me-1"></i><strong>5인 미만 사업장은 가산수당 적용 제외</strong><br>입력한 시간에는 100%만 적용됩니다.'
+    : '<i class="bi bi-check-circle-fill me-1"></i>5인 이상 사업장 기준으로 연장·야간·휴일 가산을 적용합니다.';
+
+  $('totalAllowance').textContent = formatWon(totalAllowance);
+  $('overtimePay').textContent = `${formatWon(overtimePay)}${smallBusiness ? ' (100%)' : ' (150%)'}`;
+  $('nightPay').textContent = `${formatWon(nightPay)}${smallBusiness ? ' (100%)' : ' (150%)'}`;
+  $('holidayPay').textContent = smallBusiness
+    ? `${formatWon(holidayPay)} (100%)`
+    : `${formatWon(holidayPay)} (${holidayHours > 8 ? '8h 이내/초과 분리' : '150%'})`;
+  $('overtimeNightPay').textContent = `${formatWon(overtimeNightPay)}${smallBusiness ? ' (100%)' : ' (200%)'}`;
+  $('holidayNightPay').textContent = smallBusiness
+    ? `${formatWon(holidayNightPay)} (100%)`
+    : `${formatWon(holidayNightPay)} (${holidayNightOverlap > 0 ? '200%/250%' : '0%'})`;
+  $('appliedHourlyWage').textContent = hourlyLabel;
+}
+
+function resetAll() {
+  state.mode = 'hourly';
+  $('hourlyWage').value = '10320';
+  $('monthlyWage').value = '2090000';
+  $('overtimeHours').value = '0';
+  $('nightHours').value = '0';
+  $('holidayHours').value = '0';
+  $('overtimeNightOverlap').value = '0';
+  $('holidayNightOverlap').value = '0';
+  $('smallBusiness').checked = false;
+  setMode('hourly');
+}
+
+document.querySelectorAll('.mode-tab').forEach((btn) => {
+  btn.addEventListener('click', () => setMode(btn.dataset.mode));
+});
+
+document.querySelectorAll('.overtime-input').forEach((input) => {
+  input.addEventListener('input', calculate);
+  input.addEventListener('change', calculate);
+});
+
+$('smallBusiness').addEventListener('change', calculate);
+$('resetBtn').addEventListener('click', resetAll);
+resetAll();
+</script>
+<script>
+(function(){
+  var B=/bot|crawler|spider|crawling|googlebot|bingbot|yandexbot|baiduspider|slurp|duckduckbot|facebookexternalhit|ia_archiver|msnbot|scrapy|applebot|semrushbot|ahrefsbot|petalbot|bytespider/i;
+  if(B.test(navigator.userAgent))return;
+  var S='https://wblffwhxaqxtqjccmwig.supabase.co';
+  var K='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndibGZmd2h4YXF4dHFqY2Ntd2lnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4OTQzMDcsImV4cCI6MjA5MzQ3MDMwN30.9uGXG1zw3bF5ojMcfQnPr8zsirn3WejIjK60XOZfAcg';
+  var p=location.pathname;
+  var s=(p.replace(/^\//,'')||'').split('/')[0]||'main';
+  var r=document.referrer,t='direct';
+  if(r){try{var h=new URL(r).hostname;
+    if(/google\.(com|co\.kr)$/.test(h))t='google';
+    else if(/search\.naver\.com/.test(h))t='naver';
+    else if(/search\.daum\.net/.test(h))t='daum';
+    else if(/bing\.com/.test(h))t='bing';
+    else if(/(^|\.)t\.co$|twitter\.com|x\.com/.test(h))t='twitter';
+    else if(/facebook\.com/.test(h))t='facebook';
+    else if(/instagram\.com/.test(h))t='instagram';
+    else if(/youtube\.com/.test(h))t='youtube';
+    else if(/perplexity\.ai/.test(h))t='perplexity';
+    else if(/chatgpt\.com|chat\.openai\.com/.test(h))t='chatgpt';
+    else t='other';
+  }catch(e){t='other';}}
+  fetch(S+'/rest/v1/mycalc_page_views',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','apikey':K,'Authorization':'Bearer '+K,'Prefer':'return=minimal'},
+    body:JSON.stringify({page_path:p,page_title:document.title,subdomain:s,referrer:r,ref_type:t,user_agent:navigator.userAgent})
+  }).catch(function(){});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>내신 등급 계산기 - 9등급·5등급 평균등급, 석차→등급 변환, 등급컷 | 마이캘크</title>
+<meta name="description" content="고교 내신 등급 계산기. 과목별 단위수 반영 평균등급 산출, 동석차 반영 석차→등급 변환, 학생수별 등급컷 조회. 9등급제·5등급제(2028대입) 동시 지원.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="내신 등급 계산기 - 평균등급·석차 변환·등급컷 | 마이캘크">
+<meta property="og:description" content="단위수 반영 평균 내신, 동석차 반영 석차→등급, 학생수별 등급컷을 9등급제·5등급제로 계산합니다.">
+<meta property="og:url" content="https://student.mycalc.co.kr/naesin">
+<meta property="og:site_name" content="mycalc">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "내신 등급 계산기",
+  "url": "https://student.mycalc.co.kr/naesin",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "All",
+  "description": "과목별 단위수 반영 평균등급, 동석차 반영 석차 등급 변환, 학생수별 등급컷을 계산하는 웹 계산기입니다.",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "KRW"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "내신 등급은 어떻게 계산하나요?", "acceptedAnswer": {"@type": "Answer", "text": "과목별 석차등급에 단위수를 곱한 값을 모두 더하고, 전체 단위수로 나눠 가중평균 등급을 계산합니다."}},
+    {"@type": "Question", "name": "동석차가 많으면 등급이 바뀌나요?", "acceptedAnswer": {"@type": "Answer", "text": "바뀔 수 있습니다. 동석차가 있으면 석차 대신 중간석차를 사용하므로, 중간석차 백분율이 등급 경계를 넘으면 한 등급 낮아질 수 있습니다."}},
+    {"@type": "Question", "name": "5등급제는 언제부터 적용되나요?", "acceptedAnswer": {"@type": "Answer", "text": "2025년 고등학교 1학년부터 5등급제가 적용되어 2028학년도 대입부터 본격 반영됩니다. 학교·전형별 세부 반영은 모집요강을 확인해야 합니다."}},
+    {"@type": "Question", "name": "9등급과 5등급은 어떻게 환산하나요?", "acceptedAnswer": {"@type": "Answer", "text": "두 체계는 등급 구간과 누적비율이 달라 정확히 일대일 환산되지 않습니다. 이 계산기는 누적비율 기준의 근사 참고값만 제공합니다."}}
+  ]
+}
+</script>
+<style>
+*{box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.page-hero{background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 100%);color:#fff;padding:1.8rem 0 1.45rem;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='72' height='72' viewBox='0 0 72 72' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.045'%3E%3Cpath d='M18 14h36v6H18zm0 14h28v6H18zm0 14h36v6H18z'/%3E%3C/g%3E%3C/svg%3E")}
+.hero-content{position:relative}
+.breadcrumb-mini{display:flex;align-items:center;gap:6px;font-size:.74rem;opacity:.82;margin-bottom:.45rem;flex-wrap:wrap}
+.breadcrumb-mini a{color:#fff;text-decoration:none}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.75rem;margin-bottom:.5rem}
+.page-hero h1{font-size:1.42rem;font-weight:800;margin:0 0 .3rem;letter-spacing:0}
+.page-hero p{font-size:.84rem;opacity:.86;margin:0}
+.tool-tabs-wrap{background:#fff;border-bottom:2px solid #e2e8f0}
+.tool-tabs{list-style:none;display:flex;overflow-x:auto;margin:0;padding:0 12px;-ms-overflow-style:none;scrollbar-width:none}
+.tool-tabs::-webkit-scrollbar{display:none}
+.tool-tabs button{display:inline-flex;align-items:center;gap:6px;padding:10px 13px;font-size:.82rem;font-weight:700;color:#64748b;border:0;background:none;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;margin-bottom:-2px}
+.tool-tabs button:hover{color:#1e3a8a}
+.tool-tabs button.active{color:#1e3a8a;border-bottom-color:#1e3a8a}
+.main-layout{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start;padding:16px 0 32px}
+@media(max-width:991px){.main-layout{grid-template-columns:1fr}}
+.input-card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden;margin-bottom:14px}
+.input-card-header{padding:14px 16px;border-bottom:1px solid #dbeafe;background:#f0f7ff}
+.input-card-title{font-size:.9rem;font-weight:800;color:#0f172a;display:flex;align-items:center;gap:7px}
+.input-card-body{padding:16px}
+.form-label{font-weight:700;font-size:.8rem;color:#374151;margin-bottom:5px;display:block}
+.form-control,.form-select{font-size:.85rem;border-color:#d1d5db;border-radius:7px}
+.form-control:focus,.form-select:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.section-divider{border:none;border-top:1px solid #f1f5f9;margin:14px 0}
+.radio-pills{display:flex;gap:7px;flex-wrap:wrap}
+.radio-pill{position:relative}
+.radio-pill input{position:absolute;opacity:0;pointer-events:none}
+.radio-pill span{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:8px;border:1.5px solid #d1d5db;background:#fff;color:#475569;font-size:.8rem;font-weight:700;cursor:pointer}
+.radio-pill input:checked+span{border-color:#2563eb;background:#eff6ff;color:#1d4ed8}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.subject-table-wrap{overflow-x:auto;border:1px solid #e2e8f0;border-radius:10px}
+.subject-table{width:100%;min-width:560px;margin:0;border-collapse:separate;border-spacing:0}
+.subject-table th{background:#f8fafc;color:#475569;font-size:.75rem;font-weight:800;padding:9px;border-bottom:1px solid #e2e8f0;text-align:center}
+.subject-table td{padding:7px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+.subject-table tr:last-child td{border-bottom:0}
+.subject-table .col-name{width:38%}
+.subject-table .col-unit{width:20%}
+.subject-table .col-grade{width:22%}
+.subject-table .col-remove{width:52px;text-align:center}
+.icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid #e2e8f0;background:#fff;color:#64748b;display:inline-flex;align-items:center;justify-content:center;transition:all .15s}
+.icon-btn:hover{border-color:#fecaca;background:#fef2f2;color:#dc2626}
+.btn-primary{background:#1e3a8a;border-color:#1e3a8a;font-weight:800}
+.btn-primary:hover{background:#1d4ed8;border-color:#1d4ed8}
+.btn-outline-secondary{font-weight:700}
+.result-panel{background:linear-gradient(160deg,#1e3a8a 0%,#2563eb 100%);border-radius:12px;color:#fff;padding:18px 20px;position:sticky;top:88px;box-shadow:0 4px 20px rgba(30,58,138,.35)}
+.result-title{font-size:.9rem;font-weight:800;opacity:.9;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.score-main{background:rgba(255,255,255,.14);border-radius:12px;padding:14px;margin-bottom:10px}
+.score-label{font-size:.75rem;opacity:.78;margin-bottom:2px}
+.score-value{font-size:2rem;font-weight:900;line-height:1.05;color:#bfdbfe}
+.score-value.good{color:#bbf7d0}.score-value.mid{color:#bfdbfe}.score-value.warn{color:#fed7aa}.score-value.bad{color:#fecaca}
+.score-sub{font-size:.78rem;opacity:.78;margin-top:4px}
+.result-row{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.13);gap:12px}
+.result-row:last-child{border-bottom:0}
+.result-row span:first-child{opacity:.82}
+.result-row strong{font-size:.88rem;text-align:right}
+.metric-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px}
+.metric-card{background:rgba(255,255,255,.12);border-radius:8px;padding:8px;text-align:center}
+.metric-lbl{font-size:.65rem;opacity:.74;margin-bottom:2px}
+.metric-val{font-size:.9rem;font-weight:900}
+.dist-list{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.dist-row{display:grid;grid-template-columns:42px 1fr 34px;gap:7px;align-items:center;font-size:.72rem}
+.dist-track{height:10px;background:rgba(255,255,255,.16);border-radius:999px;overflow:hidden}
+.dist-fill{height:100%;background:#bfdbfe;border-radius:999px;width:0%}
+.cutoff-table-wrap{overflow-x:auto;margin-top:8px}
+.cutoff-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid rgba(255,255,255,.18);border-radius:10px;overflow:hidden;font-size:.76rem}
+.cutoff-table th,.cutoff-table td{padding:7px 8px;border-bottom:1px solid rgba(255,255,255,.12);text-align:right}
+.cutoff-table th:first-child,.cutoff-table td:first-child{text-align:left}
+.cutoff-table th{background:rgba(255,255,255,.12);font-weight:800}
+.cutoff-table tr:last-child td{border-bottom:0}
+.notice-box{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.76rem;color:#713f12;margin-top:14px;display:flex;gap:8px;align-items:flex-start}
+.info-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px;font-size:.84rem;color:#475569;margin-top:14px}
+.info-card h2{font-size:1rem;font-weight:850;color:#0f172a;margin:0 0 10px}
+.info-card p{line-height:1.65;margin:0 0 10px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.info-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;background:#fff}
+.info-table th,.info-table td{padding:8px 9px;border-bottom:1px solid #eef2f7;font-size:.78rem;text-align:right}
+.info-table th:first-child,.info-table td:first-child{text-align:left}
+.info-table th{background:#f8fafc;color:#334155;font-weight:800}
+.info-table tr:last-child th,.info-table tr:last-child td{border-bottom:0}
+.compare-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.compare-item{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:8px;text-align:center}
+.compare-item strong{display:block;color:#1e3a8a;font-size:.9rem}
+.faq-list{display:grid;gap:10px}
+.faq-item{border-top:1px solid #e2e8f0;padding-top:10px}
+.faq-item:first-child{border-top:0;padding-top:0}
+.faq-q{font-weight:850;color:#0f172a;margin-bottom:4px}
+.helper-text{font-size:.75rem;color:#64748b;margin-top:5px}
+footer{background:#0f172a;color:rgba(255,255,255,.62);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}
+footer a{color:rgba(255,255,255,.75);text-decoration:none}
+@media(max-width:576px){
+  .main-layout{padding-top:12px}
+  .page-hero h1{font-size:1.22rem}
+  .page-hero p{font-size:.8rem}
+  .score-value{font-size:1.65rem}
+  .input-card-body{padding:14px}
+  .info-grid{grid-template-columns:1fr}
+  .compare-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mycalc.co.kr/student/naesin/">
+</head>
+<body>
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../../tax/index.html">세금</a></li>
+<li><a href="../../work/index.html">급여·노동</a></li>
+<li><a href="../../tools/index.html">도구</a></li>
+<li><a href="../../realestate/index.html">부동산</a></li>
+<li><a href="../../money/index.html">금융·투자</a></li>
+<li><a href="../../student/index.html" class="on">학생</a></li>
+<li><a href="../../parent/index.html">학부모·육아</a></li>
+<li><a href="../../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="../gpa/index.html" class="mc-done">학점계산기</a></li>
+<li><a href="index.html" class="on mc-done">내신등급</a></li>
+<li><a href="../military/index.html" class="mc-done">군전역일+군적금</a></li>
+<li><span class="wip">수능등급컷</span></li>
+<li><span class="wip">출결계산</span></li>
+<li><span class="wip">학자금대출</span></li>
+<li><span class="wip">장학금</span></li>
+<li><span class="wip">토익환산</span></li>
+</ul></div></div>
+</div>
+
+<div class="page-hero">
+  <div class="container hero-content">
+    <div class="breadcrumb-mini"><a href="../../index.html">mycalc</a><i class="bi bi-chevron-right"></i><a href="../index.html">학생</a><i class="bi bi-chevron-right"></i><span>내신등급</span></div>
+    <div class="hero-badge">학생</div>
+    <h1><i class="bi bi-bar-chart-line-fill me-2"></i>내신 등급 계산기</h1>
+    <p>과목별 단위수 반영 평균등급, 동석차 반영 석차 변환, 학생수별 등급컷을 계산합니다.</p>
+  </div>
+</div>
+
+<div class="tool-tabs-wrap"><div class="container"><ul class="tool-tabs">
+<li><button type="button" class="active" data-tab="average"><i class="bi bi-table"></i>내신 평균등급</button></li>
+<li><button type="button" data-tab="rank"><i class="bi bi-arrow-down-up"></i>석차 → 등급</button></li>
+<li><button type="button" data-tab="cutoff"><i class="bi bi-list-ol"></i>등급컷 조회</button></li>
+</ul></div></div>
+
+<div class="container">
+<div class="main-layout">
+<div>
+  <section class="tab-panel active" id="tab-average">
+    <div class="input-card">
+      <div class="input-card-header"><div class="input-card-title"><i class="bi bi-sliders" style="color:#2563eb"></i> 과목 정보 입력</div></div>
+      <div class="input-card-body">
+        <label class="form-label">등급 체계</label>
+        <div class="radio-pills mb-3">
+          <label class="radio-pill"><input type="radio" name="gradeSystem" value="9" checked><span>9등급제</span></label>
+          <label class="radio-pill"><input type="radio" name="gradeSystem" value="5"><span>5등급제</span></label>
+        </div>
+        <div class="subject-table-wrap">
+          <table class="subject-table" aria-label="내신 과목 입력 표">
+            <thead>
+              <tr><th class="col-name">과목명</th><th class="col-unit">단위수</th><th class="col-grade">석차등급</th><th class="col-remove">삭제</th></tr>
+            </thead>
+            <tbody id="subjectBody"></tbody>
+          </table>
+        </div>
+        <div class="d-flex flex-wrap gap-2 mt-3">
+          <button class="btn btn-outline-primary btn-sm fw-bold" type="button" id="addSubject"><i class="bi bi-plus-lg me-1"></i>과목 추가</button>
+          <button class="btn btn-primary btn-sm" type="button" id="avgBtn"><i class="bi bi-calculator me-1"></i>계산하기</button>
+          <button class="btn btn-outline-secondary btn-sm" type="button" id="resetAverage"><i class="bi bi-arrow-counterclockwise me-1"></i>초기화</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tab-panel" id="tab-rank">
+    <div class="input-card">
+      <div class="input-card-header"><div class="input-card-title"><i class="bi bi-arrow-down-up" style="color:#2563eb"></i> 석차 정보 입력</div></div>
+      <div class="input-card-body">
+        <label class="form-label">등급 체계</label>
+        <div class="radio-pills mb-3">
+          <label class="radio-pill"><input type="radio" name="rankSystem" value="9" checked><span>9등급제</span></label>
+          <label class="radio-pill"><input type="radio" name="rankSystem" value="5"><span>5등급제</span></label>
+        </div>
+        <div class="row g-3">
+          <div class="col-sm-4"><label class="form-label" for="rankTotal">수강자 수</label><input type="number" class="form-control" id="rankTotal" min="1" step="1" value="100"></div>
+          <div class="col-sm-4"><label class="form-label" for="myRank">내 석차</label><input type="number" class="form-control" id="myRank" min="1" step="1" value="1"></div>
+          <div class="col-sm-4"><label class="form-label" for="tiedCount">동석차 인원</label><input type="number" class="form-control" id="tiedCount" min="1" step="1" value="1"></div>
+        </div>
+        <div class="d-flex flex-wrap gap-2 mt-3">
+          <button class="btn btn-primary btn-sm" type="button" id="rankBtn"><i class="bi bi-check2-circle me-1"></i>확인하기</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tab-panel" id="tab-cutoff">
+    <div class="input-card">
+      <div class="input-card-header"><div class="input-card-title"><i class="bi bi-list-ol" style="color:#2563eb"></i> 등급컷 조회</div></div>
+      <div class="input-card-body">
+        <label class="form-label">등급 체계</label>
+        <div class="radio-pills mb-3">
+          <label class="radio-pill"><input type="radio" name="cutoffSystem" value="9" checked><span>9등급제</span></label>
+          <label class="radio-pill"><input type="radio" name="cutoffSystem" value="5"><span>5등급제</span></label>
+        </div>
+        <div class="row g-3">
+          <div class="col-sm-6"><label class="form-label" for="cutoffTotal">수강자 수</label><input type="number" class="form-control form-control-lg" id="cutoffTotal" min="1" step="1" value="178"></div>
+        </div>
+        <div class="d-flex flex-wrap gap-2 mt-3">
+          <button class="btn btn-primary btn-sm" type="button" id="cutoffBtn"><i class="bi bi-search me-1"></i>조회하기</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="notice-box">
+    <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1"></i>
+    <span>내신 계산 결과는 일반적인 등급 비율과 중간석차 공식을 적용한 참고용입니다. 학교생활기록부 반영, 성취평가 과목, 진로선택 과목, 대학별 환산 방식은 학교와 전형에 따라 달라질 수 있습니다.</span>
+  </div>
+
+  <section class="info-card">
+    <h2>내신 등급 비율</h2>
+    <div class="info-grid">
+      <table class="info-table">
+        <thead><tr><th>9등급</th><th>구간</th><th>누적</th></tr></thead>
+        <tbody id="table9"></tbody>
+      </table>
+      <table class="info-table">
+        <thead><tr><th>5등급</th><th>구간</th><th>누적</th></tr></thead>
+        <tbody id="table5"></tbody>
+      </table>
+    </div>
+    <p class="mt-3 mb-0">등급은 상위 누적비율 기준으로 끊습니다. 9등급제는 1등급 4%, 5등급제는 1등급 10%처럼 중앙으로 갈수록 인원이 많아지는 구조입니다.</p>
+  </section>
+
+  <section class="info-card">
+    <h2>동석차 처리 방법</h2>
+    <p>동점자가 있으면 같은 석차 인원 전체를 하나의 중간석차로 계산합니다. 공식은 <strong>중간석차 = 석차 + (동석차 인원 - 1) ÷ 2</strong>입니다.</p>
+    <p>예를 들어 수강자 100명에서 1등 동석차가 9명이면 중간석차는 5등, 석차백분율은 5%입니다. 9등급제 1등급 기준 4%를 넘으므로 2등급으로 판정됩니다.</p>
+  </section>
+
+  <section class="info-card">
+    <h2>9등급제 vs 5등급제 비교</h2>
+    <p>2025년 고1부터 5등급제가 적용되어 2028학년도 대입부터 본격 반영됩니다. 두 체계는 등급 수와 누적비율이 달라 단순한 숫자 환산은 참고용으로만 봐야 합니다.</p>
+    <div class="compare-grid">
+      <div class="compare-item"><strong>5등급 1</strong>9등급 1~2 근처</div>
+      <div class="compare-item"><strong>5등급 2</strong>9등급 3 근처</div>
+      <div class="compare-item"><strong>5등급 3</strong>9등급 4~5 근처</div>
+      <div class="compare-item"><strong>5등급 4</strong>9등급 6~7 근처</div>
+      <div class="compare-item"><strong>5등급 5</strong>9등급 8~9 근처</div>
+    </div>
+  </section>
+
+  <section class="info-card">
+    <h2>자주 묻는 질문</h2>
+    <div class="faq-list">
+      <div class="faq-item"><div class="faq-q">내신 등급은 어떻게 계산하나요?</div><div>과목별 석차등급에 단위수를 곱한 값을 모두 더하고, 전체 단위수로 나눠 가중평균 등급을 계산합니다.</div></div>
+      <div class="faq-item"><div class="faq-q">동석차가 많으면 등급이 바뀌나요?</div><div>바뀔 수 있습니다. 동석차가 있으면 석차 대신 중간석차를 사용하므로, 중간석차 백분율이 등급 경계를 넘으면 한 등급 낮아질 수 있습니다.</div></div>
+      <div class="faq-item"><div class="faq-q">5등급제는 언제부터 적용되나요?</div><div>2025년 고등학교 1학년부터 5등급제가 적용되어 2028학년도 대입부터 본격 반영됩니다.</div></div>
+      <div class="faq-item"><div class="faq-q">9등급과 5등급은 어떻게 환산하나요?</div><div>두 체계는 등급 구간과 누적비율이 달라 정확히 일대일 환산되지 않습니다. 누적비율 기준의 근사 참고값으로만 활용하세요.</div></div>
+    </div>
+  </section>
+</div>
+
+<aside>
+  <div class="result-panel">
+    <div class="result-title"><i class="bi bi-clipboard-data-fill"></i> 계산 결과</div>
+    <div class="score-main">
+      <div class="score-label" id="mainLabel">평균 내신 등급</div>
+      <div class="score-value" id="mainScore">0.00등급</div>
+      <div class="score-sub" id="mainSub">9등급제 기준</div>
+    </div>
+    <div id="averageRows">
+      <div class="result-row"><span>총 이수 단위</span><strong id="totalUnitText">0단위</strong></div>
+      <div class="result-row"><span>환산 참고</span><strong id="convertHint">-</strong></div>
+      <div class="dist-list" id="distList"></div>
+    </div>
+    <div id="rankRows" style="display:none">
+      <div class="result-row"><span>중간석차</span><strong id="midRankText">-</strong></div>
+      <div class="result-row"><span>석차백분율</span><strong id="percentileText">-</strong></div>
+      <div class="result-row"><span>판정 기준</span><strong id="rankBasisText">-</strong></div>
+    </div>
+    <div id="cutoffRows" style="display:none">
+      <div class="cutoff-table-wrap"><table class="cutoff-table"><thead><tr><th>등급</th><th>석차 범위</th><th>인원</th><th>누적</th></tr></thead><tbody id="cutoffBody"></tbody></table></div>
+    </div>
+    <div class="metric-row">
+      <div class="metric-card"><div class="metric-lbl" id="metricOneLabel">등급 체계</div><div class="metric-val" id="metricOne">9등급제</div></div>
+      <div class="metric-card"><div class="metric-lbl" id="metricTwoLabel">입력 과목</div><div class="metric-val" id="metricTwo">5개</div></div>
+    </div>
+  </div>
+</aside>
+</div>
+</div>
+
+<footer><div class="container">© 2026 mycalc · 내신 등급 계산 결과는 참고용입니다. | <a href="../../index.html">메인으로</a></div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const GRADE_9 = [
+  {grade:1, cumPercent:4}, {grade:2, cumPercent:11}, {grade:3, cumPercent:23},
+  {grade:4, cumPercent:40}, {grade:5, cumPercent:60}, {grade:6, cumPercent:77},
+  {grade:7, cumPercent:89}, {grade:8, cumPercent:96}, {grade:9, cumPercent:100}
+];
+const GRADE_5 = [
+  {grade:1, cumPercent:10}, {grade:2, cumPercent:34}, {grade:3, cumPercent:66},
+  {grade:4, cumPercent:90}, {grade:5, cumPercent:100}
+];
+const $ = id => document.getElementById(id);
+let activeTab = 'average';
+
+function tableFor(system){return system === '5' ? GRADE_5 : GRADE_9}
+function maxGrade(){return document.querySelector('input[name="gradeSystem"]:checked').value === '5' ? 5 : 9}
+function fmt(n,d=2){return Number.isFinite(n) ? n.toFixed(d) : '0.00'}
+function gradeColorClass(grade){
+  if(grade <= 2) return 'good';
+  if(grade <= 4) return 'mid';
+  if(grade <= 6) return 'warn';
+  return 'bad';
+}
+function syncSystems(source){
+  const value = document.querySelector(`input[name="${source}System"]:checked`).value;
+  ['grade','rank','cutoff'].forEach(prefix=>{
+    const node = document.querySelector(`input[name="${prefix}System"][value="${value}"]`);
+    if(node) node.checked = true;
+  });
+  updateSubjectGradeOptions();
+}
+function gradeOptions(selected, limit){
+  return Array.from({length:limit},(_,i)=>i+1).map(v=>`<option value="${v}" ${Number(selected)===v?'selected':''}>${v}등급</option>`).join('');
+}
+function addSubjectRow(data={}){
+  const limit = maxGrade();
+  const grade = Math.min(Number(data.grade || 2), limit);
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td class="col-name"><input class="form-control form-control-sm subject-name" type="text" placeholder="선택 입력" value="${data.name||''}"></td>
+    <td class="col-unit"><select class="form-select form-select-sm subject-unit">${[1,2,3,4,5].map(v=>`<option value="${v}" ${Number(data.unit||3)===v?'selected':''}>${v}단위</option>`).join('')}</select></td>
+    <td class="col-grade"><select class="form-select form-select-sm subject-grade">${gradeOptions(grade, limit)}</select></td>
+    <td class="col-remove"><button type="button" class="icon-btn remove-subject" aria-label="과목 삭제"><i class="bi bi-x-lg"></i></button></td>`;
+  $('subjectBody').appendChild(tr);
+  tr.querySelectorAll('input,select').forEach(node=>node.addEventListener('input', calculateAverage));
+  tr.querySelector('.remove-subject').addEventListener('click',()=>{
+    tr.remove();
+    if(!$('subjectBody').children.length) addSubjectRow();
+    calculateAverage();
+  });
+}
+function updateSubjectGradeOptions(){
+  const limit = maxGrade();
+  document.querySelectorAll('.subject-grade').forEach(sel=>{
+    const current = Math.min(Number(sel.value || 1), limit);
+    sel.innerHTML = gradeOptions(current, limit);
+  });
+}
+function resetSubjects(){
+  $('subjectBody').innerHTML = '';
+  [
+    {name:'국어', unit:3, grade:2},
+    {name:'수학', unit:4, grade:1},
+    {name:'영어', unit:3, grade:3},
+    {name:'사회', unit:2, grade:4},
+    {name:'과학', unit:3, grade:2}
+  ].forEach(addSubjectRow);
+}
+function calcAvgGrade(subjects){
+  let sumGradeUnit = 0, sumUnit = 0;
+  subjects.forEach(s=>{sumGradeUnit += s.grade * s.unit; sumUnit += s.unit;});
+  return sumUnit ? sumGradeUnit / sumUnit : 0;
+}
+function convertReference(avg, system){
+  if(system === '9'){
+    if(avg <= 2.5) return '5등급제 1등급권';
+    if(avg <= 3.5) return '5등급제 2등급권';
+    if(avg <= 5.5) return '5등급제 3등급권';
+    if(avg <= 7.5) return '5등급제 4등급권';
+    return '5등급제 5등급권';
+  }
+  if(avg <= 1.5) return '9등급제 1~2등급권';
+  if(avg <= 2.5) return '9등급제 3등급권';
+  if(avg <= 3.5) return '9등급제 4~5등급권';
+  if(avg <= 4.5) return '9등급제 6~7등급권';
+  return '9등급제 8~9등급권';
+}
+function calculateAverage(){
+  syncSystems('grade');
+  const system = document.querySelector('input[name="gradeSystem"]:checked').value;
+  const subjects = [...document.querySelectorAll('#subjectBody tr')].map(tr=>({
+    unit:Number(tr.querySelector('.subject-unit').value) || 0,
+    grade:Number(tr.querySelector('.subject-grade').value) || 0
+  }));
+  const totalUnit = subjects.reduce((s,x)=>s+x.unit,0);
+  const avg = calcAvgGrade(subjects);
+  const limit = system === '5' ? 5 : 9;
+  const counts = Array.from({length:limit},()=>0);
+  subjects.forEach(s=>{if(s.grade >= 1 && s.grade <= limit) counts[s.grade-1] += 1;});
+  const maxCount = Math.max(1, ...counts);
+  $('mainLabel').textContent = '평균 내신 등급';
+  $('mainScore').textContent = `${fmt(avg)}등급`;
+  $('mainScore').className = `score-value ${gradeColorClass(avg)}`;
+  $('mainSub').textContent = `${system}등급제 기준`;
+  $('totalUnitText').textContent = `${totalUnit}단위`;
+  $('convertHint').textContent = convertReference(avg, system);
+  $('distList').innerHTML = counts.map((count,i)=>`<div class="dist-row"><span>${i+1}등급</span><div class="dist-track"><div class="dist-fill" style="width:${count/maxCount*100}%"></div></div><strong>${count}</strong></div>`).join('');
+  $('metricOneLabel').textContent = '등급 체계';
+  $('metricOne').textContent = `${system}등급제`;
+  $('metricTwoLabel').textContent = '입력 과목';
+  $('metricTwo').textContent = `${subjects.length}개`;
+}
+function calcGradeFromRank(rank, tiedCount, totalStudents, gradeTable){
+  const midRank = rank + (tiedCount - 1) / 2;
+  const percentile = totalStudents ? (midRank / totalStudents) * 100 : 0;
+  for(const g of gradeTable){
+    if(percentile <= g.cumPercent) return {grade:g.grade, midRank, percentile};
+  }
+  return {grade:gradeTable.length, midRank, percentile};
+}
+function calculateRank(){
+  syncSystems('rank');
+  const system = document.querySelector('input[name="rankSystem"]:checked').value;
+  const total = Math.max(1, Number($('rankTotal').value) || 1);
+  const rank = Math.max(1, Number($('myRank').value) || 1);
+  const tied = Math.max(1, Number($('tiedCount').value) || 1);
+  const r = calcGradeFromRank(rank, tied, total, tableFor(system));
+  $('mainLabel').textContent = '내 등급';
+  $('mainScore').textContent = `${r.grade}등급`;
+  $('mainScore').className = `score-value ${gradeColorClass(r.grade)}`;
+  $('mainSub').textContent = `동석차 ${tied}명 포함, 수강자 ${total}명 기준`;
+  $('midRankText').textContent = `${fmt(r.midRank,1)}등`;
+  $('percentileText').textContent = `${fmt(r.percentile)}%`;
+  $('rankBasisText').textContent = `${system}등급제 누적비율`;
+  $('metricOneLabel').textContent = '등급 체계';
+  $('metricOne').textContent = `${system}등급제`;
+  $('metricTwoLabel').textContent = '수강자 수';
+  $('metricTwo').textContent = `${total}명`;
+}
+function calcGradeCutoffs(totalStudents, gradeTable){
+  const cutoffs = [];
+  let prevCum = 0;
+  gradeTable.forEach(g=>{
+    const cumStudents = Math.round(totalStudents * g.cumPercent / 100);
+    const gradeStudents = Math.max(0, cumStudents - prevCum);
+    cutoffs.push({grade:g.grade, from:prevCum+1, to:cumStudents, count:gradeStudents, cumPercent:g.cumPercent});
+    prevCum = Math.max(prevCum, cumStudents);
+  });
+  return cutoffs;
+}
+function calculateCutoffs(){
+  syncSystems('cutoff');
+  const system = document.querySelector('input[name="cutoffSystem"]:checked').value;
+  const total = Math.max(1, Number($('cutoffTotal').value) || 1);
+  const rows = calcGradeCutoffs(total, tableFor(system));
+  $('mainLabel').textContent = '등급컷';
+  $('mainScore').textContent = `${total}명`;
+  $('mainScore').className = 'score-value mid';
+  $('mainSub').textContent = `${system}등급제 수강자 기준`;
+  $('cutoffBody').innerHTML = rows.map(r=>{
+    const range = r.count > 0 ? `${r.from}~${r.to}등` : '-';
+    return `<tr><td>${r.grade}등급</td><td>${range}</td><td>${r.count}명</td><td>${r.cumPercent}%</td></tr>`;
+  }).join('');
+  $('metricOneLabel').textContent = '등급 체계';
+  $('metricOne').textContent = `${system}등급제`;
+  $('metricTwoLabel').textContent = '수강자 수';
+  $('metricTwo').textContent = `${total}명`;
+}
+function setResultMode(tab){
+  $('averageRows').style.display = tab === 'average' ? '' : 'none';
+  $('rankRows').style.display = tab === 'rank' ? '' : 'none';
+  $('cutoffRows').style.display = tab === 'cutoff' ? '' : 'none';
+}
+function switchTab(tab){
+  activeTab = tab;
+  document.querySelectorAll('.tool-tabs button').forEach(btn=>btn.classList.toggle('active', btn.dataset.tab === tab));
+  document.querySelectorAll('.tab-panel').forEach(panel=>panel.classList.toggle('active', panel.id === `tab-${tab}`));
+  setResultMode(tab);
+  if(tab === 'average') calculateAverage();
+  if(tab === 'rank') calculateRank();
+  if(tab === 'cutoff') calculateCutoffs();
+}
+function renderInfoTables(){
+  function render(table, bodyId){
+    let prev = 0;
+    $(bodyId).innerHTML = table.map(g=>{
+      const range = `${prev}% 초과~${g.cumPercent}%`;
+      const ratio = g.cumPercent - prev;
+      prev = g.cumPercent;
+      return `<tr><td>${g.grade}등급</td><td>${ratio}%</td><td>${g.cumPercent}%</td></tr>`;
+    }).join('');
+  }
+  render(GRADE_9, 'table9');
+  render(GRADE_5, 'table5');
+}
+
+document.querySelectorAll('.tool-tabs button').forEach(btn=>btn.addEventListener('click',()=>switchTab(btn.dataset.tab)));
+document.querySelectorAll('input[name="gradeSystem"]').forEach(r=>r.addEventListener('change',()=>{updateSubjectGradeOptions();calculateAverage();}));
+document.querySelectorAll('input[name="rankSystem"]').forEach(r=>r.addEventListener('change',calculateRank));
+document.querySelectorAll('input[name="cutoffSystem"]').forEach(r=>r.addEventListener('change',calculateCutoffs));
+$('addSubject').addEventListener('click',()=>{addSubjectRow();calculateAverage();});
+$('avgBtn').addEventListener('click',calculateAverage);
+$('resetAverage').addEventListener('click',()=>{document.querySelector('input[name="gradeSystem"][value="9"]').checked=true;resetSubjects();calculateAverage();});
+['rankTotal','myRank','tiedCount'].forEach(id=>$(id).addEventListener('input',calculateRank));
+$('rankBtn').addEventListener('click',calculateRank);
+$('cutoffTotal').addEventListener('input',calculateCutoffs);
+$('cutoffBtn').addEventListener('click',calculateCutoffs);
+
+renderInfoTables();
+resetSubjects();
+switchTab('average');
+</script>
+<script>
+(function(){
+  var B=/bot|crawler|spider|crawling|googlebot|bingbot|yandexbot|baiduspider|slurp|duckduckbot|facebookexternalhit|ia_archiver|msnbot|scrapy|applebot|semrushbot|ahrefsbot|petalbot|bytespider/i;
+  if(B.test(navigator.userAgent))return;
+  var S='https://wblffwhxaqxtqjccmwig.supabase.co';
+  var K='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndibGZmd2h4YXF4dHFqY2Ntd2lnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4OTQzMDcsImV4cCI6MjA5MzQ3MDMwN30.9uGXG1zw3bF5ojMcfQnPr8zsirn3WejIjK60XOZfAcg';
+  var p=location.pathname;
+  var s=(p.replace(/^\//,'')||'').split('/')[0]||'main';
+  var r=document.referrer,t='direct';
+  if(r){try{var h=new URL(r).hostname;
+    if(/google\.(com|co\.kr)$/.test(h))t='google';
+    else if(/search\.naver\.com/.test(h))t='naver';
+    else if(/search\.daum\.net/.test(h))t='daum';
+    else if(/bing\.com/.test(h))t='bing';
+    else if(/(^|\.)t\.co$|twitter\.com|x\.com/.test(h))t='twitter';
+    else if(/facebook\.com/.test(h))t='facebook';
+    else if(/instagram\.com/.test(h))t='instagram';
+    else if(/youtube\.com/.test(h))t='youtube';
+    else if(/perplexity\.ai/.test(h))t='perplexity';
+    else if(/chatgpt\.com|chat\.openai\.com/.test(h))t='chatgpt';
+    else t='other';
+  }catch(e){t='other';}}
+  fetch(S+'/rest/v1/mycalc_page_views',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','apikey':K,'Authorization':'Bearer '+K,'Prefer':'return=minimal'},
+    body:JSON.stringify({page_path:p,page_title:document.title,subdomain:s,referrer:r,ref_type:t,user_agent:navigator.userAgent})
+  }).catch(function(){});
+})();
+</script>
+</body>
+</html>
