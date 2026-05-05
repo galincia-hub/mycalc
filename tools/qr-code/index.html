@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>무료 QR코드 생성기 - URL, Wi-Fi, 연락처 | mycalc</title>
+<meta name="description" content="무료 온라인 QR코드 생성기. URL, 텍스트, Wi-Fi, 연락처, 이메일을 QR코드로 변환. 색상 커스터마이징, PNG 다운로드 지원.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.page-hero{background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 100%);color:#fff;padding:1.75rem 0 1.5rem;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='.045'%3E%3Cpath d='M8 8h16v16H8zM12 12v8h8v-8zM40 8h16v16H40zM44 12v8h8v-8zM8 40h16v16H8zM12 44v8h8v-8zM34 34h8v8h-8zM46 34h4v4h-4zM54 34h4v12h-4zM34 46h4v12h-4zM42 50h12v4H42z'/%3E%3C/g%3E%3C/svg%3E")}
+.hero-content{position:relative}
+.breadcrumb-mini{display:flex;gap:6px;align-items:center;font-size:.75rem;opacity:.86;margin-bottom:.5rem}
+.breadcrumb-mini a{color:#fff;text-decoration:none}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.75rem;margin-bottom:.5rem}
+.page-hero h1{font-size:1.4rem;font-weight:800;margin:0 0 .3rem}
+.page-hero p{font-size:.83rem;opacity:.88;margin:0}
+.gi-tabs-wrap{background:#fff;border-bottom:2px solid #e2e8f0}
+.gi-tabs{list-style:none;display:flex;overflow-x:auto;margin:0;padding:0 12px;-ms-overflow-style:none;scrollbar-width:none}
+.gi-tabs::-webkit-scrollbar{display:none}
+.gi-tabs li a,.gi-tabs li span{display:inline-block;padding:9px 13px;font-size:.82rem;font-weight:600;color:#64748b;text-decoration:none;border-bottom:2px solid transparent;white-space:nowrap;margin-bottom:-2px}
+.gi-tabs li a.cur{color:#1e3a8a;border-bottom-color:#1e3a8a;font-weight:700}
+.gi-tabs li span{opacity:.45}
+.main-layout{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start;padding:16px 0 32px}
+@media(max-width:991px){.main-layout{grid-template-columns:1fr}}
+.input-card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden}
+.input-card-header{padding:14px 16px;border-bottom:1px solid #dbeafe;background:#f0f7ff}
+.input-card-title{font-size:.88rem;font-weight:700;color:#0f172a;display:flex;align-items:center;gap:7px}
+.input-card-body{padding:16px}
+.qr-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:#f1f5f9;border-radius:8px;padding:4px;margin-bottom:14px}
+.qr-tab{border:0;background:transparent;color:#64748b;border-radius:6px;padding:8px 6px;font-size:.78rem;font-weight:700;white-space:nowrap}
+.qr-tab.active{background:#fff;color:#1e3a8a;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.qr-form{display:none}
+.qr-form.active{display:block}
+.form-label{font-weight:600;font-size:.8rem;color:#374151;margin-bottom:4px;display:block}
+.form-control,.form-select{font-size:.85rem;border-color:#d1d5db;border-radius:7px}
+.form-control:focus,.form-select:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.input-group-text{background:#f1f5f9;border-color:#d1d5db;font-size:.8rem;color:#64748b}
+.section-divider{border:none;border-top:1px solid #f1f5f9;margin:14px 0}
+.color-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.color-input{height:38px;padding:4px}
+.result-panel{background:linear-gradient(160deg,#1e3a8a 0%,#2563eb 100%);border-radius:12px;color:#fff;padding:18px 20px;position:sticky;top:96px;box-shadow:0 4px 20px rgba(30,58,138,.35)}
+.result-title{font-size:.88rem;font-weight:700;opacity:.9;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.qr-preview-box{background:#fff;border-radius:12px;min-height:296px;display:flex;align-items:center;justify-content:center;padding:18px;margin-bottom:12px;overflow:auto}
+#qrPreview canvas,#qrPreview img{display:block;max-width:100%;height:auto}
+.empty-preview{color:#64748b;text-align:center;font-size:.82rem;line-height:1.5}
+.payload-info{background:rgba(255,255,255,.13);border-radius:8px;padding:9px 10px;margin-bottom:12px}
+.payload-label{font-size:.7rem;opacity:.75;margin-bottom:4px}
+.payload-text{font-size:.76rem;line-height:1.45;word-break:break-all;max-height:72px;overflow:auto}
+.result-actions{display:grid;gap:8px}
+.btn-download{background:#fff;color:#1e3a8a;border:0;font-weight:800;border-radius:8px;padding:10px 12px}
+.btn-download:disabled{opacity:.6;cursor:not-allowed}
+.btn-reset{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.28);font-weight:700;border-radius:8px;padding:9px 12px}
+.disclaimer{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.75rem;color:#713f12;margin-top:16px;display:flex;gap:8px;align-items:flex-start}
+.content-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px 20px;margin-top:16px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.content-card h2{font-size:1rem;font-weight:800;color:#0f172a;margin:0 0 10px}
+.use-list{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:0;padding:0;list-style:none}
+.use-list li{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;font-size:.8rem;color:#475569}
+.accordion-button{font-size:.85rem;font-weight:700}
+.accordion-body{font-size:.82rem;color:#475569;line-height:1.6}
+footer{background:#0f172a;color:rgba(255,255,255,.65);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}
+footer a{color:rgba(255,255,255,.7);text-decoration:none}
+@media(max-width:576px){
+  .page-hero h1{font-size:1.2rem}
+  .qr-tabs{grid-template-columns:repeat(2,1fr)}
+  .color-grid,.use-list{grid-template-columns:1fr}
+  .qr-preview-box{min-height:240px}
+}
+</style>
+</head>
+<body>
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../../tax/index.html">세금</a></li>
+<li><a href="../../work/index.html">급여·노동</a></li>
+<li><a href="../../tools/index.html" class="on">도구</a></li>
+<li><a href="../../realestate/index.html">부동산</a></li>
+<li><a href="../../money/index.html">금융·투자</a></li>
+<li><a href="../../student/index.html">학생</a></li>
+<li><a href="../../parent/index.html">학부모·육아</a></li>
+<li><a href="../../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="../qr-code/index.html" class="on mc-done">QR코드</a></li>
+<li><a href="../color-picker/index.html" class="mc-done">컬러피커</a></li>
+<li><a href="../image-resize/index.html" class="mc-done">이미지리사이즈</a></li>
+<li><a href="../pdf-merge/index.html" class="mc-done">PDF합치기</a></li>
+<li><a href="../pdf-split/index.html" class="mc-done">PDF분할</a></li>
+<li><a href="../signature/index.html" class="mc-done">서명생성</a></li>
+<li><a href="../watermark/index.html" class="mc-done">워터마크</a></li>
+<li><span class="wip">배경제거</span></li>
+<li><span class="wip">HWP변환</span></li>
+<li><span class="wip">증명사진</span></li>
+<li><span class="wip">동영상GIF</span></li>
+<li><span class="wip">오디오추출</span></li>
+<li><span class="wip">PDF압축</span></li>
+<li><span class="wip">목업</span></li>
+<li><span class="wip">엑셀이미지</span></li>
+<li><span class="wip">TTS</span></li>
+</ul></div></div>
+</div>
+
+<div class="page-hero">
+  <div class="container hero-content">
+    <div class="breadcrumb-mini"><a href="../../index.html">mycalc</a><i class="bi bi-chevron-right"></i><a href="../index.html">도구</a><i class="bi bi-chevron-right"></i><span>QR코드 생성기</span></div>
+    <div class="hero-badge"><i class="bi bi-phone me-1"></i>브라우저 전용 · PNG 다운로드</div>
+    <h1>QR코드 생성기</h1>
+    <p>URL, 텍스트, Wi-Fi, 연락처, 이메일, 전화/SMS를 QR코드로 변환합니다.</p>
+  </div>
+</div>
+
+<div class="gi-tabs-wrap"><div class="container"><ul class="gi-tabs">
+<li><a href="index.html" class="cur">QR 생성기</a></li>
+<li><span>사용 가이드</span></li>
+</ul></div></div>
+
+<div class="container">
+<div class="main-layout">
+<div>
+<div class="input-card">
+  <div class="input-card-header">
+    <div class="input-card-title"><i class="bi bi-qr-code" style="color:#1e3a8a"></i> QR코드 내용 입력</div>
+  </div>
+  <div class="input-card-body">
+    <div class="qr-tabs" role="tablist" aria-label="QR 코드 유형">
+      <button class="qr-tab active" data-tab="url" type="button">URL</button>
+      <button class="qr-tab" data-tab="text" type="button">텍스트</button>
+      <button class="qr-tab" data-tab="wifi" type="button">Wi-Fi</button>
+      <button class="qr-tab" data-tab="contact" type="button">연락처</button>
+      <button class="qr-tab" data-tab="email" type="button">이메일</button>
+      <button class="qr-tab" data-tab="phone" type="button">전화/SMS</button>
+    </div>
+
+    <div class="qr-form active" data-form="url">
+      <label class="form-label" for="urlInput">URL</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-link-45deg"></i></span>
+        <input class="form-control form-control-lg qr-input" id="urlInput" type="url" placeholder="https://tools.mycalc.co.kr">
+      </div>
+      <div class="form-text">http:// 또는 https://를 포함하면 대부분의 카메라 앱에서 바로 열립니다.</div>
+    </div>
+
+    <div class="qr-form" data-form="text">
+      <label class="form-label" for="textInput">자유 텍스트</label>
+      <textarea class="form-control qr-input" id="textInput" rows="6" placeholder="QR코드에 담을 텍스트를 입력하세요."></textarea>
+    </div>
+
+    <div class="qr-form" data-form="wifi">
+      <div class="mb-3">
+        <label class="form-label" for="wifiSsid">SSID</label>
+        <input class="form-control qr-input" id="wifiSsid" type="text" placeholder="MyNetwork">
+      </div>
+      <div class="row g-2">
+        <div class="col-sm-7">
+          <label class="form-label" for="wifiPassword">비밀번호</label>
+          <input class="form-control qr-input" id="wifiPassword" type="text" placeholder="MyPassword">
+        </div>
+        <div class="col-sm-5">
+          <label class="form-label" for="wifiType">암호화 방식</label>
+          <select class="form-select qr-input" id="wifiType">
+            <option value="WPA" selected>WPA/WPA2</option>
+            <option value="WEP">WEP</option>
+            <option value="nopass">없음</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-text">표준 포맷: WIFI:T:WPA;S:MyNetwork;P:MyPassword;;</div>
+    </div>
+
+    <div class="qr-form" data-form="contact">
+      <div class="row g-2">
+        <div class="col-sm-4">
+          <label class="form-label" for="contactName">이름</label>
+          <input class="form-control qr-input" id="contactName" type="text" placeholder="홍길동">
+        </div>
+        <div class="col-sm-4">
+          <label class="form-label" for="contactPhone">전화번호</label>
+          <input class="form-control qr-input" id="contactPhone" type="tel" placeholder="010-1234-5678">
+        </div>
+        <div class="col-sm-4">
+          <label class="form-label" for="contactEmail">이메일</label>
+          <input class="form-control qr-input" id="contactEmail" type="email" placeholder="hello@example.com">
+        </div>
+      </div>
+    </div>
+
+    <div class="qr-form" data-form="email">
+      <div class="mb-3">
+        <label class="form-label" for="mailTo">수신자</label>
+        <input class="form-control qr-input" id="mailTo" type="email" placeholder="hello@example.com">
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="mailSubject">제목</label>
+        <input class="form-control qr-input" id="mailSubject" type="text" placeholder="문의드립니다">
+      </div>
+      <label class="form-label" for="mailBody">본문</label>
+      <textarea class="form-control qr-input" id="mailBody" rows="4" placeholder="메일 본문"></textarea>
+    </div>
+
+    <div class="qr-form" data-form="phone">
+      <div class="row g-2 mb-3">
+        <div class="col-sm-5">
+          <label class="form-label" for="phoneMode">유형</label>
+          <select class="form-select qr-input" id="phoneMode">
+            <option value="tel" selected>전화</option>
+            <option value="sms">SMS</option>
+          </select>
+        </div>
+        <div class="col-sm-7">
+          <label class="form-label" for="phoneNumber">전화번호</label>
+          <input class="form-control qr-input" id="phoneNumber" type="tel" placeholder="010-1234-5678">
+        </div>
+      </div>
+      <label class="form-label" for="smsMessage">SMS 메시지</label>
+      <textarea class="form-control qr-input" id="smsMessage" rows="3" placeholder="문자 메시지"></textarea>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="row g-2">
+      <div class="col-sm-6">
+        <label class="form-label" for="qrSize">QR 크기</label>
+        <select class="form-select qr-input" id="qrSize">
+          <option value="128">128 px</option>
+          <option value="256" selected>256 px</option>
+          <option value="512">512 px</option>
+          <option value="1024">1024 px</option>
+        </select>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="qrLevel">오류 보정 수준</label>
+        <select class="form-select qr-input" id="qrLevel">
+          <option value="L">L (7%)</option>
+          <option value="M" selected>M (15%)</option>
+          <option value="Q">Q (25%)</option>
+          <option value="H">H (30%)</option>
+        </select>
+      </div>
+    </div>
+    <div class="color-grid mt-3">
+      <div>
+        <label class="form-label" for="darkColor">전경색 (Dark)</label>
+        <input class="form-control form-control-color color-input qr-input" id="darkColor" type="color" value="#000000">
+      </div>
+      <div>
+        <label class="form-label" for="lightColor">배경색 (Light)</label>
+        <input class="form-control form-control-color color-input qr-input" id="lightColor" type="color" value="#ffffff">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="disclaimer">
+  <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1"></i>
+  <span>생성된 QR코드는 입력한 내용을 그대로 담는 정적 QR입니다. 공개 장소에 부착하기 전 실제 스마트폰 카메라로 스캔해 내용과 가독성을 확인하세요.</span>
+</div>
+
+<div class="content-card">
+  <h2>QR코드란?</h2>
+  <p class="mb-0">QR코드는 URL, 텍스트, 연락처 같은 정보를 사각형 패턴에 저장해 스마트폰 카메라로 빠르게 읽을 수 있는 2차원 바코드입니다.</p>
+</div>
+
+<div class="content-card">
+  <h2>QR코드 활용법</h2>
+  <ul class="use-list">
+    <li><strong>명함</strong><br>연락처를 vCard로 공유</li>
+    <li><strong>메뉴판</strong><br>온라인 메뉴 URL 연결</li>
+    <li><strong>마케팅</strong><br>이벤트 페이지 이동</li>
+    <li><strong>Wi-Fi 공유</strong><br>SSID와 비밀번호 전달</li>
+  </ul>
+</div>
+
+<div class="content-card">
+  <h2>FAQ</h2>
+  <div class="accordion" id="qrFaq">
+    <div class="accordion-item">
+      <h3 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">생성된 QR코드에 유효기간이 있나요?</button></h3>
+      <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#qrFaq"><div class="accordion-body">없습니다. 입력한 내용을 직접 담는 정적 QR코드라서 파일 자체에는 만료일이 없습니다.</div></div>
+    </div>
+    <div class="accordion-item">
+      <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">QR코드 스캔이 안 될 때?</button></h3>
+      <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#qrFaq"><div class="accordion-body">전경색과 배경색의 대비, 출력 크기, QR 주변 여백을 확인하세요. 너무 밝은 전경색이나 복잡한 배경은 인식률을 낮출 수 있습니다.</div></div>
+    </div>
+    <div class="accordion-item">
+      <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">상업적으로 사용해도 되나요?</button></h3>
+      <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#qrFaq"><div class="accordion-body">자유롭게 사용할 수 있습니다. 다만 연결되는 URL, 연락처, 문구의 권리와 책임은 사용자에게 있습니다.</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div>
+  <div class="result-panel">
+    <div class="result-title"><i class="bi bi-eye-fill"></i> 실시간 미리보기</div>
+    <div class="qr-preview-box">
+      <div id="qrPreview"></div>
+    </div>
+    <div class="payload-info">
+      <div class="payload-label">QR 데이터</div>
+      <div class="payload-text" id="payloadText">URL을 입력하세요.</div>
+    </div>
+    <div class="result-actions">
+      <button class="btn-download" id="downloadBtn" type="button" disabled><i class="bi bi-download me-1"></i> PNG 다운로드</button>
+      <button class="btn-reset" type="button" id="resetBtn"><i class="bi bi-arrow-counterclockwise me-1"></i> QR코드 초기화</button>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+<footer><div class="container">© 2026 mycalc · 브라우저에서 생성되는 정적 QR코드입니다. | <a href="../../index.html">메인으로</a></div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script>
+const state = { tab: 'url', qr: null };
+const $ = id => document.getElementById(id);
+const levelMap = {
+  L: QRCode.CorrectLevel.L,
+  M: QRCode.CorrectLevel.M,
+  Q: QRCode.CorrectLevel.Q,
+  H: QRCode.CorrectLevel.H
+};
+
+function escapeWifi(value) {
+  return String(value || '').replace(/([\\;,:"])/g, '\\$1');
+}
+
+function cleanPhone(value) {
+  return String(value || '').trim().replace(/\s+/g, '');
+}
+
+function buildPayload() {
+  if (state.tab === 'url') return $('urlInput').value.trim();
+  if (state.tab === 'text') return $('textInput').value.trim();
+  if (state.tab === 'wifi') {
+    const ssid = $('wifiSsid').value.trim();
+    if (!ssid) return '';
+    const type = $('wifiType').value;
+    const password = $('wifiPassword').value;
+    return `WIFI:T:${type};S:${escapeWifi(ssid)};P:${escapeWifi(password)};;`;
+  }
+  if (state.tab === 'contact') {
+    const name = $('contactName').value.trim();
+    const phone = $('contactPhone').value.trim();
+    const email = $('contactEmail').value.trim();
+    if (!name && !phone && !email) return '';
+    return ['BEGIN:VCARD','VERSION:3.0',`FN:${name}`,`TEL:${phone}`,`EMAIL:${email}`,'END:VCARD'].join('\n');
+  }
+  if (state.tab === 'email') {
+    const to = $('mailTo').value.trim();
+    const subject = encodeURIComponent($('mailSubject').value.trim());
+    const body = encodeURIComponent($('mailBody').value.trim());
+    if (!to && !subject && !body) return '';
+    const params = [];
+    if (subject) params.push(`subject=${subject}`);
+    if (body) params.push(`body=${body}`);
+    return `mailto:${to}${params.length ? '?' + params.join('&') : ''}`;
+  }
+  if (state.tab === 'phone') {
+    const number = cleanPhone($('phoneNumber').value);
+    if (!number) return '';
+    if ($('phoneMode').value === 'sms') {
+      const message = encodeURIComponent($('smsMessage').value.trim());
+      return `sms:${number}${message ? '?body=' + message : ''}`;
+    }
+    return `tel:${number}`;
+  }
+  return '';
+}
+
+function setPreviewEmpty(message) {
+  $('qrPreview').innerHTML = `<div class="empty-preview"><i class="bi bi-qr-code fs-2 d-block mb-2"></i>${message}</div>`;
+  $('payloadText').textContent = message;
+  $('downloadBtn').disabled = true;
+}
+
+function renderQr() {
+  const payload = buildPayload();
+  if (!payload) {
+    setPreviewEmpty('QR코드로 만들 내용을 입력하세요.');
+    return;
+  }
+  const size = parseInt($('qrSize').value, 10) || 256;
+  $('qrPreview').innerHTML = '';
+  state.qr = new QRCode($('qrPreview'), {
+    text: payload,
+    width: size,
+    height: size,
+    colorDark: $('darkColor').value,
+    colorLight: $('lightColor').value,
+    correctLevel: levelMap[$('qrLevel').value] || QRCode.CorrectLevel.M
+  });
+  $('payloadText').textContent = payload;
+  $('downloadBtn').disabled = false;
+}
+
+function setTab(tab) {
+  state.tab = tab;
+  document.querySelectorAll('.qr-tab').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
+  document.querySelectorAll('.qr-form').forEach(form => form.classList.toggle('active', form.dataset.form === tab));
+  renderQr();
+}
+
+function downloadPng() {
+  const canvas = $('qrPreview').querySelector('canvas');
+  const img = $('qrPreview').querySelector('img');
+  let url = '';
+  if (canvas) url = canvas.toDataURL('image/png');
+  else if (img) url = img.src;
+  if (!url) return;
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'mycalc-qr-code.png';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+function resetAll() {
+  document.querySelectorAll('.qr-input').forEach(input => {
+    if (input.type === 'color') return;
+    if (input.tagName === 'SELECT') input.selectedIndex = input.id === 'qrSize' || input.id === 'qrLevel' ? 1 : 0;
+    else input.value = '';
+  });
+  $('darkColor').value = '#000000';
+  $('lightColor').value = '#ffffff';
+  $('qrSize').value = '256';
+  $('qrLevel').value = 'M';
+  setTab('url');
+}
+
+document.querySelectorAll('.qr-tab').forEach(btn => btn.addEventListener('click', () => setTab(btn.dataset.tab)));
+document.querySelectorAll('.qr-input').forEach(input => input.addEventListener('input', renderQr));
+document.querySelectorAll('select.qr-input').forEach(input => input.addEventListener('change', renderQr));
+$('downloadBtn').addEventListener('click', downloadPng);
+$('resetBtn').addEventListener('click', resetAll);
+setPreviewEmpty('QR코드로 만들 내용을 입력하세요.');
+</script>
+</body>
+</html>

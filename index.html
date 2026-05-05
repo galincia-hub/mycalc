@@ -1,0 +1,853 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>마이캘크 – 생활 밀착형 계산기 모음</title>
+<meta name="description" content="세금·급여·부동산·금융·생활 계산기를 한 곳에서. 마이캘크.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}
+
+/* ── 네비 ── */
+.main-nav{background:#0f172a;z-index:1000}
+.nav-inner{display:flex;align-items:center;padding:0 16px;min-height:56px;flex-wrap:wrap}
+.nav-brand{color:#fff;font-weight:800;font-size:1.05rem;text-decoration:none;white-space:nowrap;padding:12px 0;margin-right:16px;letter-spacing:-.3px}
+.nav-brand span{color:#38bdf8}
+.nav-links{list-style:none;display:flex;flex-wrap:wrap;gap:2px;margin:0;padding:4px 0;margin-left:auto}
+.nav-links a{color:rgba(255,255,255,.65);text-decoration:none;padding:5px 10px;border-radius:5px;font-size:.8rem;transition:all .15s;white-space:nowrap}
+.nav-links a:hover,.nav-links a.active{color:#fff;background:rgba(255,255,255,.12)}
+.nav-toggle{display:none;background:none;border:none;color:#fff;font-size:1.3rem;padding:8px;cursor:pointer;margin-left:auto}
+@media(max-width:768px){
+  .nav-toggle{display:block}
+  .nav-links{display:none;width:100%;flex-direction:column;padding-bottom:8px}
+  .nav-links.open{display:flex}
+  .nav-links a{padding:8px 12px}
+}
+
+/* ── 히어로 ── */
+.hero{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 60%,#2563eb 100%);color:#fff;padding:3rem 0 2.5rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.hero-content{position:relative}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(56,189,248,.15);border:1px solid rgba(56,189,248,.3);border-radius:20px;padding:4px 14px;font-size:.75rem;color:#7dd3fc;margin-bottom:.75rem}
+.hero h1{font-size:2rem;font-weight:900;margin:0 0 .5rem;letter-spacing:-.5px}
+.hero h1 span{color:#38bdf8}
+.hero p{font-size:.9rem;opacity:.8;margin:0 0 1.5rem;max-width:520px}
+.hero-stats{display:flex;flex-wrap:wrap;gap:16px}
+.hero-stat{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:10px 16px;text-align:center}
+.hero-stat-num{font-size:1.1rem;font-weight:800;color:#fff}
+.hero-stat-label{font-size:.72rem;color:rgba(255,255,255,.65);margin-top:2px}
+
+/* ── 섹션 ── */
+.section-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid #e2e8f0}
+.section-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
+.section-title{font-size:1rem;font-weight:800;color:#0f172a}
+.section-badge{font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:8px;border:1px solid}
+.badge-done{background:#dcfce7;color:#166534;border-color:#86efac}
+.badge-wip{background:#fef9c3;color:#854d0e;border-color:#fde047}
+
+/* ── 도메인 섹션 ── */
+.domain-section{background:#fff;border-radius:14px;border:1px solid #e2e8f0;padding:20px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.domain-section.coming-soon{opacity:.85}
+
+/* ── 아이템 카드 ── */
+.item-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.item-card{border:1.5px solid #e2e8f0;border-radius:10px;padding:12px 14px;text-decoration:none;color:#1e293b;transition:all .18s;background:#fafafa;display:flex;flex-direction:column;gap:4px;cursor:pointer;position:relative}
+.item-card:hover{border-color:#3b82f6;background:#eff6ff;transform:translateY(-1px);box-shadow:0 4px 12px rgba(59,130,246,.12)}
+.item-card.active{border-color:#16a34a;background:#f0fdf4}
+.item-card.active:hover{border-color:#16a34a;background:#dcfce7}
+.item-card-icon{font-size:1.2rem;margin-bottom:2px}
+.item-card-name{font-size:.82rem;font-weight:700;line-height:1.3}
+.item-card-desc{font-size:.72rem;color:#64748b;line-height:1.4}
+.item-status{position:absolute;top:8px;right:8px;font-size:.62rem;font-weight:700;padding:1px 6px;border-radius:6px}
+.status-done{background:#dcfce7;color:#166534}
+.status-soon{background:#f1f5f9;color:#94a3b8}
+.status-hot{background:#fee2e2;color:#b91c1c}
+
+/* ── 준비중 오버레이 ── */
+.item-card.coming .item-card-name,.item-card.coming .item-card-desc{opacity:.6}
+
+/* ── 토스트 ── */
+.toast-wrap{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:9999;pointer-events:none}
+.toast-msg{background:#1e293b;color:#fff;padding:10px 20px;border-radius:10px;font-size:.82rem;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,.25);opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap}
+.toast-msg.show{opacity:1}
+
+/* ── 작업순서 배지 ── */
+.work-order{display:inline-flex;align-items:center;justify-content:center;background:#dbeafe;color:#1e40af;border-radius:50%;width:18px;height:18px;font-size:.62rem;font-weight:800;flex-shrink:0;position:absolute;top:8px;left:8px}
+
+/* ── 푸터 ── */
+footer{background:#0f172a;color:rgba(255,255,255,.5);text-align:center;padding:1.25rem;font-size:.75rem;margin-top:2rem}
+footer a{color:rgba(255,255,255,.6);text-decoration:none}
+footer a:hover{color:#fff}
+
+@media(max-width:576px){
+  .hero h1{font-size:1.5rem}
+  .item-grid{grid-template-columns:repeat(auto-fill,minmax(145px,1fr))}
+}
+/* ── mc-nav: 2단 공통 네비게이션 ── */
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul{justify-content:flex-end}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+</style>
+</head>
+<body>
+
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="tax/index.html">세금</a></li>
+<li><a href="work/index.html">급여·노동</a></li>
+<li><a href="tools/index.html">도구</a></li>
+<li><a href="realestate/index.html">부동산</a></li>
+<li><a href="money/index.html">금융·투자</a></li>
+<li><a href="student/index.html">학생</a></li>
+<li><a href="parent/index.html">학부모·육아</a></li>
+<li><a href="life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+</div>
+
+<!-- 히어로 -->
+<div class="hero">
+  <div class="container hero-content">
+    <div class="hero-eyebrow"><i class="bi bi-calculator-fill"></i> 생활 밀착형 계산기 포털</div>
+    <h1>복잡한 계산,<br><span>마이캘크</span>에서 쉽게</h1>
+    <p>세금·급여·부동산·금융·생활 분야의 계산기를 무료로 제공합니다. 광고 없이, 빠르게.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-num">35</div><div class="hero-stat-label">완성된 계산기</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">50+</div><div class="hero-stat-label">준비 중인 계산기</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">8</div><div class="hero-stat-label">서비스 도메인</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="container py-4">
+
+<!-- ── 세금 ── -->
+<div class="domain-section">
+  <div class="section-header">
+    <div class="section-icon" style="background:#dbeafe;color:#1e40af"><i class="bi bi-receipt-cutoff"></i></div>
+    <div>
+      <div class="section-title">세금 계산기</div>
+      <div style="font-size:.75rem;color:#64748b;">소득세·부가세·양도세 등 세금 관련 계산</div>
+    </div>
+    <span class="section-badge badge-done ms-auto">10 완성</span>
+  </div>
+  <div class="item-grid">
+
+    <a class="item-card active" href="tax/general-income/index.html">
+      <span class="work-order">✓</span>
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">🧾</div>
+      <div class="item-card-name">종합소득세</div>
+      <div class="item-card-desc">사업·근로·연금·금융·기타소득 종합 계산</div>
+    </a>
+
+    <a class="item-card active" href="tax/freelancer/index.html">
+      <span class="work-order">✓</span>
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">🧑‍💻</div>
+      <div class="item-card-name">프리랜서 3.3%</div>
+      <div class="item-card-desc">3.3% 원천징수·환급 예상 계산</div>
+    </a>
+
+    <a class="item-card active" href="tax/vat/index.html">
+      <span class="work-order">✓</span>
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">💳</div>
+      <div class="item-card-name">부가세</div>
+      <div class="item-card-desc">부가가치세 포함 역산·계산</div>
+    </a>
+
+    <a class="item-card active" href="tax/day-laborer/index.html">
+      <span class="work-order">✓</span>
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">👷</div>
+      <div class="item-card-name">일용직 세금</div>
+      <div class="item-card-desc">일당 실수령액·월간 합산 계산</div>
+    </a>
+
+    <a class="item-card active" href="tax/earned-income/index.html">
+      <span class="work-order">✓</span>
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">👔</div>
+      <div class="item-card-name">근로소득세</div>
+      <div class="item-card-desc">총급여 → 근로소득공제 → 연말정산</div>
+    </a>
+
+    <a class="item-card active" href="tax/retirement-income/index.html">
+      <span class="work-order">✓</span>
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">🏦</div>
+      <div class="item-card-name">퇴직소득세</div>
+      <div class="item-card-desc">퇴직금 연분연승법 세액 계산</div>
+    </a>
+
+    <div class="item-card coming" onclick="showToast('연말정산 계산기는 준비중입니다')">
+      <span class="work-order">7</span>
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">📊</div>
+      <div class="item-card-name">연말정산</div>
+      <div class="item-card-desc">연말정산 예상 환급·추납 계산</div>
+    </div>
+
+    <a class="item-card active" href="tax/capital-gains/index.html">
+      <span class="work-order">✓</span>
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">🏠</div>
+      <div class="item-card-name">양도소득세</div>
+      <div class="item-card-desc">부동산·주식 양도세 · 1세대1주택</div>
+    </a>
+
+    <a class="item-card active" href="tax/property/index.html">
+      <span class="work-order">✓</span>
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">🏢</div>
+      <div class="item-card-name">부동산세금</div>
+      <div class="item-card-desc">취득세·재산세·종부세·양도세 통합</div>
+    </a>
+
+    <a class="item-card active" href="tax/inheritance/index.html">
+      <span class="work-order">✓</span>
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">📜</div>
+      <div class="item-card-name">상속·증여세</div>
+      <div class="item-card-desc">상속세·증여세·분할증여 시뮬레이션</div>
+    </a>
+
+    <div class="item-card coming" onclick="showToast('가상자산 세금 계산기는 준비중입니다')">
+      <span class="work-order">11</span>
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">₿</div>
+      <div class="item-card-name">가상자산 세금</div>
+      <div class="item-card-desc">코인·NFT 양도소득 계산</div>
+    </div>
+
+    <div class="item-card coming" onclick="showToast('상금·경품 세금 계산기는 준비중입니다')">
+      <span class="work-order">12</span>
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🏆</div>
+      <div class="item-card-name">상금·경품 세금</div>
+      <div class="item-card-desc">당첨·상금 원천징수 계산</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── 급여·노동 ── -->
+<div class="domain-section">
+  <div class="section-header">
+    <div class="section-icon" style="background:#dcfce7;color:#166534"><i class="bi bi-briefcase"></i></div>
+    <div>
+      <div class="section-title">급여·노동 계산기</div>
+      <div style="font-size:.75rem;color:#64748b;">실수령액·4대보험·퇴직금 등</div>
+    </div>
+    <span class="section-badge badge-done ms-auto">7 완성</span>
+  </div>
+  <div class="item-grid">
+    <a class="item-card active" href="work/annual-salary/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">💰</div>
+      <div class="item-card-name">연봉 계산기</div>
+      <div class="item-card-desc">연봉·월급 입력 → 월 실수령액 계산</div>
+    </a>
+    <a class="item-card active" href="work/annual-salary-table/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">📊</div>
+      <div class="item-card-name">실수령액표</div>
+      <div class="item-card-desc">연봉 구간별 월 실수령액 한눈에 조회</div>
+    </a>
+    <a class="item-card active" href="work/hourly-wage/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">⏱️</div>
+      <div class="item-card-name">시급 계산기</div>
+      <div class="item-card-desc">주휴수당·일급·주급·월급·연봉 계산</div>
+    </a>
+    <a class="item-card active" href="work/minimum-wage/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">📋</div>
+      <div class="item-card-name">최저임금 계산기</div>
+      <div class="item-card-desc">2026년 최저임금 기준 월급·연봉·위반 여부 확인</div>
+    </a>
+    <a class="item-card active" href="work/insurance/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">🛡️</div>
+      <div class="item-card-name">4대보험 계산기</div>
+      <div class="item-card-desc">근로자·사업주 보험료와 실수령액 계산</div>
+    </a>
+    <a class="item-card active" href="work/severance/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">🎁</div>
+      <div class="item-card-name">퇴직금 계산기</div>
+      <div class="item-card-desc">평균임금 기반 법정 퇴직금 계산</div>
+    </a>
+    <a class="item-card active" href="work/unemployment-benefit/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">📃</div>
+      <div class="item-card-name">실업급여 계산기</div>
+      <div class="item-card-desc">구직급여 예상 수령액·소정급여일수 계산</div>
+    </a>
+    <a class="item-card active" href="work/weekly-holiday-pay/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">📅</div>
+      <div class="item-card-name">주휴수당 계산기</div>
+      <div class="item-card-desc">시급·주 근로시간 기준 주휴수당 계산</div>
+    </a>
+    <div class="item-card coming" onclick="showToast('연장·야간·휴일수당 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🌙</div>
+      <div class="item-card-name">연장·야간·휴일수당</div>
+      <div class="item-card-desc">연장근로·야간근로·휴일근로 가산수당 계산 (1.5배, 2배)</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('연차수당 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🗓️</div>
+      <div class="item-card-name">연차수당 계산기</div>
+      <div class="item-card-desc">미사용 연차 일수 × 통상임금 = 연차수당 계산</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('육아휴직급여 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">👶</div>
+      <div class="item-card-name">육아휴직급여 계산기</div>
+      <div class="item-card-desc">육아휴직 기간별 통상임금 기준 고용보험 급여 계산</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 도구 ── -->
+<div class="domain-section">
+  <div class="section-header">
+    <div class="section-icon" style="background:#fef3c7;color:#d97706"><i class="bi bi-tools"></i></div>
+    <div>
+      <div class="section-title">도구 (유틸리티)</div>
+      <div style="font-size:.75rem;color:#64748b;">단위환산·날짜 계산 등 일반 도구</div>
+    </div>
+    <span class="section-badge badge-done ms-auto">7 완성</span>
+  </div>
+  <div class="item-grid">
+    <a class="item-card active" href="tools/qr-code/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">📷</div>
+      <div class="item-card-name">QR코드 생성기</div>
+      <div class="item-card-desc">URL·Wi-Fi·연락처 QR코드 생성 및 PNG 다운로드</div>
+    </a>
+    <a class="item-card active" href="tools/color-picker/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">🎨</div>
+      <div class="item-card-name">색상 추출기</div>
+      <div class="item-card-desc">이미지에서 HEX·RGB·HSL 컬러 코드 추출</div>
+    </a>
+    <a class="item-card active" href="tools/image-resize/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">🖼️</div>
+      <div class="item-card-name">이미지 리사이즈</div>
+      <div class="item-card-desc">이미지 크기 변환·포맷 변환 무료</div>
+    </a>
+    <a class="item-card active" href="tools/pdf-merge/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">📄</div>
+      <div class="item-card-name">PDF 합치기</div>
+      <div class="item-card-desc">서버 전송 없이 브라우저에서 PDF 병합</div>
+    </a>
+    <a class="item-card active" href="tools/pdf-split/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">✂️</div>
+      <div class="item-card-name">PDF 분할</div>
+      <div class="item-card-desc">원하는 페이지만 추출하여 다운로드</div>
+    </a>
+    <a class="item-card active" href="tools/signature/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">✍️</div>
+      <div class="item-card-name">전자서명 생성기</div>
+      <div class="item-card-desc">서명 그리기·도장 만들기·투명 PNG 다운로드</div>
+    </a>
+    <a class="item-card active" href="tools/watermark/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">💧</div>
+      <div class="item-card-name">이미지 워터마크</div>
+      <div class="item-card-desc">텍스트·로고 워터마크 추가 및 다운로드</div>
+    </a>
+    <div class="item-card coming" onclick="showToast('비밀번호 생성기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🔐</div>
+      <div class="item-card-name">비밀번호 생성기</div>
+      <div class="item-card-desc">길이, 문자 종류, 특수문자 포함 여부를 선택해 안전한 비밀번호 생성</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('단위환산 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">📐</div>
+      <div class="item-card-name">단위환산</div>
+      <div class="item-card-desc">길이, 무게, 면적, 부피 등 자주 쓰는 단위를 빠르게 변환</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('날짜계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🗓️</div>
+      <div class="item-card-name">날짜계산</div>
+      <div class="item-card-desc">D-day, 날짜 차이, 영업일 계산 등 일정 관리용 날짜 도구</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('배경제거 도구는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🖼️</div>
+      <div class="item-card-name">배경제거</div>
+      <div class="item-card-desc">AI 기반 이미지 배경 자동 제거 (누끼 따기)</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('HWP변환 도구는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">📝</div>
+      <div class="item-card-name">HWP변환</div>
+      <div class="item-card-desc">한글(HWP) 파일을 PDF로 변환</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('증명사진 도구는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">📸</div>
+      <div class="item-card-name">증명사진</div>
+      <div class="item-card-desc">여권·반명함·비자 규격에 맞게 사진 자르기</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('동영상GIF 변환 도구는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🎞️</div>
+      <div class="item-card-name">동영상GIF</div>
+      <div class="item-card-desc">동영상 파일을 GIF 애니메이션으로 변환</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('오디오추출 도구는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🎵</div>
+      <div class="item-card-name">오디오추출</div>
+      <div class="item-card-desc">영상에서 오디오(MP3)만 추출</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('PDF압축 도구는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">📦</div>
+      <div class="item-card-name">PDF압축</div>
+      <div class="item-card-desc">PDF 파일 용량 줄이기</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('목업 도구는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">📱</div>
+      <div class="item-card-name">목업</div>
+      <div class="item-card-desc">스크린샷을 디바이스 프레임에 합성</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('엑셀이미지 변환 도구는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">📊</div>
+      <div class="item-card-name">엑셀이미지</div>
+      <div class="item-card-desc">엑셀 표를 이미지로 변환</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('TTS 도구는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🔊</div>
+      <div class="item-card-name">TTS</div>
+      <div class="item-card-desc">텍스트를 음성으로 변환</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 부동산 ── -->
+<div class="domain-section">
+  <div class="section-header">
+    <div class="section-icon" style="background:#fce7f3;color:#be185d"><i class="bi bi-house-door"></i></div>
+    <div>
+      <div class="section-title">부동산 계산기</div>
+      <div style="font-size:.75rem;color:#64748b;">복비·관리비·대출·전세·월세·평수 환산</div>
+    </div>
+    <span class="section-badge badge-done ms-auto">7 완성</span>
+  </div>
+  <div class="item-grid">
+    <a class="item-card active" href="realestate/fee/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">🧾</div>
+      <div class="item-card-name">복비계산기</div>
+      <div class="item-card-desc">매매·전세·월세 중개보수 계산</div>
+    </a>
+    <a class="item-card active" href="realestate/maintenance/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">📊</div>
+      <div class="item-card-name">관리비계산기</div>
+      <div class="item-card-desc">K-apt 평균 기반 예상 관리비</div>
+    </a>
+    <div class="item-card coming" onclick="showToast('주택담보대출 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🏡</div>
+      <div class="item-card-name">주택담보대출</div>
+      <div class="item-card-desc">원리금·이자 월납입금 계산</div>
+    </div>
+    <a class="item-card active" href="realestate/jeonwolse/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">🔄</div>
+      <div class="item-card-name">전월세 전환</div>
+      <div class="item-card-desc">전세 ↔ 월세 전환 계산</div>
+    </a>
+    <a class="item-card active" href="realestate/pyeong/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">📏</div>
+      <div class="item-card-name">평수변환</div>
+      <div class="item-card-desc">평↔㎡ 변환 + 평당가 계산</div>
+    </a>
+    <a class="item-card active" href="realestate/eviction/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">🚪</div>
+      <div class="item-card-name">명도비용</div>
+      <div class="item-card-desc">경매 명도 경로별 비용 비교</div>
+    </a>
+    <div class="item-card coming" onclick="showToast('경매수익률 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🏷️</div>
+      <div class="item-card-name">경매수익률</div>
+      <div class="item-card-desc">입찰가·낙찰가·수익률 계산</div>
+    </div>
+    <a class="item-card active" href="money/compound/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">📈</div>
+      <div class="item-card-name">복리이자</div>
+      <div class="item-card-desc">장기 투자·목표 자금의 복리 성장 계산</div>
+    </a>
+    <div class="item-card coming" onclick="showToast('LTV·DTI·DSR 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">📊</div>
+      <div class="item-card-name">LTV·DTI·DSR</div>
+      <div class="item-card-desc">대출 한도와 상환비율 계산</div>
+    </div>
+    <a class="item-card active" href="tax/property/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">🏢</div>
+      <div class="item-card-name">부동산세금</div>
+      <div class="item-card-desc">취득세·재산세·종부세·양도세 통합</div>
+    </a>
+    <div class="item-card coming" onclick="showToast('임대수익 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🏠</div>
+      <div class="item-card-name">임대수익</div>
+      <div class="item-card-desc">임대사업자 수익·세금 시뮬레이터</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('빌라수익률 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🏗️</div>
+      <div class="item-card-name">빌라수익률</div>
+      <div class="item-card-desc">빌라/상가 투자 수익률 계산</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('학군 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🏫</div>
+      <div class="item-card-name">학군</div>
+      <div class="item-card-desc">학군·학교 배정 확인</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 금융·투자 ── -->
+<div class="domain-section">
+  <div class="section-header">
+    <div class="section-icon" style="background:#ede9fe;color:#7c3aed"><i class="bi bi-graph-up-arrow"></i></div>
+    <div>
+      <div class="section-title">금융·투자 계산기</div>
+      <div style="font-size:.75rem;color:#64748b;">이자·수익률·복리·환율 계산</div>
+    </div>
+    <span class="section-badge badge-done ms-auto">3 완성</span>
+  </div>
+  <div class="item-grid">
+    <a class="item-card active" href="money/compound/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">🏦</div>
+      <div class="item-card-name">복리 이자</div>
+      <div class="item-card-desc">월 적립·세금·복리 주기별 세후 이자 계산</div>
+    </a>
+    <a class="item-card active" href="money/average-down/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">📉</div>
+      <div class="item-card-name">물타기 계산기</div>
+      <div class="item-card-desc">추가 매수 후 평균단가·손익·필요 수량 계산</div>
+    </a>
+    <a class="item-card active" href="money/dividend/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">💵</div>
+      <div class="item-card-name">배당금 실수령액</div>
+      <div class="item-card-desc">배당소득세·종합과세·세후 배당금 계산</div>
+    </a>
+    <div class="item-card coming" onclick="showToast('환율 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">💱</div>
+      <div class="item-card-name">환율 계산</div>
+      <div class="item-card-desc">원화 ↔ 외화 환산</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('대출상환 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🏦</div>
+      <div class="item-card-name">대출상환 계산기</div>
+      <div class="item-card-desc">원리금균등, 원금균등, 만기일시 상환액 계산</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('은퇴자금 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🌅</div>
+      <div class="item-card-name">은퇴자금 계산기</div>
+      <div class="item-card-desc">목표 은퇴자금과 필요 월 저축액 계산</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('국민연금 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🪪</div>
+      <div class="item-card-name">국민연금 계산기</div>
+      <div class="item-card-desc">예상 연금액과 납부기간별 수령액 계산</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('공모주 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">📋</div>
+      <div class="item-card-name">공모주 계산기</div>
+      <div class="item-card-desc">청약 증거금, 균등 배정, 예상 수익 계산</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('인플레이션 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">📉</div>
+      <div class="item-card-name">인플레이션 계산기</div>
+      <div class="item-card-desc">물가상승률 반영 현재가치와 미래가치 계산</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 학생 ── -->
+<div class="domain-section">
+  <div class="section-header">
+    <div class="section-icon" style="background:#f0fdf4;color:#16a34a"><i class="bi bi-book"></i></div>
+    <div>
+      <div class="section-title">학생 계산기</div>
+      <div style="font-size:.75rem;color:#64748b;">학점·성적·장학금 계산</div>
+    </div>
+    <span class="section-badge badge-done ms-auto">2 완성</span>
+  </div>
+  <div class="item-grid">
+    <a class="item-card active" href="student/gpa/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">📚</div>
+      <div class="item-card-name">학점 계산</div>
+      <div class="item-card-desc">GPA·평점·목표학점 역산</div>
+    </a>
+    <a class="item-card active" href="student/military/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">🪖</div>
+      <div class="item-card-name">군전역일+군적금</div>
+      <div class="item-card-desc">전역일·복무일·군적금 만기수령액</div>
+    </a>
+    <div class="item-card coming" onclick="showToast('내신등급 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">📋</div>
+      <div class="item-card-name">내신등급</div>
+      <div class="item-card-desc">과목별 단위수와 석차등급 기반 평균 내신 계산</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('수능등급컷 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">📈</div>
+      <div class="item-card-name">수능등급컷</div>
+      <div class="item-card-desc">표준점수, 백분위, 등급 기준 확인</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('출결계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">📅</div>
+      <div class="item-card-name">출결계산</div>
+      <div class="item-card-desc">결석, 지각, 조퇴를 출결 점수로 환산</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('학자금대출 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">💳</div>
+      <div class="item-card-name">학자금대출</div>
+      <div class="item-card-desc">대출 원리금과 상환 계획 계산</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('장학금 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🏅</div>
+      <div class="item-card-name">장학금</div>
+      <div class="item-card-desc">성적 기준과 소득 구간별 장학금 조건 정리</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 학부모·육아 ── -->
+<div class="domain-section coming-soon">
+  <div class="section-header">
+    <div class="section-icon" style="background:#fff1f2;color:#be123c"><i class="bi bi-people-fill"></i></div>
+    <div>
+      <div class="section-title">학부모·육아 계산기</div>
+      <div style="font-size:.75rem;color:#64748b;">예방접종·수당·교육비 계산</div>
+    </div>
+    <span class="section-badge badge-done ms-auto">1 완성</span>
+  </div>
+  <div class="item-grid">
+    <a class="item-card active" href="parent/vaccine/index.html">
+      <span class="item-status status-done">완성</span>
+      <div class="item-card-icon">💉</div>
+      <div class="item-card-name">예방접종 일정</div>
+      <div class="item-card-desc">생년월일 기준 국가예방접종 일정 계산</div>
+    </a>
+    <div class="item-card coming" onclick="showToast('육아휴직 급여 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">👶</div>
+      <div class="item-card-name">육아휴직 급여</div>
+      <div class="item-card-desc">육아휴직 급여 예상 계산</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('아동수당 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🍼</div>
+      <div class="item-card-name">아동수당</div>
+      <div class="item-card-desc">아동수당 수급 확인</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('출산 예정일 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🤰</div>
+      <div class="item-card-name">출산 예정일</div>
+      <div class="item-card-desc">출산일 계산, 육아휴직·부모급여 시뮬레이션</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('성장발달 백분위 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">📏</div>
+      <div class="item-card-name">성장발달 백분위</div>
+      <div class="item-card-desc">키·몸무게로 또래 대비 성장 백분위 확인</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('어린이집 비용 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🏫</div>
+      <div class="item-card-name">어린이집 비용</div>
+      <div class="item-card-desc">연령별·유형별 보육료 지원금과 실부담 비교</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('교육급여 자격 확인기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🎓</div>
+      <div class="item-card-name">교육급여 자격 확인기</div>
+      <div class="item-card-desc">소득 기준으로 교육급여·교육비 지원 자격 판정</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('대입 전형 비교 시뮬레이터는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">📝</div>
+      <div class="item-card-name">대입 전형 비교</div>
+      <div class="item-card-desc">수시·정시 전형별 합격 가능성 비교</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('학원비 예산 시뮬레이터는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">✏️</div>
+      <div class="item-card-name">학원비 예산 시뮬레이터</div>
+      <div class="item-card-desc">과목별·학년별 학원비 월 예산 시뮬레이션</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('자녀 보험·의료비 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🛡️</div>
+      <div class="item-card-name">자녀 보험·의료비</div>
+      <div class="item-card-desc">자녀 보험료 비교 및 의료비 예상</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('돌봄 시간표 플래너는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🗓️</div>
+      <div class="item-card-name">돌봄 시간표 플래너</div>
+      <div class="item-card-desc">방과후·돌봄교실 시간표 편성 도구</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('용돈·금융교육 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">💰</div>
+      <div class="item-card-name">용돈·금융교육</div>
+      <div class="item-card-desc">연령별 적정 용돈 및 저축 시뮬레이션</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 생활 ── -->
+<div class="domain-section coming-soon">
+  <div class="section-header">
+    <div class="section-icon" style="background:#fff7ed;color:#ea580c"><i class="bi bi-heart-fill"></i></div>
+    <div>
+      <div class="section-title">생활 계산기</div>
+      <div style="font-size:.75rem;color:#64748b;">칼로리·BMI·할부 등 생활 계산</div>
+    </div>
+    <span class="section-badge badge-wip ms-auto">준비중</span>
+  </div>
+  <div class="item-grid">
+    <div class="item-card coming" onclick="showToast('BMI 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">⚖️</div>
+      <div class="item-card-name">BMI 계산</div>
+      <div class="item-card-desc">체질량지수 계산</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('할부 이자 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">💳</div>
+      <div class="item-card-name">할부 이자</div>
+      <div class="item-card-desc">신용카드 할부 이자 계산</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('칼로리 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🔥</div>
+      <div class="item-card-name">칼로리 계산기</div>
+      <div class="item-card-desc">하루 필요 열량 및 운동 칼로리 소모 계산</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('혈압·맥박 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">❤️</div>
+      <div class="item-card-name">혈압·맥박 계산기</div>
+      <div class="item-card-desc">혈압 단계 판정 및 맥박 정상 범위 확인</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('수면 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🌙</div>
+      <div class="item-card-name">수면 계산기</div>
+      <div class="item-card-desc">수면 사이클 기준 최적 기상 시간 계산</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('관부가세 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">✈️</div>
+      <div class="item-card-name">관부가세 계산기</div>
+      <div class="item-card-desc">해외직구 관세·부가세 예상 금액 계산</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('임신 주수 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🤱</div>
+      <div class="item-card-name">임신 주수 계산기</div>
+      <div class="item-card-desc">마지막 생리일 기준 임신 주수 및 출산 예정일</div>
+    </div>
+    <div class="item-card coming" onclick="showToast('음주측정 계산기는 준비중입니다')">
+      <span class="item-status status-soon">준비중</span>
+      <div class="item-card-icon">🍺</div>
+      <div class="item-card-name">음주측정 계산기</div>
+      <div class="item-card-desc">체중·음주량 기준 혈중 알코올 농도 추정</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<!-- 준비중 토스트 -->
+<div class="toast-wrap">
+  <div class="toast-msg" id="toastMsg"></div>
+</div>
+
+<footer>
+  <div class="container">
+    <p class="mb-1">© 2025 mycalc · 본 사이트의 계산 결과는 참고용이며 법적 효력이 없습니다.</p>
+    <p class="mb-0" style="font-size:.7rem;">정확한 세액은 세무사 또는 관할 세무서에 문의하세요.</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+let toastTimer;
+function showToast(msg) {
+  const el = document.getElementById('toastMsg');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+</script>
+</body>
+</html>

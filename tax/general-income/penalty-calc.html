@@ -1,0 +1,231 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>종합소득세 가산세 계산기 – mycalc</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Pretendard', -apple-system, sans-serif; background: #f8f9fa; font-size: 14px; color: #1a1a2e; }
+    .main-nav { background: #1e3a8a; padding: 0; z-index: 1000; }
+    .nav-inner { display: flex; align-items: center; gap: 8px; padding: 0 16px; min-height: 52px; flex-wrap: wrap; }
+    .nav-brand { color: #fff; font-weight: 700; font-size: 1rem; text-decoration: none; white-space: nowrap; padding: 10px 0; }
+    .nav-links { list-style: none; display: flex; flex-wrap: wrap; gap: 2px; margin: 0; padding: 4px 0; margin-left: auto; }
+    .nav-links a { color: rgba(255,255,255,.75); text-decoration: none; padding: 6px 10px; border-radius: 6px; font-size: .82rem; transition: all .2s; white-space: nowrap; }
+    .nav-links a:hover, .nav-links a.active { color: #fff; background: rgba(255,255,255,.15); }
+    .nav-toggle { display: none; background: none; border: none; color: #fff; font-size: 1.3rem; padding: 8px; cursor: pointer; margin-left: auto; }
+    @media(max-width:768px) { .nav-toggle { display: block; } .nav-links { display: none; width: 100%; padding-bottom: 8px; } .nav-links.open { display: flex; flex-direction: column; } .nav-links a { padding: 8px 12px; } }
+    .page-hero { background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); color: #fff; padding: 2rem 0 1.5rem; margin-bottom: 1.5rem; }
+    .page-hero h1 { font-size: 1.4rem; font-weight: 700; margin: 0 0 .25rem; }
+    .page-hero p { font-size: .85rem; opacity: .85; margin: 0; }
+    .breadcrumb-nav { font-size: .75rem; color: rgba(255,255,255,.7); margin-bottom: .5rem; }
+    .breadcrumb-nav a { color: rgba(255,255,255,.8); text-decoration: none; }
+    .breadcrumb-nav a:hover { color: #fff; }
+    .card-section { background: #fff; border-radius: 10px; border: 1px solid #e2e8f0; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+    .section-title { font-size: 1rem; font-weight: 700; color: #1e3a8a; margin-bottom: 1rem; padding-bottom: .5rem; border-bottom: 2px solid #dbeafe; display: flex; align-items: center; gap: 8px; }
+    .table th { background: #f0f4ff; font-size: .8rem; white-space: nowrap; }
+    .table td { font-size: .8rem; }
+    .disclaimer { background: #fef9c3; border: 1px solid #fde047; border-radius: 8px; padding: .75rem 1rem; font-size: .78rem; color: #713f12; margin-top: 1.5rem; }
+    footer { background: #1e3a8a; color: rgba(255,255,255,.7); text-align: center; padding: 1rem; font-size: .78rem; margin-top: 2rem; }
+    footer a { color: rgba(255,255,255,.7); text-decoration: none; }
+    footer a:hover { color: #fff; }
+/* ── mc-nav: 2단 공통 네비게이션 ── */
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul{justify-content:flex-end}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.gi-tabs-wrap{background:#fff;border-bottom:2px solid #e2e8f0}
+.gi-tabs{list-style:none;display:flex;overflow-x:auto;margin:0;padding:0 12px;-ms-overflow-style:none;scrollbar-width:none}
+.gi-tabs::-webkit-scrollbar{display:none}
+.gi-tabs li a{display:inline-block;padding:9px 13px;font-size:.82rem;font-weight:600;color:#64748b;text-decoration:none;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;margin-bottom:-2px}
+.gi-tabs li a:hover{color:#1e3a8a}
+.gi-tabs li a.cur{color:#1e3a8a;border-bottom-color:#1e3a8a;font-weight:700}
+    .form-label { font-weight: 600; font-size: .85rem; color: #374151; margin-bottom: .35rem; }
+    .form-control, .form-select { font-size: .85rem; border-color: #d1d5db; border-radius: 6px; }
+    .form-control:focus, .form-select:focus { border-color: #1e3a8a; box-shadow: 0 0 0 3px rgba(30,58,138,.1); }
+    .step-label { font-size: .72rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: .05em; margin-bottom: .4rem; }
+    .step-block { margin-bottom: 1.2rem; }
+    .input-group-text { font-size: .82rem; background: #f3f4f6; border-color: #d1d5db; color: #4b5563; }
+    .radio-card-group { display: flex; flex-direction: column; gap: 6px; }
+    .radio-card { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all .18s; }
+    .radio-card:hover { border-color: #93c5fd; background: #f0f9ff; }
+    .radio-card input[type="radio"] { accent-color: #1e3a8a; width: 16px; height: 16px; flex-shrink: 0; }
+    .radio-card.selected { border-color: #1e3a8a; background: #eff6ff; }
+    .radio-card-label { font-size: .85rem; font-weight: 600; color: #1e3a8a; }
+    .radio-card-sub { font-size: .75rem; color: #6b7280; margin-top: 1px; }
+    .result-panel { background: #fff; border-radius: 10px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,.06); overflow: hidden; }
+    .result-header { background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); color: #fff; padding: 1rem 1.25rem; }
+    .result-header h2 { font-size: .95rem; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 8px; }
+    .result-body { padding: 1.25rem; }
+    .result-empty { text-align: center; padding: 2.5rem 1rem; color: #9ca3af; }
+    .result-empty i { font-size: 2.5rem; margin-bottom: .75rem; display: block; }
+    .result-row { display: flex; justify-content: space-between; align-items: baseline; padding: .55rem 0; border-bottom: 1px solid #f3f4f6; gap: 8px; }
+    .result-row:last-child { border-bottom: none; }
+    .result-key { font-size: .82rem; color: #6b7280; flex-shrink: 0; }
+    .result-val { font-size: .85rem; font-weight: 600; color: #111827; text-align: right; }
+    .result-final { background: #fff5f5; border: 1.5px solid #fca5a5; border-radius: 8px; padding: 1rem; margin-top: .75rem; text-align: center; }
+    .result-final-label { font-size: .78rem; color: #6b7280; margin-bottom: .25rem; }
+    .result-final-amount { font-size: 1.6rem; font-weight: 800; color: #dc2626; }
+    .result-basis { background: #f8fafc; border-radius: 6px; padding: .75rem; margin-top: .75rem; font-size: .75rem; color: #6b7280; line-height: 1.6; }
+    .badge-reduction { display: inline-block; background: #dcfce7; color: #166534; border-radius: 4px; padding: 2px 7px; font-size: .72rem; font-weight: 700; }
+    .reduction-indicator { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: .6rem .85rem; font-size: .8rem; color: #166534; margin-top: .5rem; display: none; }
+    .reduction-indicator.show { display: flex; align-items: center; gap: 6px; }
+    @media(min-width: 992px) { .sticky-result { position: sticky; top: 68px; } }
+  </style>
+</head>
+<body>
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../../tax/index.html" class="on">세금</a></li>
+<li><a href="../../work/index.html">급여·노동</a></li>
+<li><a href="../../tools/index.html">도구</a></li>
+<li><a href="../../realestate/index.html">부동산</a></li>
+<li><a href="../../money/index.html">금융·투자</a></li>
+<li><a href="../../student/index.html">학생</a></li>
+<li><a href="../../parent/index.html">학부모·육아</a></li>
+<li><a href="../../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="index.html" class="mc-done">종합소득세</a></li>
+<li><a href="../freelancer/index.html" class="mc-done">프리랜서 3.3%</a></li>
+<li><a href="../vat/index.html" class="mc-done">부가세</a></li>
+<li><a href="../day-laborer/index.html" class="mc-done">일용직</a></li>
+<li><a href="../earned-income/index.html" class="mc-done">근로소득세</a></li>
+<li><a href="../retirement-income/index.html" class="mc-done">퇴직소득세</a></li>
+<li><a href="../capital-gains/index.html" class="mc-done">양도소득세</a></li>
+<li><span class="wip">연말정산</span></li>
+<li><a href="../property/index.html" class="mc-done">부동산세금</a></li>
+<li><a href="../inheritance/index.html" class="mc-done">상속증여</a></li>
+<li><span class="wip">가상자산</span></li>
+<li><span class="wip">상금</span></li>
+</ul></div></div>
+</div>
+<div class="page-hero">
+  <div class="container">
+    <h1><i class="bi bi-exclamation-triangle-fill me-2"></i>종합소득세 가산세 계산기</h1>
+    <p>무신고·과소신고·납부지연 가산세를 간편하게 계산하세요</p>
+  </div>
+</div>
+<div class="gi-tabs-wrap"><div class="container"><ul class="gi-tabs">
+<li><a href="index.html">계산기</a></li>
+<li><a href="about.html">종합소득세란?</a></li>
+<li><a href="tax-rate.html">세율</a></li>
+<li><a href="flow.html">세액계산흐름도</a></li>
+<li><a href="penalty-calc.html" class="cur">가산세 계산기</a></li>
+<li><a href="penalty.html">가산세</a></li>
+</ul></div></div>
+<div class="container pb-4">
+  <div class="row g-3">
+    <div class="col-lg-7">
+      <div class="card-section">
+        <div class="section-title"><i class="bi bi-pencil-square"></i> 가산세 정보 입력</div>
+        <div class="step-block">
+          <div class="step-label">Step 1 · 가산세 종류 선택</div>
+          <div class="radio-card-group" id="penaltyTypeGroup">
+            <label class="radio-card selected" id="card-musinggo"><input type="radio" name="penaltyType" value="musinggo" checked onchange="onTypeChange()"><div><div class="radio-card-label">무신고 가산세</div><div class="radio-card-sub">신고기한까지 종합소득세 신고를 하지 않은 경우</div></div></label>
+            <label class="radio-card" id="card-gwaso"><input type="radio" name="penaltyType" value="gwaso" onchange="onTypeChange()"><div><div class="radio-card-label">과소신고·초과환급신고 가산세</div><div class="radio-card-sub">실제보다 적게 신고하거나 환급액을 초과 신고한 경우</div></div></label>
+            <label class="radio-card" id="card-napbu"><input type="radio" name="penaltyType" value="napbu" onchange="onTypeChange()"><div><div class="radio-card-label">납부지연·환급불성실 가산세</div><div class="radio-card-sub">세액을 기한 내에 납부하지 않거나 미달납부한 경우</div></div></label>
+          </div>
+        </div>
+        <div class="step-block" id="block-reason">
+          <div class="step-label">Step 2 · 부과사유 선택</div>
+          <select class="form-select" id="penaltyReason" onchange="onReasonChange()">
+            <option value="general">일반 무신고</option>
+            <option value="general-book">일반 무신고 (복식부기의무자)</option>
+            <option value="fraud">부정 무신고</option>
+            <option value="fraud-book">부정 무신고 (복식부기의무자)</option>
+          </select>
+        </div>
+        <div class="step-block" id="block-intl" style="display:none;">
+          <div class="step-label">Step 3 · 국제거래 수반 여부</div>
+          <div class="form-check"><input class="form-check-input" type="checkbox" id="isInternational" onchange="onIntlChange()"><label class="form-check-label" for="isInternational"><strong>국제거래 수반</strong> — 해당 시 가산세율 60% 적용</label></div>
+        </div>
+        <div class="step-block" id="block-lateDate">
+          <div class="step-label">Step 4 · 기한후신고 감면 (선택)</div>
+          <div class="row g-2">
+            <div class="col-sm-6"><label class="form-label">법정신고기한</label><input type="date" class="form-control" id="legalDeadline" onchange="calcReduction()"></div>
+            <div class="col-sm-6"><label class="form-label">신고(납부)일</label><input type="date" class="form-control" id="filingDate" onchange="calcReduction()"></div>
+          </div>
+          <div class="reduction-indicator" id="reductionIndicator"><i class="bi bi-tag-fill"></i><span id="reductionText"></span></div>
+        </div>
+        <div class="step-block">
+          <div class="step-label">Step 5 · 금액 입력</div>
+          <div class="row g-2">
+            <div class="col-12" id="field-taxAmount"><label class="form-label">납부세액 (결정세액) <span class="text-danger">*</span></label><div class="input-group"><input type="number" class="form-control" id="taxAmount" placeholder="0" min="0" step="1"><span class="input-group-text">원</span></div></div>
+            <div class="col-12" id="field-revenue" style="display:none;"><label class="form-label">수입금액 <span class="text-danger">*</span></label><div class="input-group"><input type="number" class="form-control" id="revenue" placeholder="0" min="0" step="1"><span class="input-group-text">원</span></div><div class="form-text">복식부기의무자 가산세 최솟값 계산에 사용됩니다</div></div>
+            <div class="col-12" id="field-filedAmount" style="display:none;"><label class="form-label">기 신고세액 <span class="text-danger">*</span></label><div class="input-group"><input type="number" class="form-control" id="filedAmount" placeholder="0" min="0" step="1"><span class="input-group-text">원</span></div><div class="form-text">과소신고납부세액 = 결정세액 − 기 신고세액</div></div>
+            <div class="col-12" id="field-unpaid" style="display:none;"><label class="form-label">미납(미달납부)세액 <span class="text-danger">*</span></label><div class="input-group"><input type="number" class="form-control" id="unpaidAmount" placeholder="0" min="0" step="1"><span class="input-group-text">원</span></div></div>
+            <div class="col-12" id="field-days" style="display:none;">
+              <label class="form-label">경과일수</label>
+              <div class="row g-2">
+                <div class="col-sm-6"><div class="input-group"><input type="number" class="form-control" id="overdueDays" placeholder="0" min="0" step="1"><span class="input-group-text">일</span></div></div>
+                <div class="col-sm-6 d-flex align-items-center"><small class="text-muted">또는 날짜로 계산:</small></div>
+                <div class="col-sm-6"><label class="form-label mb-1" style="font-size:.78rem; color:#6b7280;">납부기한</label><input type="date" class="form-control" id="dueDate" onchange="calcOverdueDays()"></div>
+                <div class="col-sm-6"><label class="form-label mb-1" style="font-size:.78rem; color:#6b7280;">납부일</label><input type="date" class="form-control" id="payDate" onchange="calcOverdueDays()"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex gap-2 mt-2">
+          <button class="btn btn-primary flex-grow-1" style="background:#1e3a8a; border-color:#1e3a8a; font-weight:700;" onclick="calculate()"><i class="bi bi-calculator me-1"></i> 계산하기</button>
+          <button class="btn btn-outline-secondary" onclick="resetForm()"><i class="bi bi-arrow-counterclockwise me-1"></i> 다시하기</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="sticky-result">
+        <div class="result-panel">
+          <div class="result-header"><h2><i class="bi bi-clipboard-data"></i> 계산 결과</h2></div>
+          <div class="result-body" id="resultBody">
+            <div class="result-empty" id="resultEmpty"><i class="bi bi-calculator"></i><div style="font-size:.88rem; font-weight:600; color:#6b7280;">좌측 폼을 작성하고<br>계산하기를 눌러주세요</div></div>
+            <div id="resultContent" style="display:none;"></div>
+          </div>
+        </div>
+        <div class="disclaimer mt-3"><i class="bi bi-info-circle me-1"></i>이 계산 결과는 모의계산의 결과이므로 참고용으로만 사용하시기 바랍니다.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer><div class="container"><p class="mb-0">본 사이트의 계산 결과는 참고용이며 법적 효력이 없습니다. | <a href="../../index.html">← 메인으로</a></p></div></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function toggleNav(){document.getElementById('navLinks').classList.toggle('open')}
+let currentType='musinggo',currentReason='general',reductionRate=0,reductionDays=null;
+function onTypeChange(){currentType=document.querySelector('input[name="penaltyType"]:checked').value;document.querySelectorAll('.radio-card').forEach(c=>c.classList.remove('selected'));const checked=document.querySelector('input[name="penaltyType"]:checked');if(checked)checked.closest('.radio-card').classList.add('selected');const select=document.getElementById('penaltyReason');select.innerHTML='';if(currentType==='musinggo'){select.innerHTML=`<option value="general">일반 무신고</option><option value="general-book">일반 무신고 (복식부기의무자)</option><option value="fraud">부정 무신고</option><option value="fraud-book">부정 무신고 (복식부기의무자)</option>`}else if(currentType==='gwaso'){select.innerHTML=`<option value="general">일반 과소신고</option><option value="general-book">일반 과소신고 (복식부기의무자)</option><option value="fraud">부정 과소신고</option><option value="fraud-book">부정 과소신고 (복식부기의무자)</option>`}document.getElementById('block-reason').style.display=(currentType==='napbu')?'none':'';currentReason=(currentType==='napbu')?'napbu':select.value;document.getElementById('block-lateDate').style.display=(currentType==='napbu')?'none':'';updateFieldVisibility();onReasonChange()}
+function onReasonChange(){if(currentType!=='napbu')currentReason=document.getElementById('penaltyReason').value;const isFraud=currentReason.includes('fraud');const intlBlock=document.getElementById('block-intl');intlBlock.style.display=isFraud?'':'none';if(!isFraud)document.getElementById('isInternational').checked=false;updateFieldVisibility()}
+function onIntlChange(){}
+function updateFieldVisibility(){const isNapbu=(currentType==='napbu');const isBook=currentReason.includes('book');const isGwaso=(currentType==='gwaso');document.getElementById('field-taxAmount').style.display=isNapbu?'none':'';document.getElementById('field-revenue').style.display=isBook?'':'none';document.getElementById('field-filedAmount').style.display=isGwaso?'':'none';document.getElementById('field-unpaid').style.display=isNapbu?'':'none';document.getElementById('field-days').style.display=isNapbu?'':'none'}
+function calcReduction(){const d1=document.getElementById('legalDeadline').value,d2=document.getElementById('filingDate').value,ind=document.getElementById('reductionIndicator'),txt=document.getElementById('reductionText');if(!d1||!d2){ind.classList.remove('show');reductionRate=0;reductionDays=null;return}const diff=Math.round((new Date(d2)-new Date(d1))/86400000);reductionDays=diff;if(diff<=0){ind.classList.remove('show');reductionRate=0;return}let label='';if(diff<=30){reductionRate=0.50;label=`법정기한 후 ${diff}일 경과 → 50% 감면 적용`}else if(diff<=90){reductionRate=0.30;label=`법정기한 후 ${diff}일 경과 → 30% 감면 적용`}else if(diff<=180){reductionRate=0.20;label=`법정기한 후 ${diff}일 경과 → 20% 감면 적용`}else if(diff<=365){reductionRate=0.10;label=`법정기한 후 ${diff}일 경과 → 10% 감면 적용`}else{reductionRate=0;label=`법정기한 후 ${diff}일 경과 → 감면 없음`}txt.textContent=label;ind.classList.add('show')}
+function calcOverdueDays(){const d1=document.getElementById('dueDate').value,d2=document.getElementById('payDate').value;if(!d1||!d2)return;const diff=Math.round((new Date(d2)-new Date(d1))/86400000);if(diff>0)document.getElementById('overdueDays').value=diff}
+function fmt(n){return Math.round(n).toLocaleString('ko-KR')}
+function calculate(){const type=currentType,reason=currentReason,isIntl=document.getElementById('isInternational').checked;const taxAmount=parseFloat(document.getElementById('taxAmount').value)||0;const revenue=parseFloat(document.getElementById('revenue').value)||0;const filedAmount=parseFloat(document.getElementById('filedAmount').value)||0;const unpaidAmount=parseFloat(document.getElementById('unpaidAmount').value)||0;const days=parseFloat(document.getElementById('overdueDays').value)||0;let baseAmt=0,formula='',typeName='',reasonName='';
+if(type==='musinggo'){typeName='무신고 가산세';if(reason==='general'){if(taxAmount<=0)return alert('납부세액을 입력해주세요.');baseAmt=taxAmount*0.20;reasonName='일반 무신고';formula=`납부세액 ${fmt(taxAmount)}원 × 20% = ${fmt(baseAmt)}원`}else if(reason==='general-book'){if(taxAmount<=0||revenue<=0)return alert('납부세액과 수입금액을 모두 입력해주세요.');const a=taxAmount*0.20,b=revenue*0.0007;baseAmt=Math.max(a,b);reasonName='일반 무신고 (복식부기의무자)';formula=`MAX[납부세액×20%(${fmt(a)}원), 수입금액×0.07%(${fmt(b)}원)] = ${fmt(baseAmt)}원`}else if(reason==='fraud'){if(taxAmount<=0)return alert('납부세액을 입력해주세요.');const rate=isIntl?0.60:0.40;baseAmt=taxAmount*rate;reasonName='부정 무신고';formula=`납부세액 ${fmt(taxAmount)}원 × ${isIntl?'60%':'40%'} = ${fmt(baseAmt)}원`}else if(reason==='fraud-book'){if(taxAmount<=0||revenue<=0)return alert('납부세액과 수입금액을 모두 입력해주세요.');const rate=isIntl?0.60:0.40;const a=taxAmount*rate,b=revenue*0.0014;baseAmt=Math.max(a,b);reasonName='부정 무신고 (복식부기의무자)';formula=`MAX[납부세액×${isIntl?'60%':'40%'}(${fmt(a)}원), 수입금액×0.14%(${fmt(b)}원)] = ${fmt(baseAmt)}원`}}
+else if(type==='gwaso'){typeName='과소신고 가산세';const underPaid=taxAmount-filedAmount;if(reason==='general'){if(taxAmount<=0)return alert('납부세액을 입력해주세요.');if(underPaid<=0)return alert('과소신고납부세액이 0 이하입니다.');baseAmt=underPaid*0.10;reasonName='일반 과소신고';formula=`과소납부세액 ${fmt(underPaid)}원 × 10% = ${fmt(baseAmt)}원`}else if(reason==='general-book'){if(taxAmount<=0||revenue<=0)return alert('납부세액과 수입금액을 입력해주세요.');if(underPaid<=0)return alert('과소신고납부세액이 0 이하입니다.');const a=underPaid*0.10,b=revenue*0.0007;baseAmt=Math.max(a,b);reasonName='일반 과소신고 (복식부기의무자)';formula=`MAX[과소납부세액×10%(${fmt(a)}원), 수입금액×0.07%(${fmt(b)}원)] = ${fmt(baseAmt)}원`}else if(reason==='fraud'){if(taxAmount<=0)return alert('납부세액을 입력해주세요.');if(underPaid<=0)return alert('과소신고납부세액이 0 이하입니다.');const rate=isIntl?0.60:0.40;baseAmt=underPaid*rate;reasonName='부정 과소신고';formula=`과소납부세액 ${fmt(underPaid)}원 × ${isIntl?'60%':'40%'} = ${fmt(baseAmt)}원`}else if(reason==='fraud-book'){if(taxAmount<=0||revenue<=0)return alert('납부세액과 수입금액을 입력해주세요.');if(underPaid<=0)return alert('과소신고납부세액이 0 이하입니다.');const rate=isIntl?0.60:0.40;const a=underPaid*rate,b=revenue*0.0014;baseAmt=Math.max(a,b);reasonName='부정 과소신고 (복식부기의무자)';formula=`MAX[과소납부세액×${isIntl?'60%':'40%'}(${fmt(a)}원), 수입금액×0.14%(${fmt(b)}원)] = ${fmt(baseAmt)}원`}}
+else if(type==='napbu'){typeName='납부지연 가산세';reasonName='미납·미달납부';if(unpaidAmount<=0)return alert('미납세액을 입력해주세요.');if(days<=0)return alert('경과일수를 입력해주세요.');baseAmt=unpaidAmount*days*0.00022;formula=`미납세액 ${fmt(unpaidAmount)}원 × ${days}일 × 0.022% = ${fmt(baseAmt)}원`}
+let finalPenalty=baseAmt,reductionAmt=0,reductionLabel='';
+if(type!=='napbu'&&reductionRate>0){reductionAmt=baseAmt*reductionRate;finalPenalty=baseAmt-reductionAmt;const pct=Math.round(reductionRate*100);reductionLabel=`${pct}% 감면 (${reductionDays}일 경과)`}
+renderResult({typeName,reasonName,baseAmt,reductionRate,reductionAmt,reductionLabel,finalPenalty,formula})}
+function renderResult(data){const{typeName,reasonName,baseAmt,reductionRate,reductionAmt,reductionLabel,finalPenalty,formula}=data;document.getElementById('resultEmpty').style.display='none';const content=document.getElementById('resultContent');content.style.display='';let reductionRow='';if(reductionRate>0){reductionRow=`<div class="result-row"><span class="result-key">기한후신고 감면율</span><span class="result-val"><span class="badge-reduction">${reductionLabel}</span></span></div><div class="result-row"><span class="result-key">감면액</span><span class="result-val text-success">- ${fmt(reductionAmt)}원</span></div>`}content.innerHTML=`<div class="result-row"><span class="result-key">가산세 종류</span><span class="result-val">${typeName}</span></div><div class="result-row"><span class="result-key">부과사유</span><span class="result-val">${reasonName}</span></div><div class="result-row"><span class="result-key">기본 가산세</span><span class="result-val">${fmt(baseAmt)}원</span></div>${reductionRow}<div class="result-final"><div class="result-final-label">최종 가산세</div><div class="result-final-amount">${fmt(finalPenalty)}<span style="font-size:1rem; font-weight:600;">원</span></div></div><div class="result-basis"><strong style="color:#374151;">계산 근거</strong><br>${formula}${reductionRate>0?`<br>감면 후: ${fmt(baseAmt)}원 × (1 - ${Math.round(reductionRate*100)}%) = ${fmt(finalPenalty)}원`:''}</div>`}
+function resetForm(){document.querySelector('input[name="penaltyType"][value="musinggo"]').checked=true;['penaltyReason','legalDeadline','filingDate','taxAmount','revenue','filedAmount','unpaidAmount','overdueDays','dueDate','payDate'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});document.getElementById('isInternational').checked=false;reductionRate=0;reductionDays=null;document.getElementById('reductionIndicator').classList.remove('show');document.getElementById('resultEmpty').style.display='';document.getElementById('resultContent').style.display='none';currentType='musinggo';currentReason='general';onTypeChange()}
+onTypeChange();
+</script>
+</body>
+</html>

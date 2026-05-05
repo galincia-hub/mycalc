@@ -1,0 +1,569 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>퇴직소득세 계산기 – 퇴직금 세금 계산 | mycalc</title>
+<meta name="description" content="퇴직급여·근속연수 입력 → 근속연수공제·환산급여 자동 계산 → 퇴직소득세 결과. 연분연승법 적용.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}
+/* ── mc-nav ── */
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t1-ul{justify-content:flex-end}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+/* Sub-tabs */
+.gi-tabs-wrap{background:#fff;border-bottom:2px solid #e2e8f0}
+.gi-tabs{list-style:none;display:flex;overflow-x:auto;margin:0;padding:0 12px;-ms-overflow-style:none;scrollbar-width:none}
+.gi-tabs::-webkit-scrollbar{display:none}
+.gi-tabs li a{display:inline-block;padding:9px 13px;font-size:.82rem;font-weight:600;color:#64748b;text-decoration:none;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;margin-bottom:-2px}
+.gi-tabs li a:hover{color:#1e3a8a}
+.gi-tabs li a.cur{color:#1e3a8a;border-bottom-color:#1e3a8a;font-weight:700}
+/* 히어로 */
+.page-hero{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 40%,#6d28d9 100%);color:#fff;padding:1.75rem 0 1.5rem;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.hero-content{position:relative}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.75rem;margin-bottom:.5rem}
+.page-hero h1{font-size:1.4rem;font-weight:800;margin:0 0 .3rem}
+.page-hero p{font-size:.83rem;opacity:.85;margin:0}
+/* 레이아웃 */
+.main-layout{display:grid;grid-template-columns:1fr 360px;gap:16px;align-items:start;padding:16px 0 32px}
+@media(max-width:991px){.main-layout{grid-template-columns:1fr}}
+/* 아코디언 */
+.acc-wrap{display:flex;flex-direction:column;gap:10px}
+.acc-card{background:#fff;border-radius:10px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden}
+.acc-header{display:flex;align-items:center;gap:10px;padding:14px 16px;cursor:pointer;user-select:none;border:none;background:none;width:100%;text-align:left;transition:background .15s}
+.acc-header:hover{background:#f8fafc}
+.acc-header.open{background:#f0f7ff}
+.acc-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+.ic-blue{background:#dbeafe;color:#1d4ed8}
+.ic-purple{background:#ede9fe;color:#7c3aed}
+.ic-green{background:#dcfce7;color:#16a34a}
+.acc-title{font-weight:700;font-size:.9rem;flex:1}
+.acc-badge{font-size:.72rem;font-weight:700;padding:3px 9px;border-radius:10px;white-space:nowrap}
+.acc-chevron{font-size:.9rem;color:#94a3b8;transition:transform .2s;margin-left:4px}
+.acc-header.open .acc-chevron{transform:rotate(180deg)}
+.acc-body{padding:0 16px 16px;display:none}
+.acc-body.open{display:block}
+.sub-sec{background:#f8fafc;border:1px solid #e8edf2;border-radius:8px;padding:12px;margin-bottom:10px}
+.sub-sec:last-child{margin-bottom:0}
+.sub-title{font-size:.8rem;font-weight:700;color:#1e40af;margin-bottom:10px;display:flex;align-items:center;gap:5px}
+/* 폼 */
+.form-label{font-weight:600;font-size:.8rem;color:#374151;margin-bottom:4px;display:block}
+.form-control,.form-select{font-size:.85rem;border-color:#d1d5db;border-radius:7px}
+.form-control:focus,.form-select:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+.input-group-text{background:#f1f5f9;border-color:#d1d5db;font-size:.8rem;color:#64748b;min-width:36px;justify-content:center}
+.form-text{font-size:.72rem;color:#64748b;margin-top:3px}
+.auto-field{background:#f0f7ff!important;border-color:#bfdbfe!important;color:#1e40af!important;font-weight:600}
+/* 근속연수 표시 */
+.service-badge{display:inline-flex;align-items:center;gap:6px;background:#ede9fe;border:1px solid #c4b5fd;border-radius:8px;padding:6px 12px;font-size:.82rem;color:#5b21b6;font-weight:700;margin-top:6px}
+/* 결과 패널 */
+.result-panel{background:linear-gradient(160deg,#1e3a8a 0%,#4c1d95 100%);border-radius:12px;color:#fff;padding:18px 20px;position:sticky;top:88px;box-shadow:0 4px 20px rgba(30,58,138,.3)}
+.result-title{font-size:.88rem;font-weight:700;opacity:.85;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.result-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:.82rem;border-bottom:1px solid rgba(255,255,255,.1)}
+.result-row:last-child{border:none}
+.result-label{opacity:.8;display:flex;align-items:center;gap:4px}
+.result-val{font-weight:600;text-align:right}
+.result-val.hl{color:#fde047}
+.result-divider{border:none;border-top:1.5px solid rgba(255,255,255,.25);margin:8px 0}
+.result-final{display:flex;justify-content:space-between;align-items:center;margin-top:6px;background:rgba(255,255,255,.12);border-radius:8px;padding:10px 12px}
+.result-final-label{font-size:.95rem;font-weight:700}
+.result-final-val{font-size:1.35rem;font-weight:900;color:#86efac}
+.op-badge{display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,.18);border-radius:4px;width:18px;height:18px;font-size:.62rem;font-weight:800;flex-shrink:0}
+.metric-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.metric-card{background:rgba(255,255,255,.12);border-radius:8px;padding:8px;text-align:center}
+.metric-lbl{font-size:.68rem;opacity:.7;margin-bottom:2px}
+.metric-val{font-size:.88rem;font-weight:800}
+/* 공식 박스 */
+.formula-box{background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;margin-top:12px;font-size:.78rem;color:#78350f}
+.formula-box .formula{font-family:monospace;font-size:.8rem;font-weight:700;color:#92400e;line-height:1.9}
+/* 면책 */
+.disclaimer{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.75rem;color:#713f12;margin-top:16px;display:flex;gap:8px;align-items:flex-start}
+footer{background:#1e3a8a;color:rgba(255,255,255,.65);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}
+footer a{color:rgba(255,255,255,.7);text-decoration:none}
+@media(max-width:576px){.result-final-val{font-size:1.1rem}.page-hero h1{font-size:1.2rem}}
+</style>
+</head>
+<body>
+
+<!-- 2단 네비 -->
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../../tax/index.html" class="on">세금</a></li>
+<li><a href="../../work/index.html">급여·노동</a></li>
+<li><a href="../../tools/index.html">도구</a></li>
+<li><a href="../../realestate/index.html">부동산</a></li>
+<li><a href="../../money/index.html">금융·투자</a></li>
+<li><a href="../../student/index.html">학생</a></li>
+<li><a href="../../parent/index.html">학부모·육아</a></li>
+<li><a href="../../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="../general-income/index.html" class="mc-done">종합소득세</a></li>
+<li><a href="../freelancer/index.html" class="mc-done">프리랜서 3.3%</a></li>
+<li><a href="../vat/index.html" class="mc-done">부가세</a></li>
+<li><a href="../day-laborer/index.html" class="mc-done">일용직</a></li>
+<li><a href="../earned-income/index.html" class="mc-done">근로소득세</a></li>
+<li><a href="index.html" class="on mc-done">퇴직소득세</a></li>
+<li><a href="../capital-gains/index.html" class="mc-done">양도소득세</a></li>
+<li><span class="wip">연말정산</span></li>
+<li><a href="../property/index.html" class="mc-done">부동산세금</a></li>
+<li><a href="../inheritance/index.html" class="mc-done">상속증여</a></li>
+<li><span class="wip">가상자산</span></li>
+<li><span class="wip">상금</span></li>
+</ul></div></div>
+</div>
+
+<!-- 히어로 -->
+<div class="page-hero">
+  <div class="container hero-content">
+    <div class="hero-badge">2024년 귀속 기준 · 연분연승법</div>
+    <h1><i class="bi bi-calculator me-2"></i>퇴직소득세 계산기</h1>
+    <p>입사일·퇴사일·퇴직급여 입력 → 근속연수공제·환산급여 자동 계산 → 세액 결과</p>
+  </div>
+</div>
+
+<!-- 서브탭 -->
+<div class="gi-tabs-wrap"><div class="container"><ul class="gi-tabs">
+<li><a href="index.html" class="cur">계산기</a></li>
+<li><a href="about.html">퇴직소득세란?</a></li>
+</ul></div></div>
+
+<div class="container">
+<div class="main-layout">
+
+<!-- ── 왼쪽: 입력 ── -->
+<div>
+<div class="acc-wrap">
+
+<!-- 1. 근속기간 -->
+<div class="acc-card">
+  <button class="acc-header open" onclick="toggle(this)">
+    <span class="acc-icon ic-blue"><i class="bi bi-calendar3"></i></span>
+    <span class="acc-title">근속기간</span>
+    <span class="acc-badge bg-primary text-white" id="b-years">0년</span>
+    <i class="bi bi-chevron-down acc-chevron"></i>
+  </button>
+  <div class="acc-body open">
+    <div class="sub-sec">
+      <div class="sub-title"><i class="bi bi-calendar-range"></i> 입사일 · 퇴사일</div>
+      <div class="row g-2">
+        <div class="col-sm-6">
+          <label class="form-label">입사일</label>
+          <input type="date" class="form-control" id="startDate" onchange="calc()">
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label">퇴사일 (마지막 근무일)</label>
+          <input type="date" class="form-control" id="endDate" onchange="calc()">
+        </div>
+        <div class="col-12">
+          <label class="form-label">근속연수 <small class="text-muted">(자동 계산)</small></label>
+          <div class="input-group">
+            <input type="text" class="form-control auto-field" id="serviceYearsDisp" readonly placeholder="입사일·퇴사일 입력 시 자동">
+            <span class="input-group-text">년</span>
+          </div>
+          <div class="form-text" id="serviceDetailNote"></div>
+        </div>
+      </div>
+      <div id="serviceYearsBadge" class="service-badge" style="display:none">
+        <i class="bi bi-clock-history"></i>
+        <span id="serviceYearsBadgeText"></span>
+      </div>
+      <div style="background:#f0f7ff;border-radius:6px;padding:8px 10px;margin-top:10px;font-size:.74rem;color:#1e40af">
+        <strong>근속연수 계산:</strong> 입사일부터 퇴사일까지, 1년 미만 잔여기간은 1년으로 올림 적용
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2. 퇴직급여 -->
+<div class="acc-card">
+  <button class="acc-header open" onclick="toggle(this)">
+    <span class="acc-icon ic-purple"><i class="bi bi-bank"></i></span>
+    <span class="acc-title">퇴직급여</span>
+    <span class="acc-badge" style="background:#7c3aed;color:#fff" id="b-retirement">0원</span>
+    <i class="bi bi-chevron-down acc-chevron"></i>
+  </button>
+  <div class="acc-body open">
+    <div class="sub-sec">
+      <div class="sub-title"><i class="bi bi-wallet2"></i> 퇴직급여 총액</div>
+      <div class="row g-2">
+        <div class="col-12">
+          <label class="form-label">퇴직급여 총액 (세전)</label>
+          <div class="input-group">
+            <input type="number" class="form-control" id="retirePay" min="0" step="100000" placeholder="0" oninput="calc()">
+            <span class="input-group-text">원</span>
+          </div>
+          <div class="form-text">퇴직금·퇴직연금 일시금 수령액 (세전 금액)</div>
+        </div>
+        <div class="col-12">
+          <label class="form-label">비과세 퇴직소득 <small class="text-muted">(있는 경우만)</small></label>
+          <div class="input-group">
+            <input type="number" class="form-control" id="nonTaxable" min="0" step="100000" placeholder="0" oninput="calc()">
+            <span class="input-group-text">원</span>
+          </div>
+          <div class="form-text">일반적으로 0원. 임원 퇴직소득 한도 초과분 등 특수한 경우만 입력</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. 기납부세액 -->
+<div class="acc-card">
+  <button class="acc-header" onclick="toggle(this)">
+    <span class="acc-icon ic-green"><i class="bi bi-receipt"></i></span>
+    <span class="acc-title">기납부 원천징수세액</span>
+    <span class="acc-badge bg-success text-white" id="b-withheld">0원</span>
+    <i class="bi bi-chevron-down acc-chevron"></i>
+  </button>
+  <div class="acc-body">
+    <div class="sub-sec">
+      <div class="sub-title"><i class="bi bi-minus-circle"></i> 이미 납부한 세액</div>
+      <div class="row g-2">
+        <div class="col-sm-6">
+          <label class="form-label">기납부 소득세</label>
+          <div class="input-group">
+            <input type="number" class="form-control" id="withheld" min="0" step="10000" placeholder="0" oninput="calc()">
+            <span class="input-group-text">원</span>
+          </div>
+          <div class="form-text">퇴직금 지급 시 원천징수된 세액</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /acc-wrap -->
+
+<!-- 계산 공식 요약 -->
+<div class="formula-box mt-3">
+  <div style="font-weight:700;margin-bottom:6px"><i class="bi bi-function me-1"></i> 퇴직소득세 계산 구조 (연분연승법)</div>
+  <div class="formula">
+    ① 퇴직소득금액 = 퇴직급여 − 비과세<br>
+    ② 근속연수공제 → ③ 환산급여 = (①−②) × 12 ÷ 근속연수<br>
+    ④ 환산급여공제 → ⑤ 과세표준 = ③ − ④<br>
+    ⑥ 환산산출세액 = ⑤ × 세율(6~45%)<br>
+    ⑦ 산출세액 = ⑥ × 근속연수 ÷ 12
+  </div>
+</div>
+
+<div class="disclaimer mt-3"><i class="bi bi-info-circle flex-shrink-0 mt-1"></i><span>이 결과는 모의계산이므로 <strong>참고용으로만</strong> 사용하세요. 임원 퇴직소득 한도, 퇴직연금 이연과세 등 개인별 상황에 따라 실제 세액이 달라질 수 있습니다.</span></div>
+</div><!-- /left -->
+
+<!-- ── 오른쪽: 결과 ── -->
+<div>
+  <div class="result-panel">
+    <div class="result-title"><i class="bi bi-receipt-cutoff"></i> 세액 계산 결과</div>
+
+    <!-- 기본 정보 -->
+    <div class="result-row">
+      <span class="result-label"><span class="op-badge">①</span> 퇴직급여 총액</span>
+      <span class="result-val" id="r-pay">0원</span>
+    </div>
+    <div class="result-row">
+      <span class="result-label"><span class="op-badge">−</span> 비과세</span>
+      <span class="result-val" id="r-nontax">0원</span>
+    </div>
+    <div class="result-row" style="background:rgba(255,255,255,.08);border-radius:4px;padding:5px 8px">
+      <span class="result-label"><span class="op-badge">=</span> 퇴직소득금액</span>
+      <span class="result-val hl" id="r-retireincome">0원</span>
+    </div>
+
+    <div class="result-divider"></div>
+
+    <!-- 근속연수공제 -->
+    <div class="result-row">
+      <span class="result-label"><span class="op-badge">−</span> 근속연수공제 <small style="opacity:.6;font-size:.7rem" id="r-yearsLabel"></small></span>
+      <span class="result-val" id="r-serviceded">0원</span>
+    </div>
+    <div class="result-row" style="background:rgba(255,255,255,.08);border-radius:4px;padding:5px 8px">
+      <span class="result-label"><span class="op-badge">×</span> 환산급여 <small style="opacity:.6;font-size:.7rem">×12÷년수</small></span>
+      <span class="result-val hl" id="r-convwage">0원</span>
+    </div>
+
+    <div class="result-divider"></div>
+
+    <!-- 환산급여공제 -->
+    <div class="result-row">
+      <span class="result-label"><span class="op-badge">−</span> 환산급여공제</span>
+      <span class="result-val" id="r-convded">0원</span>
+    </div>
+    <div class="result-row" style="background:rgba(255,255,255,.08);border-radius:4px;padding:5px 8px">
+      <span class="result-label"><span class="op-badge">=</span> 과세표준</span>
+      <span class="result-val hl" id="r-taxbase">0원</span>
+    </div>
+
+    <div class="result-divider"></div>
+
+    <!-- 세액 계산 -->
+    <div class="result-row">
+      <span class="result-label"><span class="op-badge">×</span> 환산산출세액 <span style="background:rgba(255,255,255,.2);border-radius:6px;padding:1px 6px;font-size:.7rem" id="r-ratechip">6%</span></span>
+      <span class="result-val" id="r-convtax">0원</span>
+    </div>
+    <div class="result-row">
+      <span class="result-label"><span class="op-badge">×</span> 산출세액 <small style="opacity:.6;font-size:.7rem">×년수÷12</small></span>
+      <span class="result-val hl" id="r-calctax">0원</span>
+    </div>
+    <div class="result-row">
+      <span class="result-label" style="padding-left:10px;opacity:.7">+ 지방소득세 (10%)</span>
+      <span class="result-val" id="r-local">0원</span>
+    </div>
+    <div class="result-row">
+      <span class="result-label" style="padding-left:10px;opacity:.7">= 총 세금 (국+지방)</span>
+      <span class="result-val" id="r-total">0원</span>
+    </div>
+
+    <div class="result-divider"></div>
+
+    <div class="result-row">
+      <span class="result-label"><span class="op-badge">−</span> 기납부 원천징수세액</span>
+      <span class="result-val" id="r-withheld">0원</span>
+    </div>
+
+    <div class="result-final">
+      <span class="result-final-label">최종 납부(환급)세액</span>
+      <span class="result-final-val" id="r-final">0원</span>
+    </div>
+
+    <!-- 메트릭 -->
+    <div class="metric-row">
+      <div class="metric-card">
+        <div class="metric-lbl">실효세율</div>
+        <div class="metric-val" id="m-eff">—</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-lbl">근속연수</div>
+        <div class="metric-val" id="m-years">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 근속연수공제 참고표 -->
+  <div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;margin-top:10px;overflow:hidden">
+    <div style="background:#f0f4ff;padding:10px 14px;font-size:.82rem;font-weight:700;color:#1e3a8a;border-bottom:1px solid #dbeafe"><i class="bi bi-table me-1"></i>근속연수공제 기준</div>
+    <table style="width:100%;border-collapse:collapse;font-size:.76rem">
+      <thead><tr>
+        <th style="background:#f8fafc;padding:6px 10px;font-weight:600;color:#475569;border-bottom:1px solid #e2e8f0">근속연수</th>
+        <th style="background:#f8fafc;padding:6px 10px;font-weight:600;color:#475569;border-bottom:1px solid #e2e8f0;text-align:right">공제액</th>
+      </tr></thead>
+      <tbody id="serviceDeductTable"></tbody>
+    </table>
+  </div>
+
+  <div class="text-center mt-2">
+    <button class="btn btn-sm btn-outline-secondary" onclick="resetAll()"><i class="bi bi-arrow-counterclockwise me-1"></i>초기화</button>
+  </div>
+</div><!-- /right -->
+
+</div><!-- /main-layout -->
+</div><!-- /container -->
+
+<footer><div class="container">© 2025 mycalc · 참고용이며 법적 효력이 없습니다. | <a href="../../index.html">← 메인으로</a></div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ── 세율표 (shared/tax-calculator-formulas.js 인라인) ──
+const TAX_RATES=[
+  {min:0,max:14000000,rate:.06,deduction:0},
+  {min:14000000,max:50000000,rate:.15,deduction:1260000},
+  {min:50000000,max:88000000,rate:.24,deduction:5760000},
+  {min:88000000,max:150000000,rate:.35,deduction:15440000},
+  {min:150000000,max:300000000,rate:.38,deduction:19940000},
+  {min:300000000,max:500000000,rate:.40,deduction:25900000},
+  {min:500000000,max:1000000000,rate:.42,deduction:35900000},
+  {min:1000000000,max:Infinity,rate:.45,deduction:65900000},
+];
+function getBracket(b){return TAX_RATES.find(x=>b<=x.max)||TAX_RATES[TAX_RATES.length-1]}
+function getCalcTax(b){if(b<=0)return 0;const br=getBracket(b);return Math.max(b*br.rate-br.deduction,0)}
+
+// ── 근속연수 계산 (1년 미만 올림) ──
+function calcServiceYears(startStr, endStr){
+  const s=new Date(startStr), e=new Date(endStr);
+  if(isNaN(s.getTime())||isNaN(e.getTime())||e<=s) return {years:0,label:''};
+  let y=e.getFullYear()-s.getFullYear();
+  const anniv=new Date(s.getFullYear()+y, s.getMonth(), s.getDate());
+  if(anniv>e) y--;
+  const after=new Date(s.getFullYear()+y, s.getMonth(), s.getDate());
+  const remainMs=e-after;
+  const remainDays=Math.floor(remainMs/86400000);
+  let remainMonths=0;
+  if(remainMs>0){
+    const d=new Date(after);
+    while(true){
+      const next=new Date(d.getFullYear(),d.getMonth()+1,d.getDate());
+      if(next>e) break;
+      remainMonths++;
+      d.setMonth(d.getMonth()+1);
+    }
+  }
+  const serviceYears = y + (remainMs>0?1:0);
+  const label = remainMs>0
+    ? `실제 ${y}년 ${remainMonths}개월 → 올림 적용`
+    : `정확히 ${y}년`;
+  return {years:Math.max(serviceYears,1), label};
+}
+
+// ── 근속연수공제 ──
+function calcServiceDeduction(y){
+  if(y<=5) return y*1000000;
+  if(y<=10) return 5000000+(y-5)*2000000;
+  if(y<=20) return 15000000+(y-10)*2500000;
+  return 40000000+(y-20)*3000000;
+}
+
+// ── 환산급여공제 ──
+function calcConversionDeduction(w){
+  if(w<=8000000) return w;
+  if(w<=70000000) return 8000000+(w-8000000)*0.6;
+  if(w<=100000000) return 45200000+(w-70000000)*0.55;
+  if(w<=300000000) return 61700000+(w-100000000)*0.45;
+  return 151700000+(w-300000000)*0.35;
+}
+
+// ── 유틸 ──
+function fmt(n){return Math.round(n||0).toLocaleString('ko-KR')+'원'}
+function fmtShort(n){if(n>=100000000)return(n/100000000).toFixed(1)+'억';if(n>=10000)return Math.round(n/10000)+'만원';return fmt(n)}
+function v(id){return parseFloat(document.getElementById(id).value)||0}
+function el(id){return document.getElementById(id)}
+function toggle(btn){btn.classList.toggle('open');btn.nextElementSibling.classList.toggle('open')}
+
+// ── 메인 계산 ──
+function calc(){
+  const startStr=el('startDate').value;
+  const endStr=el('endDate').value;
+  const {years, label}=calcServiceYears(startStr,endStr);
+
+  // 근속연수 표시
+  if(years>0){
+    el('serviceYearsDisp').value=years;
+    el('serviceDetailNote').textContent=label;
+    el('serviceYearsBadge').style.display='inline-flex';
+    el('serviceYearsBadgeText').textContent=`근속연수: ${years}년 적용`;
+    el('b-years').textContent=`${years}년`;
+  } else {
+    el('serviceYearsDisp').value='';
+    el('serviceDetailNote').textContent='';
+    el('serviceYearsBadge').style.display='none';
+    el('b-years').textContent='0년';
+  }
+
+  const retirePay=v('retirePay');
+  const nonTax=v('nonTaxable');
+  el('b-retirement').textContent=fmt(retirePay);
+  el('b-withheld').textContent=fmt(v('withheld'));
+
+  if(years<=0||retirePay<=0){
+    // Reset result
+    ['r-pay','r-nontax','r-retireincome','r-serviceded','r-convwage',
+     'r-convded','r-taxbase','r-convtax','r-calctax','r-local','r-total',
+     'r-withheld','r-final'].forEach(id=>el(id).textContent='0원');
+    el('r-final').className='result-final-val';
+    el('m-eff').textContent='—';
+    el('m-years').textContent='—';
+    el('r-ratechip').textContent='—';
+    return;
+  }
+
+  // ① 퇴직소득금액
+  const retireIncome=Math.max(retirePay-nonTax,0);
+
+  // ② 근속연수공제
+  const serviceDed=calcServiceDeduction(years);
+  el('r-yearsLabel').textContent=`${years}년`;
+
+  // ③ 환산급여
+  const afterServiceDed=Math.max(retireIncome-serviceDed,0);
+  const convWage=years>0?afterServiceDed*12/years:0;
+
+  // ④ 환산급여공제
+  const convDed=calcConversionDeduction(convWage);
+
+  // ⑤ 과세표준
+  const taxBase=Math.max(convWage-convDed,0);
+
+  // ⑥ 환산산출세액
+  const bracket=getBracket(taxBase);
+  const convTax=getCalcTax(taxBase);
+
+  // ⑦ 산출세액 = 환산산출세액 × 근속연수 / 12
+  const calcTaxAmt=Math.floor(convTax*years/12);
+  const localTax=Math.floor(calcTaxAmt*0.1);
+  const totalTax=calcTaxAmt+localTax;
+  const withheld=v('withheld');
+  const finalTax=calcTaxAmt-withheld;
+  const isRefund=finalTax<0;
+  const effRate=retirePay>0?(calcTaxAmt/retirePay*100):0;
+
+  // UI
+  el('r-pay').textContent=fmt(retirePay);
+  el('r-nontax').textContent=fmt(nonTax);
+  el('r-retireincome').textContent=fmt(retireIncome);
+  el('r-serviceded').textContent=fmt(serviceDed);
+  el('r-convwage').textContent=fmt(convWage);
+  el('r-convded').textContent=fmt(convDed);
+  el('r-taxbase').textContent=fmt(taxBase);
+  el('r-ratechip').textContent=(bracket.rate*100).toFixed(0)+'%';
+  el('r-convtax').textContent=fmt(convTax);
+  el('r-calctax').textContent=fmt(calcTaxAmt);
+  el('r-local').textContent=fmt(localTax);
+  el('r-total').textContent=fmt(totalTax);
+  el('r-withheld').textContent=fmt(withheld);
+
+  const finEl=el('r-final');
+  finEl.textContent=(isRefund?'환급 ':'')+fmt(Math.abs(finalTax));
+  finEl.className='result-final-val '+(isRefund?'':finalTax>0?'':'');
+
+  el('m-eff').textContent=effRate.toFixed(2)+'%';
+  el('m-years').textContent=years+'년';
+}
+
+// ── 근속연수공제 테이블 ──
+function buildServiceTable(){
+  const rows=[
+    ['5년 이하','100만원 × 근속연수'],
+    ['5년 초과 ~ 10년','500만원 + 200만원 × (근속연수 − 5)'],
+    ['10년 초과 ~ 20년','1,500만원 + 250만원 × (근속연수 − 10)'],
+    ['20년 초과','4,000만원 + 300만원 × (근속연수 − 20)'],
+  ];
+  el('serviceDeductTable').innerHTML=rows.map((r,i)=>`
+    <tr style="border-bottom:1px solid #f1f5f9">
+      <td style="padding:5px 10px;color:#1e293b;font-weight:600">${r[0]}</td>
+      <td style="padding:5px 10px;text-align:right;color:#334155">${r[1]}</td>
+    </tr>`).join('');
+}
+
+function resetAll(){
+  el('startDate').value='';
+  el('endDate').value='';
+  el('retirePay').value='';
+  el('nonTaxable').value='';
+  el('withheld').value='';
+  calc();
+}
+
+buildServiceTable();
+calc();
+</script>
+</body>
+</html>

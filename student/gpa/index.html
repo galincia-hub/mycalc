@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>학점 계산기 - GPA 계산·학점 변환·목표학점 역산 | mycalc</title>
+<meta name="description" content="대학교 학점 계산기. 4.5/4.3 만점 GPA, 전공 평점, F학점 포함 여부, 학점 변환, 목표 학점 역산을 브라우저에서 바로 계산합니다.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.page-hero{background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 100%);color:#fff;padding:1.8rem 0 1.45rem;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='72' height='72' viewBox='0 0 72 72' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.045'%3E%3Cpath d='M18 14h36v5H18zm0 13h36v5H18zm0 13h22v5H18z'/%3E%3C/g%3E%3C/svg%3E")}
+.hero-content{position:relative}
+.breadcrumb-mini{display:flex;align-items:center;gap:6px;font-size:.74rem;opacity:.82;margin-bottom:.45rem;flex-wrap:wrap}
+.breadcrumb-mini a{color:#fff;text-decoration:none}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.75rem;margin-bottom:.5rem}
+.page-hero h1{font-size:1.42rem;font-weight:800;margin:0 0 .3rem;letter-spacing:0}
+.page-hero p{font-size:.84rem;opacity:.86;margin:0}
+.tool-tabs-wrap{background:#fff;border-bottom:2px solid #e2e8f0}
+.tool-tabs{list-style:none;display:flex;overflow-x:auto;margin:0;padding:0 12px;-ms-overflow-style:none;scrollbar-width:none}
+.tool-tabs::-webkit-scrollbar{display:none}
+.tool-tabs button{display:inline-flex;align-items:center;gap:6px;padding:10px 13px;font-size:.82rem;font-weight:700;color:#64748b;border:0;background:none;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;margin-bottom:-2px}
+.tool-tabs button:hover{color:#1e3a8a}
+.tool-tabs button.active{color:#1e3a8a;border-bottom-color:#1e3a8a}
+.main-layout{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start;padding:16px 0 32px}
+@media(max-width:991px){.main-layout{grid-template-columns:1fr}}
+.input-card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden;margin-bottom:14px}
+.input-card-header{padding:14px 16px;border-bottom:1px solid #dbeafe;background:#f0f7ff}
+.input-card-title{font-size:.9rem;font-weight:800;color:#0f172a;display:flex;align-items:center;gap:7px}
+.input-card-body{padding:16px}
+.form-label{font-weight:700;font-size:.8rem;color:#374151;margin-bottom:5px;display:block}
+.form-control,.form-select{font-size:.85rem;border-color:#d1d5db;border-radius:7px}
+.form-control:focus,.form-select:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.form-check-input:checked{background-color:#2563eb;border-color:#2563eb}
+.section-divider{border:none;border-top:1px solid #f1f5f9;margin:14px 0}
+.radio-pills{display:flex;gap:7px;flex-wrap:wrap}
+.radio-pill{position:relative}
+.radio-pill input{position:absolute;opacity:0;pointer-events:none}
+.radio-pill span{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:8px;border:1.5px solid #d1d5db;background:#fff;color:#475569;font-size:.8rem;font-weight:700;cursor:pointer}
+.radio-pill input:checked+span{border-color:#2563eb;background:#eff6ff;color:#1d4ed8}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.subject-table-wrap{overflow-x:auto;border:1px solid #e2e8f0;border-radius:10px}
+.subject-table{width:100%;min-width:680px;margin:0;border-collapse:separate;border-spacing:0}
+.subject-table th{background:#f8fafc;color:#475569;font-size:.75rem;font-weight:800;padding:9px;border-bottom:1px solid #e2e8f0;text-align:center}
+.subject-table td{padding:7px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+.subject-table tr:last-child td{border-bottom:0}
+.subject-table .col-name{width:32%}
+.subject-table .col-credit{width:14%}
+.subject-table .col-grade{width:18%}
+.subject-table .col-major{width:12%;text-align:center}
+.subject-table .col-remove{width:52px;text-align:center}
+.icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid #e2e8f0;background:#fff;color:#64748b;display:inline-flex;align-items:center;justify-content:center;transition:all .15s}
+.icon-btn:hover{border-color:#fecaca;background:#fef2f2;color:#dc2626}
+.btn-primary{background:#1e3a8a;border-color:#1e3a8a;font-weight:800}
+.btn-primary:hover{background:#1d4ed8;border-color:#1d4ed8}
+.btn-outline-secondary{font-weight:700}
+.result-panel{background:linear-gradient(160deg,#1e3a8a 0%,#2563eb 100%);border-radius:12px;color:#fff;padding:18px 20px;position:sticky;top:88px;box-shadow:0 4px 20px rgba(30,58,138,.35)}
+.result-title{font-size:.9rem;font-weight:800;opacity:.9;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.score-main{background:rgba(255,255,255,.14);border-radius:12px;padding:14px;margin-bottom:10px}
+.score-label{font-size:.75rem;opacity:.78;margin-bottom:2px}
+.score-value{font-size:2rem;font-weight:900;line-height:1.05;color:#bfdbfe}
+.score-sub{font-size:.78rem;opacity:.78;margin-top:4px}
+.result-row{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.13)}
+.result-row:last-child{border-bottom:0}
+.result-row span:first-child{opacity:.82}
+.result-row strong{font-size:.88rem}
+.metric-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px}
+.metric-card{background:rgba(255,255,255,.12);border-radius:8px;padding:8px;text-align:center}
+.metric-lbl{font-size:.65rem;opacity:.74;margin-bottom:2px}
+.metric-val{font-size:.9rem;font-weight:900}
+.notice-box{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.76rem;color:#713f12;margin-top:14px;display:flex;gap:8px;align-items:flex-start}
+.info-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;font-size:.8rem;color:#475569}
+.info-card h2{font-size:.95rem;font-weight:800;color:#0f172a;margin:0 0 8px}
+.scale-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+.scale-item{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:9px 10px}
+.scale-name{font-size:.72rem;color:#64748b;margin-bottom:2px}
+.scale-val{font-size:1rem;font-weight:900;color:#1e3a8a}
+.helper-text{font-size:.75rem;color:#64748b;margin-top:5px}
+footer{background:#0f172a;color:rgba(255,255,255,.62);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}
+footer a{color:rgba(255,255,255,.75);text-decoration:none}
+@media(max-width:576px){
+  .main-layout{padding-top:12px}
+  .page-hero h1{font-size:1.22rem}
+  .page-hero p{font-size:.8rem}
+  .score-value{font-size:1.65rem}
+  .input-card-body{padding:14px}
+}
+</style>
+</head>
+<body>
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../../tax/index.html">세금</a></li>
+<li><a href="../../work/index.html">급여·노동</a></li>
+<li><a href="../../tools/index.html">도구</a></li>
+<li><a href="../../realestate/index.html">부동산</a></li>
+<li><a href="../../money/index.html">금융·투자</a></li>
+<li><a href="../../student/index.html" class="on">학생</a></li>
+<li><a href="../../parent/index.html">학부모·육아</a></li>
+<li><a href="../../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="../gpa/index.html" class="on mc-done">학점계산기</a></li>
+<li><a href="../military/index.html" class="mc-done">군전역일</a></li>
+<li><span class="wip">내신</span></li>
+<li><span class="wip">수능</span></li>
+<li><span class="wip">출결</span></li>
+<li><span class="wip">학자금</span></li>
+<li><span class="wip">장학금</span></li>
+<li><span class="wip">토익</span></li>
+<li><span class="wip">편입</span></li>
+<li><span class="wip">자격증</span></li>
+<li><span class="wip">생활비</span></li>
+<li><span class="wip">수강신청</span></li>
+</ul></div></div>
+</div>
+
+<div class="page-hero">
+  <div class="container hero-content">
+    <div class="breadcrumb-mini"><a href="../../index.html">mycalc</a><i class="bi bi-chevron-right"></i><a href="../index.html">학생</a><i class="bi bi-chevron-right"></i><span>학점 계산기</span></div>
+    <div class="hero-badge">학생</div>
+    <h1><i class="bi bi-mortarboard-fill me-2"></i>학점 계산기</h1>
+    <p>과목별 성적을 입력해 GPA, 전공 평점, 학점 변환, 목표 학점 달성 가능성을 계산합니다.</p>
+  </div>
+</div>
+
+<div class="tool-tabs-wrap"><div class="container"><ul class="tool-tabs">
+<li><button type="button" class="active" data-tab="calc"><i class="bi bi-table"></i>학점 계산기</button></li>
+<li><button type="button" data-tab="convert"><i class="bi bi-arrow-left-right"></i>학점 변환</button></li>
+<li><button type="button" data-tab="target"><i class="bi bi-bullseye"></i>목표학점 역산</button></li>
+</ul></div></div>
+
+<div class="container">
+<div class="main-layout">
+<div>
+  <section class="tab-panel active" id="tab-calc">
+    <div class="input-card">
+      <div class="input-card-header"><div class="input-card-title"><i class="bi bi-sliders" style="color:#2563eb"></i> 성적 정보 입력</div></div>
+      <div class="input-card-body">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">만점 기준</label>
+            <div class="radio-pills">
+              <label class="radio-pill"><input type="radio" name="scale" value="4.5" checked><span>4.5만점</span></label>
+              <label class="radio-pill"><input type="radio" name="scale" value="4.3"><span>4.3만점</span></label>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">F학점 포함 여부</label>
+            <div class="form-check form-switch mt-1">
+              <input class="form-check-input" type="checkbox" role="switch" id="includeF" checked>
+              <label class="form-check-label fw-semibold" for="includeF">F학점을 평점 계산에 포함</label>
+            </div>
+          </div>
+        </div>
+        <hr class="section-divider">
+        <div class="subject-table-wrap">
+          <table class="subject-table" aria-label="과목 입력 표">
+            <thead>
+              <tr>
+                <th class="col-name">과목명</th>
+                <th class="col-credit">이수학점</th>
+                <th class="col-grade">성적</th>
+                <th class="col-major">전공</th>
+                <th class="col-remove">삭제</th>
+              </tr>
+            </thead>
+            <tbody id="subjectBody"></tbody>
+          </table>
+        </div>
+        <div class="d-flex flex-wrap gap-2 mt-3">
+          <button class="btn btn-outline-primary btn-sm fw-bold" type="button" id="addSubject"><i class="bi bi-plus-lg me-1"></i>과목 추가</button>
+          <button class="btn btn-primary btn-sm" type="button" id="calcGpa"><i class="bi bi-calculator me-1"></i>계산하기</button>
+          <button class="btn btn-outline-secondary btn-sm" type="button" id="resetGpa"><i class="bi bi-arrow-counterclockwise me-1"></i>초기화</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tab-panel" id="tab-convert">
+    <div class="input-card">
+      <div class="input-card-header"><div class="input-card-title"><i class="bi bi-arrow-left-right" style="color:#2563eb"></i> 학점 변환</div></div>
+      <div class="input-card-body">
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <label class="form-label" for="convertScore">내 점수</label>
+            <input type="number" class="form-control form-control-lg" id="convertScore" min="0" step="0.01" value="3.8">
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="convertBase">현재 만점</label>
+            <select class="form-select form-select-lg" id="convertBase">
+              <option value="4.5" selected>4.5 만점</option>
+              <option value="4.3">4.3 만점</option>
+              <option value="4.0">4.0 만점</option>
+              <option value="100">100점 만점</option>
+            </select>
+          </div>
+        </div>
+        <div class="d-flex flex-wrap gap-2 mt-3">
+          <button class="btn btn-primary btn-sm" type="button" id="convertBtn"><i class="bi bi-arrow-repeat me-1"></i>변환</button>
+          <button class="btn btn-outline-secondary btn-sm" type="button" id="resetConvert"><i class="bi bi-arrow-counterclockwise me-1"></i>초기화</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tab-panel" id="tab-target">
+    <div class="input-card">
+      <div class="input-card-header"><div class="input-card-title"><i class="bi bi-bullseye" style="color:#2563eb"></i> 목표학점 역산</div></div>
+      <div class="input-card-body">
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <label class="form-label" for="targetScale">만점 기준</label>
+            <select class="form-select" id="targetScale">
+              <option value="4.5" selected>4.5 만점</option>
+              <option value="4.3">4.3 만점</option>
+            </select>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="currentGpa">현재 평점</label>
+            <input type="number" class="form-control" id="currentGpa" min="0" step="0.01" placeholder="예: 3.45">
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="earnedCredits">현재 이수학점</label>
+            <input type="number" class="form-control" id="earnedCredits" min="0" step="1" placeholder="예: 72">
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="futureCredits">앞으로 이수할 학점</label>
+            <input type="number" class="form-control" id="futureCredits" min="1" step="1" placeholder="예: 18">
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="goalGpa">목표 최종 평점</label>
+            <input type="number" class="form-control" id="goalGpa" min="0" step="0.01" placeholder="예: 3.80">
+          </div>
+        </div>
+        <div class="d-flex flex-wrap gap-2 mt-3">
+          <button class="btn btn-primary btn-sm" type="button" id="targetBtn"><i class="bi bi-calculator me-1"></i>역산하기</button>
+          <button class="btn btn-outline-secondary btn-sm" type="button" id="resetTarget"><i class="bi bi-arrow-counterclockwise me-1"></i>초기화</button>
+        </div>
+        <div class="helper-text">공식: 필요 평점 = (목표평점 × 전체학점 - 현재평점 × 현재학점) ÷ 남은학점</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="notice-box">
+    <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1"></i>
+    <span>계산 결과는 일반적인 학점 계산 방식을 적용한 참고용입니다. 학교별 A+ 배점, P/NP 처리, 재수강 반영 기준이 다를 수 있으므로 공식 성적은 학교 학사 규정을 확인하세요.</span>
+  </div>
+
+  <div class="info-card mt-3">
+    <h2>계산 기준</h2>
+    <div>평점은 이수학점 가중 평균으로 계산합니다. P/NP는 평점 계산에서 제외하고, F학점은 토글이 켜져 있을 때 0점으로 분모에 포함합니다.</div>
+  </div>
+</div>
+
+<aside>
+  <div class="result-panel">
+    <div class="result-title"><i class="bi bi-clipboard-data-fill"></i> 계산 결과</div>
+    <div class="score-main">
+      <div class="score-label" id="mainLabel">총 평점</div>
+      <div class="score-value" id="mainScore">0.00</div>
+      <div class="score-sub" id="mainSub">4.5 만점 기준</div>
+    </div>
+    <div id="gpaResultRows">
+      <div class="result-row"><span>전공 평점</span><strong id="majorGpa">0.00</strong></div>
+      <div class="result-row"><span>총 신청학점</span><strong id="totalCredits">0학점</strong></div>
+      <div class="result-row"><span>평점 반영 학점</span><strong id="gpaCredits">0학점</strong></div>
+      <div class="result-row"><span>전공 이수학점</span><strong id="majorCredits">0학점</strong></div>
+    </div>
+    <div id="convertResultRows" style="display:none">
+      <div class="scale-grid">
+        <div class="scale-item"><div class="scale-name">4.5 만점</div><div class="scale-val" id="to45">0.00</div></div>
+        <div class="scale-item"><div class="scale-name">4.3 만점</div><div class="scale-val" id="to43">0.00</div></div>
+        <div class="scale-item"><div class="scale-name">4.0 만점</div><div class="scale-val" id="to40">0.00</div></div>
+        <div class="scale-item"><div class="scale-name">100점 만점</div><div class="scale-val" id="to100">0.0</div></div>
+      </div>
+    </div>
+    <div id="targetResultRows" style="display:none">
+      <div class="result-row"><span>필요 평균 평점</span><strong id="requiredGpa">-</strong></div>
+      <div class="result-row"><span>달성 가능성</span><strong id="targetStatus">입력 대기</strong></div>
+      <div class="result-row"><span>필요 등급 감각</span><strong id="requiredGrade">-</strong></div>
+    </div>
+    <div class="metric-row">
+      <div class="metric-card"><div class="metric-lbl" id="metricOneLabel">백분위 환산</div><div class="metric-val" id="metricOne">0.0점</div></div>
+      <div class="metric-card"><div class="metric-lbl" id="metricTwoLabel">평점 포인트</div><div class="metric-val" id="metricTwo">0.00</div></div>
+    </div>
+  </div>
+</aside>
+</div>
+</div>
+
+<footer><div class="container">© 2026 mycalc · 학점 계산 결과는 참고용입니다. | <a href="../../index.html">메인으로</a></div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const gradePoints = {
+  '4.5': {'A+':4.5,A:4.0,'B+':3.5,B:3.0,'C+':2.5,C:2.0,'D+':1.5,D:1.0,F:0},
+  '4.3': {'A+':4.3,A:4.0,'B+':3.3,B:3.0,'C+':2.3,C:2.0,'D+':1.3,D:1.0,F:0}
+};
+const grades = ['A+','A','B+','B','C+','C','D+','D','F','P','NP'];
+const $ = id => document.getElementById(id);
+let activeTab = 'calc';
+
+function fmt(n,d=2){return Number.isFinite(n)?n.toFixed(d):'0.00'}
+function clamp(n,min,max){return Math.min(Math.max(n,min),max)}
+function scaleScore(score, from, to){return clamp(score,0,from) / from * to}
+function percentFrom(score, base){return scaleScore(score, base, 100)}
+
+function setResultMode(mode){
+  $('gpaResultRows').style.display = mode === 'calc' ? '' : 'none';
+  $('convertResultRows').style.display = mode === 'convert' ? '' : 'none';
+  $('targetResultRows').style.display = mode === 'target' ? '' : 'none';
+}
+
+function addSubjectRow(data={}){
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td class="col-name"><input class="form-control form-control-sm subject-name" type="text" placeholder="선택 입력" value="${data.name||''}"></td>
+    <td class="col-credit"><select class="form-select form-select-sm subject-credit">${[1,2,3,4].map(v=>`<option value="${v}" ${Number(data.credit||3)===v?'selected':''}>${v}학점</option>`).join('')}</select></td>
+    <td class="col-grade"><select class="form-select form-select-sm subject-grade">${grades.map(g=>`<option value="${g}" ${(data.grade||'A')===g?'selected':''}>${g}</option>`).join('')}</select></td>
+    <td class="col-major"><input class="form-check-input subject-major" type="checkbox" ${data.major?'checked':''} aria-label="전공 여부"></td>
+    <td class="col-remove"><button type="button" class="icon-btn remove-subject" aria-label="과목 삭제"><i class="bi bi-x-lg"></i></button></td>`;
+  $('subjectBody').appendChild(tr);
+  tr.querySelectorAll('input,select').forEach(node=>node.addEventListener('input', calculateGpa));
+  tr.querySelector('.remove-subject').addEventListener('click', ()=>{
+    tr.remove();
+    if(!$('subjectBody').children.length) addSubjectRow();
+    calculateGpa();
+  });
+}
+
+function resetSubjects(){
+  $('subjectBody').innerHTML = '';
+  addSubjectRow({grade:'A',credit:3,major:true});
+  addSubjectRow({grade:'B+',credit:3});
+  addSubjectRow({grade:'A+',credit:3,major:true});
+}
+
+function calculateGpa(){
+  const scale = document.querySelector('input[name="scale"]:checked').value;
+  const includeF = $('includeF').checked;
+  let totalCredits = 0, gpaCredits = 0, points = 0, majorCredits = 0, majorGpaCredits = 0, majorPoints = 0;
+  document.querySelectorAll('#subjectBody tr').forEach(tr=>{
+    const credit = Number(tr.querySelector('.subject-credit').value) || 0;
+    const grade = tr.querySelector('.subject-grade').value;
+    const isMajor = tr.querySelector('.subject-major').checked;
+    totalCredits += credit;
+    if(isMajor) majorCredits += credit;
+    if(grade === 'P' || grade === 'NP') return;
+    if(grade === 'F' && !includeF) return;
+    const gp = gradePoints[scale][grade] ?? 0;
+    gpaCredits += credit;
+    points += gp * credit;
+    if(isMajor){
+      majorGpaCredits += credit;
+      majorPoints += gp * credit;
+    }
+  });
+  const gpa = gpaCredits ? points / gpaCredits : 0;
+  const majorGpa = majorGpaCredits ? majorPoints / majorGpaCredits : 0;
+  $('mainLabel').textContent = '총 평점';
+  $('mainScore').textContent = fmt(gpa);
+  $('mainSub').textContent = `${scale} 만점 기준`;
+  $('majorGpa').textContent = fmt(majorGpa);
+  $('totalCredits').textContent = `${totalCredits}학점`;
+  $('gpaCredits').textContent = `${gpaCredits}학점`;
+  $('majorCredits').textContent = `${majorCredits}학점`;
+  $('metricOneLabel').textContent = '백분위 환산';
+  $('metricOne').textContent = `${fmt(percentFrom(gpa, Number(scale)),1)}점`;
+  $('metricTwoLabel').textContent = '평점 포인트';
+  $('metricTwo').textContent = fmt(points);
+}
+
+function calculateConvert(){
+  const score = Number($('convertScore').value) || 0;
+  const base = Number($('convertBase').value) || 4.5;
+  const v45 = scaleScore(score, base, 4.5);
+  const v43 = scaleScore(score, base, 4.3);
+  const v40 = scaleScore(score, base, 4.0);
+  const v100 = scaleScore(score, base, 100);
+  $('mainLabel').textContent = '100점 환산';
+  $('mainScore').textContent = fmt(v100,1);
+  $('mainSub').textContent = `${base} 만점 입력값 기준`;
+  $('to45').textContent = fmt(v45);
+  $('to43').textContent = fmt(v43);
+  $('to40').textContent = fmt(v40);
+  $('to100').textContent = fmt(v100,1);
+  $('metricOneLabel').textContent = '4.5 기준';
+  $('metricOne').textContent = fmt(v45);
+  $('metricTwoLabel').textContent = '4.0 기준';
+  $('metricTwo').textContent = fmt(v40);
+}
+
+function gradeHint(required, scale){
+  const table = Object.entries(gradePoints[String(scale)]).filter(([g])=>g!=='F').sort((a,b)=>b[1]-a[1]);
+  const found = table.find(([,p])=>required >= p - .01);
+  if(required <= 0) return '이미 달성';
+  if(required > scale) return '만점 초과 필요';
+  return found ? `${found[0]} 이상` : 'D 이상';
+}
+
+function calculateTarget(){
+  const scale = Number($('targetScale').value);
+  const current = clamp(Number($('currentGpa').value)||0, 0, scale);
+  const earned = Number($('earnedCredits').value) || 0;
+  const future = Number($('futureCredits').value) || 0;
+  const goal = clamp(Number($('goalGpa').value)||0, 0, scale);
+  const required = future > 0 ? (goal * (earned + future) - current * earned) / future : 0;
+  const possible = required <= scale && required >= 0;
+  $('mainLabel').textContent = '필요 평점';
+  $('mainScore').textContent = future > 0 ? fmt(required) : '-';
+  $('mainSub').textContent = `${scale} 만점 기준`;
+  $('requiredGpa').textContent = future > 0 ? `${fmt(required)} / ${scale}` : '-';
+  $('targetStatus').textContent = future <= 0 ? '입력 필요' : (possible ? '달성 가능' : (required < 0 ? '이미 달성권' : '남은 학점만으로 어려움'));
+  $('requiredGrade').textContent = future > 0 ? gradeHint(required, scale) : '-';
+  $('metricOneLabel').textContent = '필요 백분위';
+  $('metricOne').textContent = future > 0 ? `${fmt(percentFrom(Math.max(required,0), scale),1)}점` : '-';
+  $('metricTwoLabel').textContent = '최종 목표';
+  $('metricTwo').textContent = fmt(goal);
+}
+
+function switchTab(tab){
+  activeTab = tab;
+  document.querySelectorAll('.tool-tabs button').forEach(btn=>btn.classList.toggle('active', btn.dataset.tab === tab));
+  document.querySelectorAll('.tab-panel').forEach(panel=>panel.classList.toggle('active', panel.id === `tab-${tab}`));
+  setResultMode(tab);
+  if(tab === 'calc') calculateGpa();
+  if(tab === 'convert') calculateConvert();
+  if(tab === 'target') calculateTarget();
+}
+
+document.querySelectorAll('.tool-tabs button').forEach(btn=>btn.addEventListener('click',()=>switchTab(btn.dataset.tab)));
+document.querySelectorAll('input[name="scale"]').forEach(r=>r.addEventListener('change', calculateGpa));
+$('includeF').addEventListener('change', calculateGpa);
+$('addSubject').addEventListener('click',()=>{addSubjectRow();calculateGpa();});
+$('calcGpa').addEventListener('click', calculateGpa);
+$('resetGpa').addEventListener('click',()=>{document.querySelector('input[name="scale"][value="4.5"]').checked=true;$('includeF').checked=true;resetSubjects();calculateGpa();});
+$('convertBtn').addEventListener('click', calculateConvert);
+$('convertScore').addEventListener('input', calculateConvert);
+$('convertBase').addEventListener('change', calculateConvert);
+$('resetConvert').addEventListener('click',()=>{$('convertScore').value='3.8';$('convertBase').value='4.5';calculateConvert();});
+['targetScale','currentGpa','earnedCredits','futureCredits','goalGpa'].forEach(id=>$(id).addEventListener('input', calculateTarget));
+$('targetScale').addEventListener('change', calculateTarget);
+$('targetBtn').addEventListener('click', calculateTarget);
+$('resetTarget').addEventListener('click',()=>{['currentGpa','earnedCredits','futureCredits','goalGpa'].forEach(id=>$(id).value='');$('targetScale').value='4.5';calculateTarget();});
+
+resetSubjects();
+switchTab('calc');
+</script>
+</body>
+</html>

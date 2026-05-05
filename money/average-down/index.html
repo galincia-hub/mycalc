@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>물타기 계산기 - 평균 매수단가 계산</title>
+<meta name="description" content="여러 번 나눠 매수한 주식·코인의 평균 매수단가, 총 투자금액, 현재 손익, 목표가 수익률, 목표 평단가 역산 수량을 실시간 계산합니다.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{font-family:'Pretendard',-apple-system,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}.mc-t1{background:#0f172a;min-height:46px}.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}.mc-brand span{color:#38bdf8}.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}.mc-t1-ul{justify-content:flex-end}.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.page-hero{background:linear-gradient(135deg,#0f172a 0%,#155e75 58%,#0891b2 100%);color:#fff;padding:1.75rem 0 1.5rem}.breadcrumb-nav{font-size:.75rem;color:rgba(255,255,255,.72);margin-bottom:.5rem}.breadcrumb-nav a{color:rgba(255,255,255,.86);text-decoration:none}.hero-badge{display:inline-block;background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.75rem;margin-bottom:.5rem}.page-hero h1{font-size:1.45rem;font-weight:800;margin:0 0 .35rem}.page-hero p{font-size:.84rem;opacity:.86;margin:0}.main-layout{display:grid;grid-template-columns:1fr;gap:16px;align-items:start;padding:16px 0 32px}.calc-card{background:#fff;border-radius:10px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden}.card-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;background:#ecfeff;border-bottom:1px solid #cffafe}.card-hd-left{display:flex;align-items:center;gap:10px}.card-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;background:#cffafe;color:#0e7490}.card-title{font-weight:700;font-size:.9rem;color:#155e75}.card-body{padding:16px}.form-label{font-weight:600;font-size:.8rem;color:#374151;margin-bottom:4px;display:block}.form-control{font-size:.85rem;border-color:#d1d5db;border-radius:7px}.input-group-text{background:#f1f5f9;border-color:#d1d5db;font-size:.8rem;color:#64748b;min-width:42px;justify-content:center}.buy-row{display:grid;grid-template-columns:72px 1fr 1fr 36px;gap:8px;align-items:end;margin-bottom:10px}.row-label{font-size:.78rem;font-weight:800;color:#0f172a;padding-bottom:8px}.icon-btn{width:34px;height:34px;border-radius:7px;border:1px solid #cbd5e1;background:#fff;color:#475569;display:inline-flex;align-items:center;justify-content:center}.icon-btn:hover{background:#f8fafc;color:#0f172a}.remove-row{color:#b91c1c;border-color:#fecaca}.remove-row:disabled{opacity:.35;color:#94a3b8;border-color:#e2e8f0}.add-btn{border:1px solid #0e7490;background:#0e7490;color:#fff;border-radius:8px;padding:7px 12px;font-size:.8rem;font-weight:700}.add-btn:hover{background:#155e75}.result-panel{background:linear-gradient(160deg,#155e75 0%,#0e7490 100%);border-radius:12px;color:#fff;padding:18px 20px;box-shadow:0 4px 20px rgba(14,116,144,.28)}.result-title{font-size:.88rem;font-weight:700;opacity:.88;margin-bottom:12px;display:flex;align-items:center;gap:6px}.result-final{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;padding-top:6px}.result-final-label{font-size:.82rem;opacity:.82}.result-final-val{font-size:1.35rem;font-weight:850;line-height:1.1;text-align:right}.side-row{border-top:1px solid rgba(255,255,255,.18);margin-top:10px;padding-top:9px;display:flex;justify-content:space-between;gap:12px;font-size:.78rem}.side-val{font-weight:800;text-align:right;color:#cffafe}.result-table{width:100%;border-collapse:collapse;font-size:.82rem}.result-table th{background:#f8fafc;color:#475569;font-weight:700;border-bottom:1px solid #e2e8f0;padding:9px}.result-table td{border-bottom:1px solid #f1f5f9;padding:9px;color:#334155}.money,.num{text-align:right;font-weight:800;color:#155e75;white-space:nowrap}.profit{color:#dc2626}.loss{color:#2563eb}.neutral{color:#475569}.notice{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.75rem;color:#713f12;margin-top:16px;display:flex;gap:8px}.info-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:16px}.info-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px}.info-card h2{font-size:1rem;font-weight:800;color:#0f172a;margin:0 0 10px}.info-card h3{font-size:.88rem;font-weight:800;color:#155e75;margin:14px 0 6px}.info-card p,.info-card li{font-size:.82rem;line-height:1.65;color:#475569}.info-card ul{padding-left:18px;margin-bottom:0}.reverse-note{font-size:.76rem;color:#64748b;margin-top:8px}.empty-msg{color:#94a3b8}footer{background:#155e75;color:rgba(255,255,255,.68);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}footer a{color:rgba(255,255,255,.82);text-decoration:none}@media(min-width:992px){.main-layout{grid-template-columns:1fr 360px}.result-panel{position:sticky;top:96px}.info-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:640px){.buy-row{grid-template-columns:1fr 1fr 36px}.row-label{grid-column:1/-1;padding-bottom:0}.result-final-val{font-size:1.12rem}.card-hd{align-items:flex-start}.card-hd .add-btn{padding:6px 9px}}
+</style>
+</head>
+<body>
+<div class="mc-nav-wrap"><div class="mc-t1"><div class="container"><div class="mc-row"><a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a><ul class="mc-t1-ul"><li><a href="../../tax/index.html">세금</a></li><li><a href="../../work/index.html">급여·노동</a></li><li><a href="../../tools/index.html">도구</a></li><li><a href="../../realestate/index.html">부동산</a></li><li><a href="../index.html" class="on">금융·투자</a></li><li><a href="../../student/index.html">학생</a></li><li><a href="../../parent/index.html">학부모·육아</a></li><li><a href="../../life/index.html">생활</a></li></ul></div></div></div><div class="mc-t2"><div class="container"><ul class="mc-t2-ul"><li><a href="../compound/index.html" class="mc-done">복리이자</a></li><li><span class="wip">대출상환</span></li><li><a href="index.html" class="on mc-done">물타기</a></li><li><a href="../dividend/index.html" class="mc-done">배당금</a></li><li><span class="wip">은퇴자금</span></li><li><span class="wip">국민연금</span></li><li><span class="wip">공모주</span></li><li><span class="wip">인플레이션</span></li></ul></div></div></div>
+<div class="page-hero"><div class="container"><div class="breadcrumb-nav"><a href="../../index.html">홈</a> / <a href="../index.html">금융·투자</a> / 물타기 계산기</div><div class="hero-badge">평균 매수단가 실시간 계산</div><h1><i class="bi bi-arrow-down-up me-2"></i>물타기 계산기</h1><p>추가 매수 후 평균단가, 총 투자금액, 현재 손익, 목표가 수익률과 목표 평단가 역산 수량을 계산합니다.</p></div></div>
+<div class="container"><div class="main-layout"><main>
+<section class="calc-card"><div class="card-hd"><div class="card-hd-left"><span class="card-icon"><i class="bi bi-pencil-square"></i></span><span class="card-title">매수 내역 입력</span></div><button class="add-btn" type="button" id="addRow"><i class="bi bi-plus-lg me-1"></i>행 추가</button></div><div class="card-body"><div id="buyRows"></div></div></section>
+<section class="calc-card mt-3"><div class="card-hd"><div class="card-hd-left"><span class="card-icon"><i class="bi bi-bullseye"></i></span><span class="card-title">가격 시나리오</span></div></div><div class="card-body"><div class="row g-3"><div class="col-sm-6"><label class="form-label" for="targetPrice">목표가</label><div class="input-group"><input type="number" class="form-control" id="targetPrice" min="0" step="100" value="62000" inputmode="decimal"><span class="input-group-text">원</span></div></div><div class="col-sm-6"><label class="form-label" for="currentPrice">현재가</label><div class="input-group"><input type="number" class="form-control" id="currentPrice" min="0" step="100" value="48000" inputmode="decimal"><span class="input-group-text">원</span></div></div></div></div></section>
+<section class="calc-card mt-3"><div class="card-hd"><div class="card-hd-left"><span class="card-icon"><i class="bi bi-calculator"></i></span><span class="card-title">목표 평단가 역산</span></div></div><div class="card-body"><div class="row g-3"><div class="col-sm-6"><label class="form-label" for="targetAverage">목표 평단가</label><div class="input-group"><input type="number" class="form-control" id="targetAverage" min="0" step="100" value="45000" inputmode="decimal"><span class="input-group-text">원</span></div></div><div class="col-sm-6"><label class="form-label">필요 추가매수</label><div class="input-group"><input type="text" class="form-control" id="neededShares" readonly><span class="input-group-text">주</span></div></div></div><div class="reverse-note" id="reverseNote">현재가가 목표 평단가보다 낮을 때 필요한 최소 추가 수량을 계산합니다.</div></div></section>
+<section class="calc-card mt-3"><div class="card-hd"><div class="card-hd-left"><span class="card-icon"><i class="bi bi-table"></i></span><span class="card-title">상세 결과</span></div></div><div class="table-responsive"><table class="result-table"><tbody><tr><th>총 투자금액</th><td class="money" id="rTotalAmount">₩0</td></tr><tr><th>총 보유수량</th><td class="num" id="rTotalQty">0주</td></tr><tr><th>평균 매수단가</th><td class="money" id="rAverage">₩0</td></tr><tr><th>손익분기점 가격</th><td class="money" id="rBreakEven">₩0</td></tr><tr><th>목표가 수익금</th><td class="money" id="rTargetProfit">₩0</td></tr><tr><th>목표가 수익률</th><td class="num" id="rTargetRate">0.00%</td></tr><tr><th>현재 손익금</th><td class="money" id="rCurrentProfit">₩0</td></tr><tr><th>현재 손익률</th><td class="num" id="rCurrentRate">0.00%</td></tr></tbody></table></div></section>
+<div class="notice"><i class="bi bi-info-circle"></i><div>본 계산기는 거래 수수료, 세금, 슬리피지, 환율을 제외한 참고용입니다. 실제 투자 판단과 결과에 대한 책임은 투자자 본인에게 있습니다.</div></div>
+</main><aside><div class="result-panel"><div class="result-title"><i class="bi bi-check2-circle"></i>평균 매수단가</div><div class="result-final"><span class="result-final-label">현재 보유 기준</span><span class="result-final-val" id="heroAverage">₩0</span></div><div class="side-row"><span>총 투자금액</span><span class="side-val" id="sideTotalAmount">₩0</span></div><div class="side-row"><span>총 보유수량</span><span class="side-val" id="sideTotalQty">0주</span></div><div class="side-row"><span>현재 손익</span><span class="side-val" id="sideCurrentProfit">₩0</span></div><div class="side-row"><span>목표가 예상 수익</span><span class="side-val" id="sideTargetProfit">₩0</span></div></div></aside></div>
+<section class="info-grid">
+<article class="info-card"><h2>물타기란?</h2><p>물타기는 보유 종목 가격이 하락했을 때 더 낮은 가격에 추가 매수해 전체 평균 매수단가를 낮추는 전략입니다. 평균단가가 낮아지면 같은 반등 폭에서도 손익분기점에 더 빨리 도달할 수 있습니다.</p><h3>계산 기준</h3><p>평균 매수단가는 모든 매수금액을 더한 뒤 총 보유수량으로 나눕니다. 손익분기점은 수수료와 세금을 제외하면 평균 매수단가와 같습니다.</p></article>
+<article class="info-card"><h2>장단점과 리스크</h2><ul><li>장점: 평균단가를 낮춰 회복에 필요한 가격 상승 폭을 줄일 수 있습니다.</li><li>장점: 우량 자산을 분할 매수하는 과정이라면 변동성 대응에 도움이 될 수 있습니다.</li><li>리스크: 하락 추세가 이어지면 손실 규모와 투자 비중이 함께 커집니다.</li><li>리스크: 한 종목에 자금이 묶여 다른 기회를 놓칠 수 있습니다.</li></ul></article>
+<article class="info-card"><h2>물타기 vs 손절</h2><p>추가 매수는 하락 이유가 일시적이고 투자 근거가 유지될 때 검토하는 편이 합리적입니다. 반대로 실적, 재무, 산업 전망, 매수 논리가 훼손됐다면 평균단가를 낮추는 것보다 손실 제한이 우선일 수 있습니다.</p><h3>판단 기준</h3><p>추가 매수 전에는 남은 현금 비중, 최대 손실 허용액, 목표 보유 기간, 대체 투자 기회를 함께 비교해야 합니다.</p></article>
+</section></div>
+<footer><div class="container">© 2026 mycalc · 투자 결과를 보장하지 않는 참고용 계산기입니다. | <a href="../../index.html">메인으로</a></div></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const rowsEl=document.getElementById('buyRows');
+let rowId=0;
+function el(id){return document.getElementById(id)}
+function toNum(v){return parseFloat(v)||0}
+function won(v){return '₩'+Math.round(v||0).toLocaleString('ko-KR')}
+function qtyText(v){return (Math.round((v||0)*1000000)/1000000).toLocaleString('ko-KR')+'주'}
+function pct(v){return (Number.isFinite(v)?v:0).toFixed(2)+'%'}
+function tone(node,value){node.classList.remove('profit','loss','neutral');node.classList.add(value>0?'profit':value<0?'loss':'neutral')}
+function addBuyRow(price='',qty=''){
+ rowId+=1;
+ const div=document.createElement('div');
+ div.className='buy-row';
+ div.dataset.rowId=rowId;
+ div.innerHTML=`<div class="row-label">${rowsEl.children.length+1}차 매수</div><div><label class="form-label" for="price${rowId}">매수가</label><div class="input-group"><input type="number" class="form-control buy-price" id="price${rowId}" min="0" step="100" value="${price}" inputmode="decimal"><span class="input-group-text">원</span></div></div><div><label class="form-label" for="qty${rowId}">수량</label><div class="input-group"><input type="number" class="form-control buy-qty" id="qty${rowId}" min="0" step="1" value="${qty}" inputmode="decimal"><span class="input-group-text">주</span></div></div><button class="icon-btn remove-row" type="button" aria-label="매수 행 삭제"><i class="bi bi-trash"></i></button>`;
+ rowsEl.appendChild(div);
+ div.querySelectorAll('input').forEach(input=>input.addEventListener('input',calc));
+ div.querySelector('.remove-row').addEventListener('click',()=>{div.remove();renumberRows();calc()});
+ renumberRows();
+ calc();
+}
+function renumberRows(){
+ [...rowsEl.children].forEach((row,i)=>{row.querySelector('.row-label').textContent=`${i+1}차 매수`;row.querySelector('.remove-row').disabled=rowsEl.children.length===1});
+}
+function getTotals(){
+ let totalAmount=0,totalQty=0;
+ document.querySelectorAll('.buy-row').forEach(row=>{
+  const price=toNum(row.querySelector('.buy-price').value), qty=toNum(row.querySelector('.buy-qty').value);
+  totalAmount+=price*qty; totalQty+=qty;
+ });
+ return {totalAmount,totalQty,average:totalQty>0?totalAmount/totalQty:0};
+}
+function calc(){
+ const {totalAmount,totalQty,average}=getTotals();
+ const targetPrice=toNum(el('targetPrice').value), currentPrice=toNum(el('currentPrice').value), targetAverage=toNum(el('targetAverage').value);
+ const targetProfit=targetPrice>0?(targetPrice-average)*totalQty:0;
+ const currentProfit=currentPrice>0?(currentPrice-average)*totalQty:0;
+ const targetRate=totalAmount>0?targetProfit/totalAmount*100:0;
+ const currentRate=totalAmount>0?currentProfit/totalAmount*100:0;
+ el('rTotalAmount').textContent=won(totalAmount); el('sideTotalAmount').textContent=won(totalAmount);
+ el('rTotalQty').textContent=qtyText(totalQty); el('sideTotalQty').textContent=qtyText(totalQty);
+ el('rAverage').textContent=won(average); el('heroAverage').textContent=won(average);
+ el('rBreakEven').textContent=won(average);
+ el('rTargetProfit').textContent=won(targetProfit); el('sideTargetProfit').textContent=won(targetProfit);
+ el('rTargetRate').textContent=pct(targetRate);
+ el('rCurrentProfit').textContent=won(currentProfit); el('sideCurrentProfit').textContent=won(currentProfit);
+ el('rCurrentRate').textContent=pct(currentRate);
+ [el('rTargetProfit'),el('sideTargetProfit'),el('rTargetRate')].forEach(n=>tone(n,targetProfit));
+ [el('rCurrentProfit'),el('sideCurrentProfit'),el('rCurrentRate')].forEach(n=>tone(n,currentProfit));
+ calcReverse(totalAmount,totalQty,average,currentPrice,targetAverage);
+}
+function calcReverse(totalAmount,totalQty,average,currentPrice,targetAverage){
+ const out=el('neededShares'), note=el('reverseNote');
+ if(totalQty<=0||targetAverage<=0||currentPrice<=0){out.value='';note.textContent='보유 수량, 현재가, 목표 평단가를 입력하면 필요한 추가 매수 수량을 계산합니다.';return}
+ if(average<=targetAverage){out.value='0';note.textContent='이미 목표 평단가 이하입니다. 추가 매수가 필요하지 않습니다.';return}
+ if(currentPrice>=targetAverage){out.value='불가';note.textContent='현재가가 목표 평단가 이상이면 추가 매수만으로 해당 평단가까지 낮출 수 없습니다.';return}
+ const needed=(totalAmount-targetAverage*totalQty)/(targetAverage-currentPrice);
+ const shares=Math.ceil(Math.max(0,needed));
+ out.value=shares.toLocaleString('ko-KR');
+ note.textContent=`현재가 ${won(currentPrice)} 기준 약 ${won(shares*currentPrice)}를 추가 매수해야 목표 평단가에 도달합니다.`;
+}
+document.getElementById('addRow').addEventListener('click',()=>addBuyRow());
+document.querySelectorAll('#targetPrice,#currentPrice,#targetAverage').forEach(input=>input.addEventListener('input',calc));
+addBuyRow(52000,10);
+addBuyRow(47000,8);
+</script>
+</body>
+</html>

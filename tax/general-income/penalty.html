@@ -1,0 +1,203 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>종합소득세 가산세 – mycalc</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Pretendard', -apple-system, sans-serif; background: #f8f9fa; font-size: 14px; color: #1a1a2e; }
+    .main-nav { background: #1e3a8a; padding: 0; z-index: 1000; }
+    .nav-inner { display: flex; align-items: center; gap: 8px; padding: 0 16px; min-height: 52px; flex-wrap: wrap; }
+    .nav-brand { color: #fff; font-weight: 700; font-size: 1rem; text-decoration: none; white-space: nowrap; padding: 10px 0; }
+    .nav-links { list-style: none; display: flex; flex-wrap: wrap; gap: 2px; margin: 0; padding: 4px 0; margin-left: auto; }
+    .nav-links a { color: rgba(255,255,255,.75); text-decoration: none; padding: 6px 10px; border-radius: 6px; font-size: .82rem; transition: all .2s; white-space: nowrap; }
+    .nav-links a:hover, .nav-links a.active { color: #fff; background: rgba(255,255,255,.15); }
+    .nav-toggle { display: none; background: none; border: none; color: #fff; font-size: 1.3rem; padding: 8px; cursor: pointer; margin-left: auto; }
+    @media(max-width:768px) { .nav-toggle { display: block; } .nav-links { display: none; width: 100%; padding-bottom: 8px; } .nav-links.open { display: flex; flex-direction: column; } .nav-links a { padding: 8px 12px; } }
+    .page-hero { background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); color: #fff; padding: 2rem 0 1.5rem; margin-bottom: 1.5rem; }
+    .page-hero h1 { font-size: 1.4rem; font-weight: 700; margin: 0 0 .25rem; }
+    .page-hero p { font-size: .85rem; opacity: .85; margin: 0; }
+    .breadcrumb-nav { font-size: .75rem; color: rgba(255,255,255,.7); margin-bottom: .5rem; }
+    .breadcrumb-nav a { color: rgba(255,255,255,.8); text-decoration: none; }
+    .breadcrumb-nav a:hover { color: #fff; }
+    .card-section { background: #fff; border-radius: 10px; border: 1px solid #e2e8f0; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+    .section-title { font-size: 1rem; font-weight: 700; color: #1e3a8a; margin-bottom: 1rem; padding-bottom: .5rem; border-bottom: 2px solid #dbeafe; display: flex; align-items: center; gap: 8px; }
+    .table th { background: #f0f4ff; font-size: .8rem; white-space: nowrap; }
+    .table td { font-size: .8rem; }
+    .disclaimer { background: #fef9c3; border: 1px solid #fde047; border-radius: 8px; padding: .75rem 1rem; font-size: .78rem; color: #713f12; margin-top: 1.5rem; }
+    footer { background: #1e3a8a; color: rgba(255,255,255,.7); text-align: center; padding: 1rem; font-size: .78rem; margin-top: 2rem; }
+    footer a { color: rgba(255,255,255,.7); text-decoration: none; }
+    footer a:hover { color: #fff; }
+/* ── mc-nav: 2단 공통 네비게이션 ── */
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul{justify-content:flex-end}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.gi-tabs-wrap{background:#fff;border-bottom:2px solid #e2e8f0}
+.gi-tabs{list-style:none;display:flex;overflow-x:auto;margin:0;padding:0 12px;-ms-overflow-style:none;scrollbar-width:none}
+.gi-tabs::-webkit-scrollbar{display:none}
+.gi-tabs li a{display:inline-block;padding:9px 13px;font-size:.82rem;font-weight:600;color:#64748b;text-decoration:none;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;margin-bottom:-2px}
+.gi-tabs li a:hover{color:#1e3a8a}
+.gi-tabs li a.cur{color:#1e3a8a;border-bottom-color:#1e3a8a;font-weight:700}
+    .info-box { background: #eff6ff; border-left: 4px solid #1e3a8a; border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin-bottom: 1rem; font-size: .87rem; line-height: 1.7; }
+    .info-box strong { color: #1e3a8a; }
+    .table-penalty th { vertical-align: middle; }
+    .table-penalty td { vertical-align: middle; line-height: 1.5; }
+    .badge-type { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: .72rem; font-weight: 700; white-space: nowrap; }
+    .badge-musinggo { background: #fef2f2; color: #991b1b; }
+    .badge-gwaso { background: #fff7ed; color: #9a3412; }
+    .badge-napbu { background: #fefce8; color: #713f12; }
+    .badge-jangbu { background: #f0fdf4; color: #166534; }
+    .badge-etc { background: #f5f3ff; color: #4c1d95; }
+    .reduction-table td:nth-child(2) { font-weight: 700; color: #166534; }
+    .example-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.1rem 1.25rem; margin-bottom: 1rem; }
+    .example-box h4 { font-size: .88rem; font-weight: 700; color: #1e3a8a; margin-bottom: .75rem; display: flex; align-items: center; gap: 6px; }
+    .calc-step { display: flex; align-items: baseline; gap: 8px; padding: .3rem 0; font-size: .83rem; }
+    .calc-step-label { color: #6b7280; min-width: 100px; flex-shrink: 0; font-size: .78rem; }
+    .calc-step-val { color: #111827; font-weight: 600; }
+    .calc-step-formula { color: #4b5563; font-size: .78rem; }
+    .calc-result-row { border-top: 2px solid #dbeafe; margin-top: .5rem; padding-top: .5rem; }
+    .calc-result-row .calc-step-val { color: #dc2626; font-size: 1rem; font-weight: 800; }
+    .cta-btn { background: #1e3a8a; border: none; color: #fff; padding: .65rem 1.5rem; border-radius: 8px; font-size: .88rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: background .2s; }
+    .cta-btn:hover { background: #1e40af; color: #fff; }
+  </style>
+</head>
+<body>
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../../tax/index.html" class="on">세금</a></li>
+<li><a href="../../work/index.html">급여·노동</a></li>
+<li><a href="../../tools/index.html">도구</a></li>
+<li><a href="../../realestate/index.html">부동산</a></li>
+<li><a href="../../money/index.html">금융·투자</a></li>
+<li><a href="../../student/index.html">학생</a></li>
+<li><a href="../../parent/index.html">학부모·육아</a></li>
+<li><a href="../../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="index.html" class="mc-done">종합소득세</a></li>
+<li><a href="../freelancer/index.html" class="mc-done">프리랜서 3.3%</a></li>
+<li><a href="../vat/index.html" class="mc-done">부가세</a></li>
+<li><a href="../day-laborer/index.html" class="mc-done">일용직</a></li>
+<li><a href="../earned-income/index.html" class="mc-done">근로소득세</a></li>
+<li><a href="../retirement-income/index.html" class="mc-done">퇴직소득세</a></li>
+<li><a href="../capital-gains/index.html" class="mc-done">양도소득세</a></li>
+<li><span class="wip">연말정산</span></li>
+<li><a href="../property/index.html" class="mc-done">부동산세금</a></li>
+<li><a href="../inheritance/index.html" class="mc-done">상속증여</a></li>
+<li><span class="wip">가상자산</span></li>
+<li><span class="wip">상금</span></li>
+</ul></div></div>
+</div>
+<div class="page-hero">
+  <div class="container">
+    <h1><i class="bi bi-exclamation-circle-fill me-2"></i>종합소득세 가산세</h1>
+    <p>2024년 귀속 종합소득세 가산세 종류, 세율, 계산 예시 안내</p>
+  </div>
+</div>
+<div class="gi-tabs-wrap"><div class="container"><ul class="gi-tabs">
+<li><a href="index.html">계산기</a></li>
+<li><a href="about.html">종합소득세란?</a></li>
+<li><a href="tax-rate.html">세율</a></li>
+<li><a href="flow.html">세액계산흐름도</a></li>
+<li><a href="penalty-calc.html">가산세 계산기</a></li>
+<li><a href="penalty.html" class="cur">가산세</a></li>
+</ul></div></div>
+<div class="container pb-4">
+  <div class="card-section">
+    <div class="section-title"><i class="bi bi-question-circle-fill"></i> 가산세란?</div>
+    <div class="info-box"><strong>가산세</strong>란 세법에서 규정한 신고·납부 등의 의무를 위반한 경우, <strong>본세에 더하여 추가로 부과되는 금액</strong>입니다.<br><br>납세자의 고의·과실과 무관하게 의무 위반 사실만으로 부과됩니다. 다만 <strong>기한후신고</strong>를 통해 일정 비율의 가산세를 감면받을 수 있습니다.</div>
+    <div class="row g-2 mt-1">
+      <div class="col-sm-4"><div style="background:#fef2f2; border-radius:8px; padding:.9rem 1rem; text-align:center;"><div style="font-size:1.4rem; margin-bottom:.3rem;"><i class="bi bi-file-earmark-x-fill" style="color:#dc2626;"></i></div><div style="font-size:.8rem; font-weight:700; color:#991b1b;">무신고 가산세</div><div style="font-size:.75rem; color:#b91c1c; margin-top:.2rem;">신고 자체를 하지 않은 경우</div></div></div>
+      <div class="col-sm-4"><div style="background:#fff7ed; border-radius:8px; padding:.9rem 1rem; text-align:center;"><div style="font-size:1.4rem; margin-bottom:.3rem;"><i class="bi bi-file-earmark-minus-fill" style="color:#ea580c;"></i></div><div style="font-size:.8rem; font-weight:700; color:#9a3412;">과소신고 가산세</div><div style="font-size:.75rem; color:#c2410c; margin-top:.2rem;">실제보다 적게 신고한 경우</div></div></div>
+      <div class="col-sm-4"><div style="background:#fefce8; border-radius:8px; padding:.9rem 1rem; text-align:center;"><div style="font-size:1.4rem; margin-bottom:.3rem;"><i class="bi bi-clock-history" style="color:#ca8a04;"></i></div><div style="font-size:.8rem; font-weight:700; color:#713f12;">납부지연 가산세</div><div style="font-size:.75rem; color:#854d0e; margin-top:.2rem;">기한 내 미납 또는 미달납부</div></div></div>
+    </div>
+  </div>
+  <div class="card-section">
+    <div class="section-title"><i class="bi bi-table"></i> 2024년 귀속 주요 가산세</div>
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover align-middle table-penalty">
+        <thead><tr><th style="width:22%;">종류</th><th style="width:28%;">부과사유</th><th>가산세액</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge-type badge-musinggo">무신고 (일반)</span></td><td>신고기한까지 미신고</td><td>무신고납부세액 × <strong>20%</strong></td></tr>
+          <tr><td><span class="badge-type badge-musinggo">무신고 (복식부기의무자)</span></td><td>신고기한까지 미신고</td><td>MAX[무신고납부세액×20%, 수입금액×<strong>0.07%</strong>]</td></tr>
+          <tr><td><span class="badge-type badge-musinggo">무신고 (부정행위)</span></td><td>부정무신고</td><td>납부세액 × <strong>40%</strong> (국제거래 <strong>60%</strong>)</td></tr>
+          <tr><td><span class="badge-type badge-gwaso">과소신고 (일반)</span></td><td>과소하게 신고</td><td>과소신고납부세액 × <strong>10%</strong></td></tr>
+          <tr><td><span class="badge-type badge-gwaso">과소신고 (부정행위)</span></td><td>부정 과소신고</td><td>과소납부세액 × <strong>40%</strong> (국제거래 <strong>60%</strong>)</td></tr>
+          <tr><td><span class="badge-type badge-jangbu">장부 불성실 (무기장)</span></td><td>무기장·미달기장</td><td>산출세액 × (무기장소득 / 종합소득) × <strong>20%</strong></td></tr>
+          <tr><td><span class="badge-type badge-napbu">납부지연</span></td><td>미납·미달납부</td><td>미납세액 × 경과일수 × <strong>2.2/10,000</strong></td></tr>
+          <tr><td><span class="badge-type badge-etc">지급명세서 미제출</span></td><td>미제출·불분명</td><td>미제출금액 × <strong>1%</strong></td></tr>
+          <tr><td><span class="badge-type badge-etc">신용카드 발급 불성실</span></td><td>거부·허위발급</td><td>거부금액 × <strong>5%</strong> (최소 5,000원)</td></tr>
+          <tr><td><span class="badge-type badge-musinggo">성실신고확인서 미제출</span></td><td>성실신고확인 대상자 미제출</td><td>MAX[산출세액×5%, 총수입금액×0.02%]</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card-section">
+    <div class="section-title"><i class="bi bi-tag-fill"></i> 기한후신고 감면 안내</div>
+    <div class="info-box">법정신고기한이 지난 후에도 <strong>기한후신고</strong>를 통해 무신고·과소신고 가산세를 일부 감면받을 수 있습니다.</div>
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle reduction-table">
+        <thead><tr><th>신고 시기</th><th>감면율</th><th>납부 비율</th></tr></thead>
+        <tbody>
+          <tr style="background:#f0fdf4;"><td>법정기한 후 <strong>1개월 이내</strong></td><td><span style="color:#15803d; font-size:1.05rem;">50% 감면</span></td><td>가산세의 <strong>50%</strong>만 납부</td></tr>
+          <tr><td>1개월 초과 <strong>3개월 이내</strong></td><td>30% 감면</td><td>가산세의 <strong>70%</strong>만 납부</td></tr>
+          <tr><td>3개월 초과 <strong>6개월 이내</strong></td><td>20% 감면</td><td>가산세의 <strong>80%</strong>만 납부</td></tr>
+          <tr><td>6개월 초과 <strong>1년 이내</strong></td><td>10% 감면</td><td>가산세의 <strong>90%</strong>만 납부</td></tr>
+          <tr style="background:#fef2f2;"><td><strong>1년 초과</strong></td><td><span style="color:#dc2626;">감면 없음</span></td><td>가산세 <strong>100%</strong> 납부</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card-section">
+    <div class="section-title"><i class="bi bi-lightbulb-fill"></i> 가산세 계산 예시</div>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <div class="example-box">
+          <h4><i class="bi bi-1-circle-fill" style="color:#1e3a8a;"></i> 무신고가산세 (기한후신고 감면 포함)</h4>
+          <div class="calc-step"><span class="calc-step-label">납부세액</span><span class="calc-step-val">1,000,000원</span></div>
+          <div class="calc-step"><span class="calc-step-label">무신고가산세</span><span class="calc-step-val">200,000원</span><span class="calc-step-formula">= 1,000,000 × 20%</span></div>
+          <div class="calc-step" style="background:#f0fdf4; border-radius:4px; padding:.3rem .5rem;"><span class="calc-step-label">기한후신고</span><span class="calc-step-val" style="color:#15803d;">50% 감면</span></div>
+          <div class="calc-step calc-result-row"><span class="calc-step-label" style="font-weight:700;">최종 가산세</span><span class="calc-step-val">100,000원</span></div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="example-box">
+          <h4><i class="bi bi-2-circle-fill" style="color:#1e3a8a;"></i> 납부지연가산세</h4>
+          <div class="calc-step"><span class="calc-step-label">미납세액</span><span class="calc-step-val">1,000,000원</span></div>
+          <div class="calc-step"><span class="calc-step-label">경과일수</span><span class="calc-step-val">30일</span></div>
+          <div class="calc-step calc-result-row"><span class="calc-step-label" style="font-weight:700;">납부지연가산세</span><span class="calc-step-val">6,600원</span><span class="calc-step-formula">= 1,000,000 × 30 × 0.022%</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-4 pt-2" style="border-top: 1px solid #e2e8f0;">
+      <p style="font-size:.85rem; color:#6b7280; margin-bottom:.85rem;">직접 가산세를 계산해 보고 싶으신가요?</p>
+      <a href="penalty-calc.html" class="cta-btn"><i class="bi bi-calculator-fill"></i> 가산세 계산기 바로가기</a>
+    </div>
+  </div>
+  <div class="disclaimer"><i class="bi bi-info-circle me-1"></i>이 계산 결과는 모의계산의 결과이므로 참고용으로만 사용하시기 바랍니다.</div>
+</div>
+<footer><div class="container"><p class="mb-0">본 사이트의 계산 결과는 참고용이며 법적 효력이 없습니다. | <a href="../../index.html">← 메인으로</a></p></div></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>function toggleNav(){document.getElementById('navLinks').classList.toggle('open')}</script>
+</body>
+</html>

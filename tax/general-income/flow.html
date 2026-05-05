@@ -1,0 +1,241 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>종합소득세 세액계산흐름도 – mycalc</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Pretendard', -apple-system, sans-serif; background: #f8f9fa; font-size: 14px; color: #1a1a2e; }
+    .main-nav { background: #1e3a8a; padding: 0; z-index: 1000; }
+    .nav-inner { display: flex; align-items: center; gap: 8px; padding: 0 16px; min-height: 52px; flex-wrap: wrap; }
+    .nav-brand { color: #fff; font-weight: 700; font-size: 1rem; text-decoration: none; white-space: nowrap; padding: 10px 0; }
+    .nav-links { list-style: none; display: flex; flex-wrap: wrap; gap: 2px; margin: 0; padding: 4px 0; margin-left: auto; }
+    .nav-links a { color: rgba(255,255,255,.75); text-decoration: none; padding: 6px 10px; border-radius: 6px; font-size: .82rem; transition: all .2s; white-space: nowrap; }
+    .nav-links a:hover, .nav-links a.active { color: #fff; background: rgba(255,255,255,.15); }
+    .nav-toggle { display: none; background: none; border: none; color: #fff; font-size: 1.3rem; padding: 8px; cursor: pointer; margin-left: auto; }
+    @media(max-width:768px) { .nav-toggle { display: block; } .nav-links { display: none; width: 100%; padding-bottom: 8px; } .nav-links.open { display: flex; flex-direction: column; } .nav-links a { padding: 8px 12px; } }
+    .page-hero { background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); color: #fff; padding: 2rem 0 1.5rem; margin-bottom: 1.5rem; }
+    .page-hero h1 { font-size: 1.4rem; font-weight: 700; margin: 0 0 .25rem; }
+    .page-hero p { font-size: .85rem; opacity: .85; margin: 0; }
+    .breadcrumb-nav { font-size: .75rem; color: rgba(255,255,255,.7); margin-bottom: .5rem; }
+    .breadcrumb-nav a { color: rgba(255,255,255,.8); text-decoration: none; }
+    .breadcrumb-nav a:hover { color: #fff; }
+    .card-section { background: #fff; border-radius: 10px; border: 1px solid #e2e8f0; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+    .section-title { font-size: 1rem; font-weight: 700; color: #1e3a8a; margin-bottom: 1rem; padding-bottom: .5rem; border-bottom: 2px solid #dbeafe; display: flex; align-items: center; gap: 8px; }
+    .table th { background: #f0f4ff; font-size: .8rem; white-space: nowrap; }
+    .table td { font-size: .8rem; }
+    .badge-num { background: #dbeafe; color: #1e3a8a; border-radius: 12px; padding: 2px 8px; font-size: .72rem; font-weight: 700; }
+    .disclaimer { background: #fef9c3; border: 1px solid #fde047; border-radius: 8px; padding: .75rem 1rem; font-size: .78rem; color: #713f12; margin-top: 1.5rem; }
+    footer { background: #1e3a8a; color: rgba(255,255,255,.7); text-align: center; padding: 1rem; font-size: .78rem; margin-top: 2rem; }
+    footer a { color: rgba(255,255,255,.7); text-decoration: none; }
+    footer a:hover { color: #fff; }
+/* ── mc-nav: 2단 공통 네비게이션 ── */
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul{justify-content:flex-end}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.gi-tabs-wrap{background:#fff;border-bottom:2px solid #e2e8f0}
+.gi-tabs{list-style:none;display:flex;overflow-x:auto;margin:0;padding:0 12px;-ms-overflow-style:none;scrollbar-width:none}
+.gi-tabs::-webkit-scrollbar{display:none}
+.gi-tabs li a{display:inline-block;padding:9px 13px;font-size:.82rem;font-weight:600;color:#64748b;text-decoration:none;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;margin-bottom:-2px}
+.gi-tabs li a:hover{color:#1e3a8a}
+.gi-tabs li a.cur{color:#1e3a8a;border-bottom-color:#1e3a8a;font-weight:700}
+    .flow-wrap { max-width: 640px; margin: 0 auto; }
+    .flow-arrow { text-align: center; font-size: 1.5rem; color: #6b7280; line-height: 1; margin: 4px 0; }
+    .flow-node { border-radius: 10px; padding: 1rem 1.25rem; border: 2px solid; position: relative; }
+    .flow-node-title { font-size: .95rem; font-weight: 800; margin-bottom: .6rem; display: flex; align-items: center; gap: 8px; }
+    .flow-node-operator { font-size: .75rem; font-weight: 700; padding: 2px 8px; border-radius: 6px; margin-right: 4px; flex-shrink: 0; }
+    .node-income { background: #dbeafe; border-color: #1e40af; }
+    .node-income .flow-node-title { color: #1e3a8a; }
+    .node-income .flow-node-operator { background: #1e40af; color: #fff; }
+    .node-deduction { background: #dcfce7; border-color: #16a34a; }
+    .node-deduction .flow-node-title { color: #14532d; }
+    .node-deduction .flow-node-operator { background: #16a34a; color: #fff; }
+    .node-calc { background: #fef3c7; border-color: #d97706; }
+    .node-calc .flow-node-title { color: #92400e; }
+    .node-calc .flow-node-operator { background: #d97706; color: #fff; }
+    .node-credit { background: #fef9c3; border-color: #a16207; }
+    .node-credit .flow-node-title { color: #713f12; }
+    .node-credit .flow-node-operator { background: #a16207; color: #fff; }
+    .node-penalty { background: #fee2e2; border-color: #dc2626; }
+    .node-penalty .flow-node-title { color: #991b1b; }
+    .node-penalty .flow-node-operator { background: #dc2626; color: #fff; }
+    .node-prepaid { background: #ede9fe; border-color: #7c3aed; }
+    .node-prepaid .flow-node-title { color: #4c1d95; }
+    .node-prepaid .flow-node-operator { background: #7c3aed; color: #fff; }
+    .node-final { background: linear-gradient(135deg, #ede9fe 0%, #dbeafe 100%); border-color: #7c3aed; border-width: 3px; }
+    .node-final .flow-node-title { color: #4c1d95; font-size: 1.05rem; }
+    .flow-sub-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+    .flow-sub-chip { font-size: .72rem; font-weight: 600; padding: 4px 10px; border-radius: 20px; border: 1px solid; white-space: nowrap; }
+    .node-income .flow-sub-chip { background: #eff6ff; border-color: #93c5fd; color: #1e40af; }
+    .node-deduction .flow-sub-chip { background: #f0fdf4; border-color: #86efac; color: #166534; }
+    .node-calc .flow-sub-chip { background: #fffbeb; border-color: #fcd34d; color: #92400e; }
+    .node-credit .flow-sub-chip { background: #fefce8; border-color: #fde047; color: #713f12; }
+    .node-penalty .flow-sub-chip { background: #fff1f2; border-color: #fca5a5; color: #991b1b; }
+    .node-prepaid .flow-sub-chip { background: #f5f3ff; border-color: #c4b5fd; color: #5b21b6; }
+    .flow-step-badge { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; font-size: .72rem; font-weight: 800; flex-shrink: 0; }
+    .node-income .flow-step-badge { background: #1e40af; color: #fff; }
+    .node-deduction .flow-step-badge { background: #16a34a; color: #fff; }
+    .node-calc .flow-step-badge { background: #d97706; color: #fff; }
+    .node-credit .flow-step-badge { background: #a16207; color: #fff; }
+    .node-penalty .flow-step-badge { background: #dc2626; color: #fff; }
+    .node-prepaid .flow-step-badge { background: #7c3aed; color: #fff; }
+    .node-final .flow-step-badge { background: #7c3aed; color: #fff; width: 26px; height: 26px; font-size: .8rem; }
+  </style>
+</head>
+<body>
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../../tax/index.html" class="on">세금</a></li>
+<li><a href="../../work/index.html">급여·노동</a></li>
+<li><a href="../../tools/index.html">도구</a></li>
+<li><a href="../../realestate/index.html">부동산</a></li>
+<li><a href="../../money/index.html">금융·투자</a></li>
+<li><a href="../../student/index.html">학생</a></li>
+<li><a href="../../parent/index.html">학부모·육아</a></li>
+<li><a href="../../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="index.html" class="mc-done">종합소득세</a></li>
+<li><a href="../freelancer/index.html" class="mc-done">프리랜서 3.3%</a></li>
+<li><a href="../vat/index.html" class="mc-done">부가세</a></li>
+<li><a href="../day-laborer/index.html" class="mc-done">일용직</a></li>
+<li><a href="../earned-income/index.html" class="mc-done">근로소득세</a></li>
+<li><a href="../retirement-income/index.html" class="mc-done">퇴직소득세</a></li>
+<li><a href="../capital-gains/index.html" class="mc-done">양도소득세</a></li>
+<li><span class="wip">연말정산</span></li>
+<li><a href="../property/index.html" class="mc-done">부동산세금</a></li>
+<li><a href="../inheritance/index.html" class="mc-done">상속증여</a></li>
+<li><span class="wip">가상자산</span></li>
+<li><span class="wip">상금</span></li>
+</ul></div></div>
+</div>
+<div class="page-hero">
+  <div class="container">
+    <h1><i class="bi bi-diagram-3-fill me-2"></i>세액계산흐름도</h1>
+    <p>종합소득세 산출부터 최종 납부세액까지 단계별 계산 흐름을 확인하세요.</p>
+  </div>
+</div>
+<div class="gi-tabs-wrap"><div class="container"><ul class="gi-tabs">
+<li><a href="index.html">계산기</a></li>
+<li><a href="about.html">종합소득세란?</a></li>
+<li><a href="tax-rate.html">세율</a></li>
+<li><a href="flow.html" class="cur">세액계산흐름도</a></li>
+<li><a href="penalty-calc.html">가산세 계산기</a></li>
+<li><a href="penalty.html">가산세</a></li>
+</ul></div></div>
+<div class="container pb-4">
+  <div class="card-section">
+    <div class="section-title"><i class="bi bi-diagram-3-fill" style="color:#1e3a8a;"></i> 종합소득세 세액계산 흐름도</div>
+    <div class="flow-wrap">
+      <div class="flow-node node-income">
+        <div class="flow-node-title"><span class="flow-step-badge">1</span> 종합소득금액</div>
+        <div class="flow-sub-row">
+          <span class="flow-sub-chip"><i class="bi bi-bank me-1"></i>이자소득</span>
+          <span class="flow-sub-chip"><i class="bi bi-graph-up me-1"></i>배당소득</span>
+          <span class="flow-sub-chip"><i class="bi bi-briefcase me-1"></i>사업소득</span>
+          <span class="flow-sub-chip"><i class="bi bi-person-workspace me-1"></i>근로소득</span>
+          <span class="flow-sub-chip"><i class="bi bi-piggy-bank me-1"></i>연금소득</span>
+          <span class="flow-sub-chip"><i class="bi bi-three-dots me-1"></i>기타소득</span>
+        </div>
+      </div>
+      <div class="flow-arrow"><i class="bi bi-arrow-down"></i></div>
+      <div class="flow-node node-deduction">
+        <div class="flow-node-title"><span class="flow-step-badge">2</span><span class="flow-node-operator">(-)</span>소득공제</div>
+        <div class="flow-sub-row">
+          <span class="flow-sub-chip">기본공제 (본인·배우자·부양가족)</span>
+          <span class="flow-sub-chip">추가공제 (경로우대·장애인 등)</span>
+          <span class="flow-sub-chip">연금보험료공제</span>
+          <span class="flow-sub-chip">특별소득공제 (보험료·주택자금)</span>
+          <span class="flow-sub-chip">조특법 (주택마련저축·신용카드 등)</span>
+        </div>
+      </div>
+      <div class="flow-arrow"><i class="bi bi-arrow-down"></i></div>
+      <div class="flow-node node-calc">
+        <div class="flow-node-title"><span class="flow-step-badge">3</span><span class="flow-node-operator">(=)</span>과세표준</div>
+      </div>
+      <div class="flow-arrow"><i class="bi bi-arrow-down"></i></div>
+      <div class="flow-node node-calc">
+        <div class="flow-node-title"><span class="flow-step-badge">4</span><span class="flow-node-operator">(×)</span>세율 6% ~ 45%</div>
+        <div class="flow-sub-row"><span class="flow-sub-chip">누진공제 차감</span><span class="flow-sub-chip">8단계 초과누진세율 적용</span></div>
+      </div>
+      <div class="flow-arrow"><i class="bi bi-arrow-down"></i></div>
+      <div class="flow-node node-calc">
+        <div class="flow-node-title"><span class="flow-step-badge">5</span><span class="flow-node-operator">(=)</span>산출세액</div>
+      </div>
+      <div class="flow-arrow"><i class="bi bi-arrow-down"></i></div>
+      <div class="flow-node node-credit">
+        <div class="flow-node-title"><span class="flow-step-badge">6</span><span class="flow-node-operator">(-)</span>세액공제 / 세액감면</div>
+        <div class="flow-sub-row">
+          <span class="flow-sub-chip">특별세액공제 (보험료·의료비·교육비·기부금·표준)</span>
+          <span class="flow-sub-chip">기장세액공제</span>
+          <span class="flow-sub-chip">배당세액공제</span>
+          <span class="flow-sub-chip">근로소득세액공제</span>
+          <span class="flow-sub-chip">전자신고세액공제</span>
+          <span class="flow-sub-chip">연금계좌세액공제</span>
+          <span class="flow-sub-chip">자녀세액공제</span>
+          <span class="flow-sub-chip">혼인세액공제</span>
+        </div>
+      </div>
+      <div class="flow-arrow"><i class="bi bi-arrow-down"></i></div>
+      <div class="flow-node node-calc">
+        <div class="flow-node-title"><span class="flow-step-badge">7</span><span class="flow-node-operator">(=)</span>결정세액</div>
+      </div>
+      <div class="flow-arrow"><i class="bi bi-arrow-down"></i></div>
+      <div class="flow-node node-penalty">
+        <div class="flow-node-title"><span class="flow-step-badge">8</span><span class="flow-node-operator">(+)</span>가산세</div>
+        <div class="flow-sub-row"><span class="flow-sub-chip">무(과소)신고 가산세</span><span class="flow-sub-chip">납부지연 가산세</span><span class="flow-sub-chip">무기장 가산세</span></div>
+      </div>
+      <div class="flow-arrow"><i class="bi bi-arrow-down"></i></div>
+      <div class="flow-node node-prepaid">
+        <div class="flow-node-title"><span class="flow-step-badge">9</span><span class="flow-node-operator">(-)</span>기납부세액</div>
+        <div class="flow-sub-row"><span class="flow-sub-chip">중간예납세액</span><span class="flow-sub-chip">수시부과세액</span><span class="flow-sub-chip">원천징수세액</span></div>
+      </div>
+      <div class="flow-arrow"><i class="bi bi-arrow-down"></i></div>
+      <div class="flow-node node-final">
+        <div class="flow-node-title"><span class="flow-step-badge node-final">10</span><span style="background:#7c3aed; color:#fff; border-radius:6px; padding:2px 9px; font-size:.78rem; font-weight:700; margin-right:6px;">(=)</span>납부할 세액 (환급세액)</div>
+        <div style="font-size:.8rem; color:#5b21b6; margin-top: .2rem;"><i class="bi bi-info-circle me-1"></i>결정세액 + 가산세 − 기납부세액. 음수이면 환급.</div>
+      </div>
+    </div>
+  </div>
+  <div class="card-section">
+    <div class="section-title"><i class="bi bi-table" style="color:#1e3a8a;"></i> 세율 구간별 세액 예시</div>
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover align-middle mb-0">
+        <thead><tr><th class="text-center">과세표준 예시</th><th class="text-center">적용 세율</th><th class="text-center">산출세액</th><th class="text-center d-none d-md-table-cell">계산식</th></tr></thead>
+        <tbody>
+          <tr><td class="text-center fw-bold">1,000만원</td><td class="text-center"><span class="badge-num">6%</span></td><td class="text-center fw-bold text-danger">600,000원</td><td class="text-center d-none d-md-table-cell" style="font-size:.75rem; color:#6b7280;">10,000,000 × 6%</td></tr>
+          <tr><td class="text-center fw-bold">3,000만원</td><td class="text-center"><span class="badge-num">15%</span></td><td class="text-center fw-bold text-danger">3,240,000원</td><td class="text-center d-none d-md-table-cell" style="font-size:.75rem; color:#6b7280;">30,000,000 × 15% − 1,260,000</td></tr>
+          <tr><td class="text-center fw-bold">7,000만원</td><td class="text-center"><span class="badge-num">24%</span></td><td class="text-center fw-bold text-danger">11,040,000원</td><td class="text-center d-none d-md-table-cell" style="font-size:.75rem; color:#6b7280;">70,000,000 × 24% − 5,760,000</td></tr>
+          <tr><td class="text-center fw-bold">1억원</td><td class="text-center"><span class="badge-num">35%</span></td><td class="text-center fw-bold text-danger">19,560,000원</td><td class="text-center d-none d-md-table-cell" style="font-size:.75rem; color:#6b7280;">100,000,000 × 35% − 15,440,000</td></tr>
+          <tr><td class="text-center fw-bold">2억원</td><td class="text-center"><span class="badge-num">38%</span></td><td class="text-center fw-bold text-danger">56,060,000원</td><td class="text-center d-none d-md-table-cell" style="font-size:.75rem; color:#6b7280;">200,000,000 × 38% − 19,940,000</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="disclaimer"><i class="bi bi-info-circle-fill me-1"></i>본 흐름도는 이해를 돕기 위한 참고 자료입니다. 정확한 세액은 세무사 또는 관할 세무서에 문의하시기 바랍니다.</div>
+</div>
+<footer><div class="container"><p class="mb-0">본 계산기는 참고용이며 실제 세액과 다를 수 있습니다. | <a href="../../index.html">← 메인으로</a></p></div></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>function toggleNav(){document.getElementById('navLinks').classList.toggle('open')}</script>
+</body>
+</html>

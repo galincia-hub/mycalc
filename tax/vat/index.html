@@ -1,0 +1,613 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>부가세 계산기 – 포함/역산/간이과세 | mycalc</title>
+<meta name="description" content="부가가치세 포함 금액 역산, 공급가액 계산, 간이과세자 업종별 세액 계산기. 실시간 부가세 계산.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}
+
+/* ── 네비 ── */
+.main-nav{background:#1e3a8a;z-index:1000}
+.nav-inner{display:flex;align-items:center;padding:0 16px;min-height:52px;flex-wrap:wrap}
+.nav-brand{color:#fff;font-weight:800;font-size:.95rem;text-decoration:none;white-space:nowrap;padding:12px 0;margin-right:12px}
+.nav-brand span{color:#93c5fd}
+.nav-links{list-style:none;display:flex;flex-wrap:wrap;gap:2px;margin:0;padding:4px 0;margin-left:auto}
+.nav-links a{color:rgba(255,255,255,.72);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.8rem;transition:all .15s;white-space:nowrap}
+.nav-links a:hover,.nav-links a.active{color:#fff;background:rgba(255,255,255,.18)}
+.nav-toggle{display:none;background:none;border:none;color:#fff;font-size:1.3rem;padding:8px;cursor:pointer;margin-left:auto}
+@media(max-width:768px){.nav-toggle{display:block}.nav-links{display:none;width:100%;flex-direction:column;padding-bottom:8px}.nav-links.open{display:flex}.nav-links a{padding:8px 12px}}
+
+/* ── 히어로 ── */
+.page-hero{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 60%,#7c3aed 100%);color:#fff;padding:1.75rem 0 1.5rem;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.hero-content{position:relative}
+.breadcrumb-nav{font-size:.75rem;color:rgba(255,255,255,.7);margin-bottom:.5rem}
+.breadcrumb-nav a{color:rgba(255,255,255,.8);text-decoration:none}
+.breadcrumb-nav a:hover{color:#fff}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:3px 12px;font-size:.75rem;margin-bottom:.5rem}
+.page-hero h1{font-size:1.4rem;font-weight:800;margin:0 0 .3rem}
+.page-hero p{font-size:.83rem;opacity:.85;margin:0}
+
+/* ── 탭 ── */
+.tab-nav{display:flex;background:#fff;border-radius:12px 12px 0 0;border:1px solid #e2e8f0;border-bottom:none;margin-top:20px;overflow:hidden}
+.tab-btn{flex:1;padding:13px 10px;font-size:.85rem;font-weight:700;border:none;background:none;color:#64748b;cursor:pointer;transition:all .18s;border-bottom:3px solid transparent;display:flex;align-items:center;justify-content:center;gap:6px}
+.tab-btn:hover{background:#f8fafc;color:#1e3a8a}
+.tab-btn.active{background:#fff;color:#1e3a8a;border-bottom-color:#1e3a8a}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+.tab-body{background:#fff;border:1px solid #e2e8f0;border-radius:0 0 12px 12px;padding:24px}
+
+/* ── 폼 ── */
+.form-label{font-weight:700;font-size:.82rem;color:#374151;margin-bottom:4px;display:block}
+.form-control,.form-select{font-size:.88rem;border-color:#d1d5db;border-radius:8px}
+.form-control:focus,.form-select:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+.input-group-text{background:#f1f5f9;border-color:#d1d5db;font-size:.82rem;color:#64748b;min-width:40px;justify-content:center}
+.form-text{font-size:.72rem;color:#64748b;margin-top:3px}
+
+/* ── 입력 영역 ── */
+.calc-input-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px}
+.calc-input-box .big-input{font-size:1.6rem;font-weight:900;border:none;border-bottom:2px solid #3b82f6;border-radius:0;padding:6px 2px;background:transparent;color:#0f172a;width:100%;text-align:right;outline:none}
+.calc-input-box .big-input::placeholder{color:#cbd5e1}
+.calc-input-box .big-input:focus{border-bottom-color:#1e3a8a}
+.input-unit{font-size:.85rem;color:#64748b;font-weight:600;margin-left:6px}
+.quick-btns{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.quick-btn{font-size:.72rem;font-weight:600;padding:3px 10px;border-radius:6px;border:1px solid #d1d5db;background:#fff;color:#475569;cursor:pointer;transition:all .15s}
+.quick-btn:hover{border-color:#3b82f6;color:#1e3a8a;background:#eff6ff}
+
+/* ── 결과 카드 ── */
+.result-main{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:14px;padding:22px 24px;color:#fff;margin-top:0}
+.result-main-title{font-size:.78rem;opacity:.75;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.result-rows{display:flex;flex-direction:column;gap:0}
+.result-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.12);font-size:.85rem}
+.result-row:last-child{border:none}
+.result-row-label{opacity:.8;display:flex;align-items:center;gap:6px}
+.result-row-val{font-weight:700;font-size:.9rem}
+.result-row.total{background:rgba(255,255,255,.12);border-radius:8px;padding:10px 12px;margin-top:6px}
+.result-row.total .result-row-label{opacity:1;font-weight:700;font-size:.9rem}
+.result-row.total .result-row-val{font-size:1.2rem;font-weight:900}
+.result-tag{display:inline-flex;align-items:center;background:rgba(255,255,255,.18);border-radius:6px;padding:1px 8px;font-size:.72rem;font-weight:700;margin-left:4px}
+.vat-highlight{color:#fde047}
+
+/* ── 간이과세 패널 ── */
+.simple-panel{background:#fef9c3;border:1px solid #fde047;border-radius:10px;padding:14px 16px;margin-top:12px}
+.simple-panel-title{font-size:.8rem;font-weight:700;color:#713f12;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.simple-row{display:flex;justify-content:space-between;padding:4px 0;font-size:.8rem;border-bottom:1px solid rgba(253,224,71,.4)}
+.simple-row:last-child{border:none}
+.simple-label{color:#78350f}
+.simple-val{font-weight:700;color:#92400e}
+
+/* ── 비교 테이블 ── */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+@media(max-width:480px){.compare-grid{grid-template-columns:1fr}}
+.compare-card{border-radius:10px;padding:14px;border:1.5px solid}
+.compare-card.general{background:#eff6ff;border-color:#bfdbfe}
+.compare-card.simple{background:#fef9c3;border-color:#fde047}
+.compare-card-title{font-size:.82rem;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.compare-card.general .compare-card-title{color:#1e40af}
+.compare-card.simple .compare-card-title{color:#713f12}
+.compare-card ul{margin:0;padding-left:1.2rem;font-size:.78rem;line-height:1.7}
+.compare-card.general li{color:#1e3a8a}
+.compare-card.simple li{color:#78350f}
+
+/* ── 업종 셀렉터 ── */
+.sector-select-wrap{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:12px 14px;margin-top:10px}
+.sector-select-title{font-size:.78rem;font-weight:700;color:#92400e;margin-bottom:8px}
+
+/* ── 신고기간 배지 ── */
+.period-cards{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.period-card{flex:1;min-width:130px;border-radius:10px;padding:12px 14px;border:1px solid}
+.period-card.p1{background:#eff6ff;border-color:#bfdbfe}
+.period-card.p2{background:#f0fdf4;border-color:#bbf7d0}
+.period-card.p3{background:#fef9c3;border-color:#fde047}
+.period-card-badge{font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:6px;display:inline-block;margin-bottom:5px}
+.p1 .period-card-badge{background:#1e40af;color:#fff}
+.p2 .period-card-badge{background:#16a34a;color:#fff}
+.p3 .period-card-badge{background:#ca8a04;color:#fff}
+.period-card-title{font-size:.82rem;font-weight:700;color:#1e293b;margin-bottom:3px}
+.period-card-date{font-size:.75rem;color:#475569}
+
+/* ── 안내 카드 ── */
+.info-card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;padding:20px;margin-top:16px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.info-title{font-size:.95rem;font-weight:800;color:#0f172a;margin-bottom:12px;display:flex;align-items:center;gap:8px;border-bottom:2px solid #e2e8f0;padding-bottom:8px}
+.callout{border-radius:8px;padding:10px 14px;margin-bottom:10px;font-size:.82rem;display:flex;gap:10px;align-items:flex-start}
+.callout-blue{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af}
+.callout-yellow{background:#fef9c3;border:1px solid #fde047;color:#713f12}
+.callout-green{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}
+.callout-red{background:#fff1f2;border:1px solid #fecdd3;color:#991b1b}
+.callout i{flex-shrink:0;margin-top:2px}
+.info-table th{background:#f0f4ff;font-size:.78rem}
+.info-table td{font-size:.78rem;vertical-align:middle}
+
+/* ── 면책 ── */
+.disclaimer{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.75rem;color:#713f12;margin-top:16px;display:flex;gap:8px;align-items:flex-start}
+footer{background:#1e3a8a;color:rgba(255,255,255,.6);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}
+footer a{color:rgba(255,255,255,.7);text-decoration:none}
+footer a:hover{color:#fff}
+
+@media(max-width:576px){
+  .page-hero h1{font-size:1.2rem}
+  .calc-input-box .big-input{font-size:1.3rem}
+  .tab-btn{font-size:.78rem;padding:11px 6px}
+}
+/* ── mc-nav: 2단 공통 네비게이션 ── */
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul{justify-content:flex-end}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+</style>
+</head>
+<body>
+
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../../tax/index.html" class="on">세금</a></li>
+<li><a href="../../work/index.html">급여·노동</a></li>
+<li><a href="../../tools/index.html">도구</a></li>
+<li><a href="../../realestate/index.html">부동산</a></li>
+<li><a href="../../money/index.html">금융·투자</a></li>
+<li><a href="../../student/index.html">학생</a></li>
+<li><a href="../../parent/index.html">학부모·육아</a></li>
+<li><a href="../../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="../general-income/index.html" class="mc-done">종합소득세</a></li>
+<li><a href="../freelancer/index.html" class="mc-done">프리랜서 3.3%</a></li>
+<li><a href="index.html" class="on mc-done">부가세</a></li>
+<li><a href="../day-laborer/index.html" class="mc-done">일용직</a></li>
+<li><a href="../earned-income/index.html" class="mc-done">근로소득세</a></li>
+<li><a href="../retirement-income/index.html" class="mc-done">퇴직소득세</a></li>
+<li><a href="../capital-gains/index.html" class="mc-done">양도소득세</a></li>
+<li><span class="wip">연말정산</span></li>
+<li><a href="../property/index.html" class="mc-done">부동산세금</a></li>
+<li><a href="../inheritance/index.html" class="mc-done">상속증여</a></li>
+<li><span class="wip">가상자산</span></li>
+<li><span class="wip">상금</span></li>
+</ul></div></div>
+</div>
+
+<!-- 히어로 -->
+<div class="page-hero">
+  <div class="container hero-content">
+    <div class="hero-badge"><i class="bi bi-receipt-cutoff"></i> 부가가치세 · VAT</div>
+    <h1><i class="bi bi-calculator me-2"></i>부가세 계산기</h1>
+    <p>부가세 포함 역산 · 공급가액→세액 계산 · 간이과세자 업종별 세액</p>
+  </div>
+</div>
+
+<div class="container" style="padding-bottom:2rem">
+
+  <!-- 탭 -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('tab1',this)">
+      <i class="bi bi-arrow-left-circle"></i><span>포함금액 역산</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('tab2',this)">
+      <i class="bi bi-arrow-right-circle"></i><span>공급가액 계산</span>
+    </button>
+  </div>
+
+  <div class="tab-body">
+
+    <!-- ── 탭1: 포함 → 역산 ── -->
+    <div class="tab-pane active" id="tab1">
+      <div class="row g-4">
+
+        <div class="col-lg-5">
+          <div class="calc-input-box">
+            <label class="form-label" style="font-size:.78rem;color:#64748b;margin-bottom:10px">부가세 포함 금액 입력</label>
+            <div class="d-flex align-items-baseline">
+              <input type="number" class="big-input" id="t1-total" placeholder="110,000" min="0" step="100" oninput="calcReverse()">
+              <span class="input-unit">원</span>
+            </div>
+            <div class="quick-btns">
+              <button class="quick-btn" onclick="setT1(11000)">1.1만</button>
+              <button class="quick-btn" onclick="setT1(110000)">11만</button>
+              <button class="quick-btn" onclick="setT1(1100000)">110만</button>
+              <button class="quick-btn" onclick="setT1(5500000)">550만</button>
+              <button class="quick-btn" onclick="setT1(11000000)">1,100만</button>
+              <button class="quick-btn" onclick="setT1(110000000)">1.1억</button>
+            </div>
+          </div>
+
+          <!-- 간이과세 옵션 -->
+          <div class="sector-select-wrap">
+            <div class="sector-select-title"><i class="bi bi-person-workspace me-1"></i>간이과세자 옵션 <small class="fw-normal">(선택)</small></div>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="t1-simple-chk" onchange="toggleSimple('t1');calcReverse()">
+              <label class="form-check-label" for="t1-simple-chk" style="font-size:.82rem">간이과세자로 계산</label>
+            </div>
+            <div id="t1-sector-block" style="display:none">
+              <label class="form-label" style="font-size:.75rem">업종 선택</label>
+              <select class="form-select form-select-sm" id="t1-sector" onchange="calcReverse()">
+                <option value="1.5">소매·재생재활용·음식점 (1.5%)</option>
+                <option value="2.5">제조·농업·어업·임업·숙박 (2.5%)</option>
+                <option value="3">건설·운수·창고·정보통신·금융 (3%)</option>
+                <option value="4">부동산 관련·전문서비스 (4%)</option>
+              </select>
+              <div class="form-text">부가가치율(%)은 2021.7.1 이후 기준입니다</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-7">
+          <div class="result-main" id="t1-result">
+            <div class="result-main-title"><i class="bi bi-scissors"></i> 역산 결과</div>
+            <div class="result-rows">
+              <div class="result-row">
+                <span class="result-row-label">
+                  <i class="bi bi-box-seam" style="opacity:.7"></i> 공급가액
+                  <span class="result-tag">세전</span>
+                </span>
+                <span class="result-row-val" id="t1-supply">0원</span>
+              </div>
+              <div class="result-row">
+                <span class="result-row-label">
+                  <i class="bi bi-plus-circle" style="opacity:.7"></i> 부가가치세
+                  <span class="result-tag">10%</span>
+                </span>
+                <span class="result-row-val vat-highlight" id="t1-vat">0원</span>
+              </div>
+              <div class="result-row total">
+                <span class="result-row-label"><i class="bi bi-check-circle-fill"></i> 합계 (부가세 포함)</span>
+                <span class="result-row-val" id="t1-sum">0원</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 간이과세 결과 -->
+          <div class="simple-panel" id="t1-simple-result" style="display:none">
+            <div class="simple-panel-title"><i class="bi bi-person-workspace"></i> 간이과세자 세액</div>
+            <div class="simple-row">
+              <span class="simple-label">공급대가 (포함금액)</span>
+              <span class="simple-val" id="t1-s-total">0원</span>
+            </div>
+            <div class="simple-row">
+              <span class="simple-label">부가가치율</span>
+              <span class="simple-val" id="t1-s-rate">—</span>
+            </div>
+            <div class="simple-row">
+              <span class="simple-label">부가세 납부세액</span>
+              <span class="simple-val" id="t1-s-tax">0원</span>
+            </div>
+            <div class="simple-row" style="background:rgba(253,224,71,.3);border-radius:4px;padding:4px 6px;margin-top:2px">
+              <span class="simple-label" style="font-weight:700">일반과세 대비 절감액</span>
+              <span class="simple-val" style="color:#16a34a" id="t1-s-save">0원</span>
+            </div>
+          </div>
+
+          <!-- 계산 공식 -->
+          <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;margin-top:10px;font-size:.78rem;color:#64748b">
+            <strong style="color:#1e3a8a">역산 공식:</strong>
+            공급가액 = 총액 ÷ 1.1 &nbsp;|&nbsp; 부가세 = 총액 − 공급가액
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 탭2: 공급가액 → 포함 계산 ── -->
+    <div class="tab-pane" id="tab2">
+      <div class="row g-4">
+
+        <div class="col-lg-5">
+          <div class="calc-input-box">
+            <label class="form-label" style="font-size:.78rem;color:#64748b;margin-bottom:10px">공급가액 입력 (부가세 제외)</label>
+            <div class="d-flex align-items-baseline">
+              <input type="number" class="big-input" id="t2-supply" placeholder="100,000" min="0" step="100" oninput="calcForward()">
+              <span class="input-unit">원</span>
+            </div>
+            <div class="quick-btns">
+              <button class="quick-btn" onclick="setT2(10000)">1만</button>
+              <button class="quick-btn" onclick="setT2(100000)">10만</button>
+              <button class="quick-btn" onclick="setT2(1000000)">100만</button>
+              <button class="quick-btn" onclick="setT2(5000000)">500만</button>
+              <button class="quick-btn" onclick="setT2(10000000)">1,000만</button>
+              <button class="quick-btn" onclick="setT2(100000000)">1억</button>
+            </div>
+          </div>
+
+          <div class="sector-select-wrap">
+            <div class="sector-select-title"><i class="bi bi-person-workspace me-1"></i>간이과세자 옵션 <small class="fw-normal">(선택)</small></div>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="t2-simple-chk" onchange="toggleSimple('t2');calcForward()">
+              <label class="form-check-label" for="t2-simple-chk" style="font-size:.82rem">간이과세자로 계산</label>
+            </div>
+            <div id="t2-sector-block" style="display:none">
+              <label class="form-label" style="font-size:.75rem">업종 선택</label>
+              <select class="form-select form-select-sm" id="t2-sector" onchange="calcForward()">
+                <option value="1.5">소매·재생재활용·음식점 (1.5%)</option>
+                <option value="2.5">제조·농업·어업·임업·숙박 (2.5%)</option>
+                <option value="3">건설·운수·창고·정보통신·금융 (3%)</option>
+                <option value="4">부동산 관련·전문서비스 (4%)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-7">
+          <div class="result-main" id="t2-result">
+            <div class="result-main-title"><i class="bi bi-plus-circle"></i> 계산 결과</div>
+            <div class="result-rows">
+              <div class="result-row">
+                <span class="result-row-label">
+                  <i class="bi bi-box-seam" style="opacity:.7"></i> 공급가액
+                  <span class="result-tag">입력값</span>
+                </span>
+                <span class="result-row-val" id="t2-supply-disp">0원</span>
+              </div>
+              <div class="result-row">
+                <span class="result-row-label">
+                  <i class="bi bi-plus-circle" style="opacity:.7"></i> 부가가치세
+                  <span class="result-tag">10%</span>
+                </span>
+                <span class="result-row-val vat-highlight" id="t2-vat">0원</span>
+              </div>
+              <div class="result-row total">
+                <span class="result-row-label"><i class="bi bi-check-circle-fill"></i> 합계 (부가세 포함)</span>
+                <span class="result-row-val" id="t2-total">0원</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="simple-panel" id="t2-simple-result" style="display:none">
+            <div class="simple-panel-title"><i class="bi bi-person-workspace"></i> 간이과세자 세액</div>
+            <div class="simple-row">
+              <span class="simple-label">공급대가 (포함금액)</span>
+              <span class="simple-val" id="t2-s-total">0원</span>
+            </div>
+            <div class="simple-row">
+              <span class="simple-label">부가가치율</span>
+              <span class="simple-val" id="t2-s-rate">—</span>
+            </div>
+            <div class="simple-row">
+              <span class="simple-label">부가세 납부세액</span>
+              <span class="simple-val" id="t2-s-tax">0원</span>
+            </div>
+            <div class="simple-row" style="background:rgba(253,224,71,.3);border-radius:4px;padding:4px 6px;margin-top:2px">
+              <span class="simple-label" style="font-weight:700">일반과세 대비 절감액</span>
+              <span class="simple-val" style="color:#16a34a" id="t2-s-save">0원</span>
+            </div>
+          </div>
+
+          <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;margin-top:10px;font-size:.78rem;color:#64748b">
+            <strong style="color:#1e3a8a">계산 공식:</strong>
+            부가세 = 공급가액 × 10% &nbsp;|&nbsp; 합계 = 공급가액 × 1.1
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    <i class="bi bi-info-circle flex-shrink-0 mt-1"></i>
+    <span>이 계산 결과는 모의계산의 결과이므로 <strong>참고용으로만</strong> 사용하시기 바랍니다. 간이과세 세액은 과세 기간·납부의무면제 기준(4,800만원)에 따라 달라질 수 있습니다. 정확한 세액은 세무사 또는 홈택스를 통해 확인하세요.</span>
+  </div>
+
+  <!-- ── 안내 섹션 ── -->
+  <div class="info-card">
+    <div class="info-title"><i class="bi bi-info-circle-fill" style="color:#1e40af"></i> 부가가치세(VAT)란?</div>
+    <div class="callout callout-blue">
+      <i class="bi bi-building"></i>
+      <div>
+        <strong>부가가치세</strong>는 재화·용역의 공급에 대해 부과되는 세금으로, 소비자가 최종 부담하고 사업자가 납부합니다. 우리나라의 일반세율은 <strong>10%</strong>이며, 영세율(0%) 및 면세가 일부 적용됩니다.
+      </div>
+    </div>
+    <div class="callout callout-green">
+      <i class="bi bi-lightbulb"></i>
+      <div>
+        <strong>계산 방법</strong><br>
+        • 부가세 포함 가격 = 공급가액 × 1.1 <br>
+        • 공급가액 = 포함가격 ÷ 1.1 <br>
+        • 부가세 = 공급가액 × 10% = 포함가격 ÷ 11
+      </div>
+    </div>
+  </div>
+
+  <div class="info-card">
+    <div class="info-title"><i class="bi bi-people-fill" style="color:#1e40af"></i> 일반과세자 vs 간이과세자</div>
+    <div class="compare-grid">
+      <div class="compare-card general">
+        <div class="compare-card-title"><i class="bi bi-building"></i> 일반과세자</div>
+        <ul>
+          <li>연매출 <strong>8,000만원 이상</strong></li>
+          <li>세율: 공급가액 × <strong>10%</strong></li>
+          <li>매입세액 전액 공제</li>
+          <li>세금계산서 발행 의무</li>
+          <li>신고: 1년 2회 (7월·1월)</li>
+        </ul>
+      </div>
+      <div class="compare-card simple">
+        <div class="compare-card-title"><i class="bi bi-person-workspace"></i> 간이과세자</div>
+        <ul>
+          <li>연매출 <strong>8,000만원 미만</strong></li>
+          <li>세율: 공급대가 × 부가가치율 × <strong>10%</strong></li>
+          <li>매입세액 일부만 공제</li>
+          <li>영수증 발행 (세금계산서 제한)</li>
+          <li>신고: 1년 1회 (1월)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout callout-yellow mt-2" style="margin-bottom:0">
+      <i class="bi bi-exclamation-triangle"></i>
+      <div><strong>간이과세자 납부면제:</strong> 연간 공급대가가 <strong>4,800만원 미만</strong>이면 부가세 납부 의무가 면제됩니다. (단, 신고는 해야 함)</div>
+    </div>
+  </div>
+
+  <div class="info-card">
+    <div class="info-title"><i class="bi bi-calendar3" style="color:#1e40af"></i> 부가세 신고 기간</div>
+    <div class="period-cards">
+      <div class="period-card p1">
+        <span class="period-card-badge">1기 확정</span>
+        <div class="period-card-title">1기 신고 (일반과세)</div>
+        <div class="period-card-date"><strong>7월 1일 ~ 7월 25일</strong><br><span style="font-size:.72rem;color:#64748b">과세기간: 1월 1일 ~ 6월 30일</span></div>
+      </div>
+      <div class="period-card p2">
+        <span class="period-card-badge">2기 확정</span>
+        <div class="period-card-title">2기 신고 (일반과세)</div>
+        <div class="period-card-date"><strong>다음해 1월 1일 ~ 1월 25일</strong><br><span style="font-size:.72rem;color:#64748b">과세기간: 7월 1일 ~ 12월 31일</span></div>
+      </div>
+      <div class="period-card p3">
+        <span class="period-card-badge">간이 신고</span>
+        <div class="period-card-title">간이과세자 신고</div>
+        <div class="period-card-date"><strong>다음해 1월 1일 ~ 1월 25일</strong><br><span style="font-size:.72rem;color:#64748b">과세기간: 1월 1일 ~ 12월 31일</span></div>
+      </div>
+    </div>
+    <p class="mt-2 mb-0" style="font-size:.75rem;color:#64748b">※ 일반과세자는 1기·2기 예정신고(4월·10월)도 있습니다. 직전 과세기간 납부세액의 50%를 예정 고지합니다.</p>
+  </div>
+
+  <div class="info-card">
+    <div class="info-title"><i class="bi bi-shield-check" style="color:#16a34a"></i> 면세 사업자 안내</div>
+    <div class="callout callout-green" style="margin-bottom:8px">
+      <i class="bi bi-check-circle"></i>
+      <div><strong>부가세 면세 항목</strong>: 기초생활 필수 재화·서비스는 부가세가 면제됩니다.</div>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-bordered info-table mb-0">
+        <thead><tr><th>면세 항목</th><th>예시</th></tr></thead>
+        <tbody>
+          <tr><td>기초생활 식품</td><td>미가공 쌀·채소·육류·수산물 등</td></tr>
+          <tr><td>의료·보건</td><td>의료용역, 약국 의약품</td></tr>
+          <tr><td>교육</td><td>학교교육, 학원(일부 제외)</td></tr>
+          <tr><td>금융·보험</td><td>이자, 보험료</td></tr>
+          <tr><td>도서·신문·방송</td><td>종이 신문, 도서</td></tr>
+          <tr><td>주택임대</td><td>국민주택(85㎡ 이하) 임대</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout callout-red mt-2" style="margin-bottom:0">
+      <i class="bi bi-exclamation-triangle"></i>
+      <div><strong>면세 사업자</strong>는 부가세를 납부하지 않지만, 매입세액도 공제받지 못합니다. 사업자 등록 시 구분이 중요합니다.</div>
+    </div>
+  </div>
+
+  <div class="info-card">
+    <div class="info-title"><i class="bi bi-table" style="color:#1e40af"></i> 간이과세자 업종별 부가가치율</div>
+    <div class="table-responsive">
+      <table class="table table-bordered info-table mb-0">
+        <thead><tr><th>업종</th><th>부가가치율</th><th>납부세액 계산</th></tr></thead>
+        <tbody>
+          <tr><td>소매업, 재생재활용업, 음식점업</td><td class="text-center fw-bold text-warning">1.5%</td><td>공급대가 × 1.5% × 10%</td></tr>
+          <tr><td>제조업, 농업·임업·어업, 숙박업</td><td class="text-center fw-bold" style="color:#d97706">2.5%</td><td>공급대가 × 2.5% × 10%</td></tr>
+          <tr><td>건설업, 운수·창고업, 정보통신업, 금융·보험업</td><td class="text-center fw-bold" style="color:#ea580c">3%</td><td>공급대가 × 3% × 10%</td></tr>
+          <tr><td>부동산 관련 서비스업, 전문·과학·기술서비스업</td><td class="text-center fw-bold text-danger">4%</td><td>공급대가 × 4% × 10%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="mt-2 mb-0" style="font-size:.75rem;color:#64748b">※ 2021년 7월 1일 이후 적용 기준입니다. 실제 납부세액 = 공급대가 × 부가가치율 × 10% − 공제세액</p>
+  </div>
+
+</div>
+
+<footer>
+  <div class="container">
+    <p class="mb-0">© 2025 mycalc · 본 사이트는 참고용이며 법적 효력이 없습니다. | <a href="../../index.html">← 메인으로</a></p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ── 유틸 ──
+function fmt(n){return Math.round(n||0).toLocaleString('ko-KR')+'원'}
+function v(id){return parseFloat(document.getElementById(id).value)||0}
+function el(id){return document.getElementById(id)}
+
+// ── 탭 전환 ──
+function switchTab(tabId,btn){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  el(tabId).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── 간이과세 토글 ──
+function toggleSimple(tab){
+  const chk=document.getElementById(tab+'-simple-chk').checked;
+  el(tab+'-sector-block').style.display=chk?'':'none';
+  el(tab+'-simple-result').style.display=chk?'':'none';
+}
+
+// ── 퀵 버튼 ──
+function setT1(n){el('t1-total').value=n;calcReverse()}
+function setT2(n){el('t2-supply').value=n;calcForward()}
+
+// ── 탭1: 역산 ──
+function calcReverse(){
+  const total=v('t1-total');
+
+  // 일반과세 역산 (÷1.1, 소수점 버림)
+  const supply=Math.floor(total/1.1);
+  const vat=total-supply;
+
+  el('t1-supply').textContent=fmt(supply);
+  el('t1-vat').textContent=fmt(vat);
+  el('t1-sum').textContent=fmt(total);
+
+  // 간이과세
+  const isSimple=document.getElementById('t1-simple-chk').checked;
+  if(isSimple && total>0){
+    const rate=parseFloat(el('t1-sector').value)||1.5;
+    const simpleTax=Math.floor(total*rate/100*0.1);
+    const normalVat=vat; // 일반과세 부가세
+    const save=normalVat-simpleTax;
+
+    el('t1-s-total').textContent=fmt(total);
+    el('t1-s-rate').textContent=rate+'%';
+    el('t1-s-tax').textContent=fmt(simpleTax);
+    el('t1-s-save').textContent=fmt(save>0?save:0);
+    el('t1-simple-result').style.display='';
+  }
+}
+
+// ── 탭2: 공급가액 → 계산 ──
+function calcForward(){
+  const supply=v('t2-supply');
+
+  const vat=Math.floor(supply*0.1);
+  const total=supply+vat;
+
+  el('t2-supply-disp').textContent=fmt(supply);
+  el('t2-vat').textContent=fmt(vat);
+  el('t2-total').textContent=fmt(total);
+
+  // 간이과세 (공급대가 기준 = 포함금액)
+  const isSimple=document.getElementById('t2-simple-chk').checked;
+  if(isSimple && supply>0){
+    const rate=parseFloat(el('t2-sector').value)||1.5;
+    const simpleTax=Math.floor(total*rate/100*0.1);
+    const save=vat-simpleTax;
+
+    el('t2-s-total').textContent=fmt(total);
+    el('t2-s-rate').textContent=rate+'%';
+    el('t2-s-tax').textContent=fmt(simpleTax);
+    el('t2-s-save').textContent=fmt(save>0?save:0);
+    el('t2-simple-result').style.display='';
+  }
+}
+
+// ── 초기화 ──
+calcReverse();
+calcForward();
+</script>
+</body>
+</html>

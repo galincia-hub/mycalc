@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>학생 계산기 – mycalc</title>
+<meta name="description" content="학점 계산기, 내신등급, 수능, 장학금 등 학생에게 필요한 계산기 모음. mycalc.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul{justify-content:flex-end}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.page-hero{background:linear-gradient(135deg,#1e3a8a 0%,#4f46e5 100%);color:#fff;padding:2rem 0 1.75rem;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M30 5L55 18v24L30 55 5 42V18z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.hero-content{position:relative}
+.page-hero h1{font-size:1.5rem;font-weight:800;margin:0 0 .4rem}
+.page-hero p{font-size:.85rem;opacity:.88;margin:0}
+.hero-badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:.75rem}
+.hero-badge{background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.73rem}
+.section-title{font-size:.78rem;font-weight:700;color:#64748b;letter-spacing:.08em;text-transform:uppercase;margin:24px 0 10px;padding-bottom:6px;border-bottom:2px solid #e2e8f0}
+.calc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;padding:0 0 32px}
+.calc-card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;padding:18px 20px;text-decoration:none;color:inherit;transition:all .2s;box-shadow:0 1px 4px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:8px}
+.calc-card:hover{border-color:#3b82f6;box-shadow:0 4px 16px rgba(59,130,246,.16);transform:translateY(-1px);color:inherit}
+.calc-card.wip{opacity:.55;cursor:default;pointer-events:none}
+.card-top{display:flex;align-items:center;gap:10px}
+.card-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.card-title{font-weight:800;font-size:.95rem;color:#0f172a}
+.card-desc{font-size:.78rem;color:#64748b;line-height:1.5}
+.badge-new{display:inline-block;background:#dcfce7;color:#166534;border:1px solid #bbf7d0;border-radius:10px;padding:2px 8px;font-size:.68rem;font-weight:700;margin-left:6px}
+.badge-soon{display:inline-block;background:#f1f5f9;color:#94a3b8;border:1px solid #e2e8f0;border-radius:10px;padding:2px 8px;font-size:.68rem;font-weight:700;margin-left:6px}
+footer{background:#0f172a;color:rgba(255,255,255,.65);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}
+footer a{color:rgba(255,255,255,.7);text-decoration:none}
+</style>
+</head>
+<body>
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../tax/index.html">세금</a></li>
+<li><a href="../work/index.html">급여·노동</a></li>
+<li><a href="../tools/index.html">도구</a></li>
+<li><a href="../realestate/index.html">부동산</a></li>
+<li><a href="../money/index.html">금융·투자</a></li>
+<li><a href="index.html" class="on">학생</a></li>
+<li><a href="../parent/index.html">학부모·육아</a></li>
+<li><a href="../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="gpa/index.html" class="mc-done">학점계산기</a></li>
+<li><a href="military/index.html" class="mc-done">군전역일</a></li>
+<li><span class="wip">내신</span></li>
+<li><span class="wip">수능</span></li>
+<li><span class="wip">출결</span></li>
+<li><span class="wip">학자금</span></li>
+<li><span class="wip">장학금</span></li>
+<li><span class="wip">토익</span></li>
+<li><span class="wip">편입</span></li>
+<li><span class="wip">자격증</span></li>
+<li><span class="wip">생활비</span></li>
+<li><span class="wip">수강신청</span></li>
+</ul></div></div>
+</div>
+
+<div class="page-hero">
+  <div class="container hero-content">
+    <h1><i class="bi bi-mortarboard-fill me-2"></i>학생 계산기</h1>
+    <p>학점, 내신, 수능, 장학금처럼 학생 생활에 필요한 계산기 모음</p>
+    <div class="hero-badges">
+      <span class="hero-badge"><i class="bi bi-check-circle me-1"></i>2 완성</span>
+      <span class="hero-badge"><i class="bi bi-phone me-1"></i>모바일 최적화</span>
+      <span class="hero-badge"><i class="bi bi-shield-check me-1"></i>참고용 계산</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="section-title">학점·군대</div>
+  <div class="calc-grid">
+    <a href="gpa/index.html" class="calc-card">
+      <div class="card-top"><div class="card-icon" style="background:#ede9fe;color:#4f46e5"><i class="bi bi-table"></i></div><div><div class="card-title">학점 계산기<span class="badge-new">NEW</span></div></div></div>
+      <div class="card-desc">4.5/4.3 만점 GPA, 전공 평점, 학점 변환, 목표 학점 역산.</div>
+    </a>
+    <a href="military/index.html" class="calc-card">
+      <div class="card-top"><div class="card-icon" style="background:#ede9fe;color:#4f46e5"><i class="bi bi-shield-check"></i></div><div><div class="card-title">군전역일+군적금<span class="badge-new">NEW</span></div></div></div>
+      <div class="card-desc">입대일 기준 전역일, 복무 진행률, 현재 계급, 군적금 만기수령액 계산.</div>
+    </a>
+  </div>
+
+  <div class="section-title">성적·입시</div>
+  <div class="calc-grid">
+    <div class="calc-card wip">
+      <div class="card-top"><div class="card-icon" style="background:#f1f5f9;color:#94a3b8"><i class="bi bi-bar-chart-line"></i></div><div><div class="card-title">내신등급<span class="badge-soon">준비중</span></div></div></div>
+      <div class="card-desc">과목별 단위수와 석차등급 기반 평균 내신 계산.</div>
+    </div>
+    <div class="calc-card wip">
+      <div class="card-top"><div class="card-icon" style="background:#f1f5f9;color:#94a3b8"><i class="bi bi-graph-up-arrow"></i></div><div><div class="card-title">수능등급컷<span class="badge-soon">준비중</span></div></div></div>
+      <div class="card-desc">표준점수, 백분위, 등급 기준 확인.</div>
+    </div>
+    <div class="calc-card wip">
+      <div class="card-top"><div class="card-icon" style="background:#f1f5f9;color:#94a3b8"><i class="bi bi-calendar-check"></i></div><div><div class="card-title">출결계산<span class="badge-soon">준비중</span></div></div></div>
+      <div class="card-desc">결석, 지각, 조퇴, 결과를 출결 점수로 환산.</div>
+    </div>
+  </div>
+
+  <div class="section-title">장학·대출</div>
+  <div class="calc-grid">
+    <div class="calc-card wip">
+      <div class="card-top"><div class="card-icon" style="background:#f1f5f9;color:#94a3b8"><i class="bi bi-cash-coin"></i></div><div><div class="card-title">학자금대출<span class="badge-soon">준비중</span></div></div></div>
+      <div class="card-desc">대출 원리금과 상환 계획 계산.</div>
+    </div>
+    <div class="calc-card wip">
+      <div class="card-top"><div class="card-icon" style="background:#f1f5f9;color:#94a3b8"><i class="bi bi-award"></i></div><div><div class="card-title">장학금<span class="badge-soon">준비중</span></div></div></div>
+      <div class="card-desc">성적 기준과 소득 구간별 장학금 조건 정리.</div>
+    </div>
+    <div class="calc-card wip">
+      <div class="card-top"><div class="card-icon" style="background:#f1f5f9;color:#94a3b8"><i class="bi bi-translate"></i></div><div><div class="card-title">토익환산<span class="badge-soon">준비중</span></div></div></div>
+      <div class="card-desc">토익 점수 환산 및 기관별 기준 확인.</div>
+    </div>
+    <div class="calc-card wip">
+      <div class="card-top"><div class="card-icon" style="background:#f1f5f9;color:#94a3b8"><i class="bi bi-arrow-repeat"></i></div><div><div class="card-title">편입학점<span class="badge-soon">준비중</span></div></div></div>
+      <div class="card-desc">편입 지원 학점 기준 및 환산 계산.</div>
+    </div>
+    <div class="calc-card wip">
+      <div class="card-top"><div class="card-icon" style="background:#f1f5f9;color:#94a3b8"><i class="bi bi-patch-check"></i></div><div><div class="card-title">자격증<span class="badge-soon">준비중</span></div></div></div>
+      <div class="card-desc">자격증별 취득 난이도 및 관련 정보 안내.</div>
+    </div>
+    <div class="calc-card wip">
+      <div class="card-top"><div class="card-icon" style="background:#f1f5f9;color:#94a3b8"><i class="bi bi-wallet2"></i></div><div><div class="card-title">생활비<span class="badge-soon">준비중</span></div></div></div>
+      <div class="card-desc">대학생 월 생활비 예산 계산 및 비교.</div>
+    </div>
+    <div class="calc-card wip">
+      <div class="card-top"><div class="card-icon" style="background:#f1f5f9;color:#94a3b8"><i class="bi bi-calendar3"></i></div><div><div class="card-title">수강신청<span class="badge-soon">준비중</span></div></div></div>
+      <div class="card-desc">수강신청 시간표 최적화 도우미.</div>
+    </div>
+  </div>
+</div>
+
+<footer>© 2026 mycalc · 학생 계산 결과는 참고용입니다. | <a href="../index.html">메인으로</a></footer>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>부동산 계산기 – mycalc</title>
+<meta name="description" content="복비 계산, 관리비 예상, 평수 변환, 전월세 전환, 부동산 세금 계산기 모음. mycalc.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul{justify-content:flex-end}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.page-hero{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 58%,#047857 100%);color:#fff;padding:2rem 0 1.75rem;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.045'%3E%3Cpath d='M8 48h48M16 56V24l16-12 16 12v32M24 56V38h16v18'/%3E%3Cpath d='M12 28h40'/%3E%3C/g%3E%3C/svg%3E")}
+.hero-content{position:relative}
+.page-hero h1{font-size:1.5rem;font-weight:800;margin:0 0 .4rem}
+.page-hero p{font-size:.85rem;opacity:.88;margin:0}
+.hero-badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:.75rem}
+.hero-badge{background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.73rem}
+.section-title{font-size:.78rem;font-weight:700;color:#64748b;letter-spacing:.08em;text-transform:uppercase;margin:24px 0 10px;padding-bottom:6px;border-bottom:2px solid #e2e8f0}
+.calc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;padding:0 0 32px}
+.calc-card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;padding:18px 20px;text-decoration:none;color:inherit;transition:all .2s;box-shadow:0 1px 4px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:8px}
+.calc-card:hover{border-color:#3b82f6;box-shadow:0 4px 16px rgba(59,130,246,.16);transform:translateY(-1px);color:inherit}
+.calc-card.wip{opacity:.55;cursor:default;pointer-events:none}
+.card-top{display:flex;align-items:center;gap:10px}
+.card-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.card-title{font-weight:800;font-size:.95rem;color:#0f172a}
+.card-desc{font-size:.78rem;color:#64748b;line-height:1.5}
+.badge-new{display:inline-block;background:#dcfce7;color:#166534;border:1px solid #bbf7d0;border-radius:10px;padding:2px 8px;font-size:.68rem;font-weight:700;margin-left:6px}
+.badge-soon{display:inline-block;background:#f1f5f9;color:#94a3b8;border:1px solid #e2e8f0;border-radius:10px;padding:2px 8px;font-size:.68rem;font-weight:700;margin-left:6px}
+footer{background:#1e3a8a;color:rgba(255,255,255,.65);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}
+footer a{color:rgba(255,255,255,.7);text-decoration:none}
+</style>
+</head>
+<body>
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../tax/index.html">세금</a></li>
+<li><a href="../work/index.html">급여·노동</a></li>
+<li><a href="../tools/index.html">도구</a></li>
+<li><a href="../realestate/index.html" class="on">부동산</a></li>
+<li><a href="../money/index.html">금융·투자</a></li>
+<li><a href="../student/index.html">학생</a></li>
+<li><a href="../parent/index.html">학부모·육아</a></li>
+<li><a href="../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="pyeong/index.html" class="mc-done">평수변환</a></li>
+<li><a href="fee/index.html" class="mc-done">복비</a></li>
+<li><a href="jeonwolse/index.html" class="mc-done">전월세전환</a></li>
+<li><a href="maintenance/index.html" class="mc-done">관리비</a></li>
+<li><a href="eviction/index.html" class="mc-done">명도비용</a></li>
+<li><span class="wip">LTV/DTI/DSR</span></li>
+<li><span class="wip">임대수익</span></li>
+<li><span class="wip">경매</span></li>
+<li><span class="wip">빌라수익률</span></li>
+<li><span class="wip">학군</span></li>
+</ul></div></div>
+</div>
+
+<div class="page-hero">
+  <div class="container hero-content">
+    <h1><i class="bi bi-house-door me-2"></i>부동산 계산기</h1>
+    <p>복비·관리비·평수 변환·전월세 전환·부동산 세금 관련 계산기 모음</p>
+    <div class="hero-badges">
+      <span class="hero-badge"><i class="bi bi-check-circle me-1"></i>7 완성</span>
+      <span class="hero-badge"><i class="bi bi-phone me-1"></i>모바일 최적화</span>
+      <span class="hero-badge"><i class="bi bi-shield-check me-1"></i>참고용 계산</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="section-title">임대·거래</div>
+  <div class="calc-grid">
+    <a href="fee/index.html" class="calc-card">
+      <div class="card-top"><div class="card-icon" style="background:#d1fae5;color:#065f46"><i class="bi bi-receipt"></i></div><div><div class="card-title">복비계산기<span class="badge-new">✅</span></div></div></div>
+      <div class="card-desc">매매·전세·월세 중개보수 계산</div>
+    </a>
+    <a href="maintenance/index.html" class="calc-card">
+      <div class="card-top"><div class="card-icon" style="background:#d1fae5;color:#065f46"><i class="bi bi-tools"></i></div><div><div class="card-title">관리비계산기<span class="badge-new">✅</span></div></div></div>
+      <div class="card-desc">K-apt 평균 기반 예상 관리비</div>
+    </a>
+    <a href="jeonwolse/index.html" class="calc-card">
+      <div class="card-top"><div class="card-icon" style="background:#d1fae5;color:#065f46"><i class="bi bi-arrow-left-right"></i></div><div><div class="card-title">전월세 전환<span class="badge-new">✅</span></div></div></div>
+      <div class="card-desc">전세 ↔ 월세 전환 계산</div>
+    </a>
+    <a href="pyeong/index.html" class="calc-card">
+      <div class="card-top"><div class="card-icon" style="background:#d1fae5;color:#065f46"><i class="bi bi-rulers"></i></div><div><div class="card-title">평수변환<span class="badge-new">✅</span></div></div></div>
+      <div class="card-desc">평↔㎡ 변환 + 평당가 계산</div>
+    </a>
+    <a href="eviction/index.html" class="calc-card">
+      <div class="card-top"><div class="card-icon" style="background:#d1fae5;color:#065f46"><i class="bi bi-door-open"></i></div><div><div class="card-title">명도비용<span class="badge-new">✅</span></div></div></div>
+      <div class="card-desc">합의·인도명령·명도소송 비용 비교</div>
+    </a>
+    <div class="calc-card wip">
+      <div class="card-top"><div class="card-icon" style="background:#f1f5f9;color:#94a3b8"><i class="bi bi-tag"></i></div><div><div class="card-title">경매수익률<span class="badge-soon">준비중</span></div></div></div>
+      <div class="card-desc">입찰가·낙찰가·수익률 계산</div>
+    </div>
+  </div>
+
+  <div class="section-title">대출·투자</div>
+  <div class="calc-grid">
+    <a href="../money/compound/index.html" class="calc-card">
+      <div class="card-top"><div class="card-icon" style="background:#d1fae5;color:#065f46"><i class="bi bi-graph-up-arrow"></i></div><div><div class="card-title">복리이자<span class="badge-new">✅</span></div></div></div>
+      <div class="card-desc">장기 투자·목표 자금의 복리 성장 계산</div>
+    </a>
+    <a href="../tax/property/index.html" class="calc-card">
+      <div class="card-top"><div class="card-icon" style="background:#d1fae5;color:#065f46"><i class="bi bi-building"></i></div><div><div class="card-title">부동산세금<span class="badge-new">✅</span></div></div></div>
+      <div class="card-desc">취득세·재산세·종부세·양도세 통합</div>
+    </a>
+    <div class="calc-card wip">
+      <div class="card-top"><div class="card-icon" style="background:#f1f5f9;color:#94a3b8"><i class="bi bi-house-check"></i></div><div><div class="card-title">주택담보대출<span class="badge-soon">준비중</span></div></div></div>
+      <div class="card-desc">원리금·이자 월납입금 계산</div>
+    </div>
+    <div class="calc-card wip">
+      <div class="card-top"><div class="card-icon" style="background:#f1f5f9;color:#94a3b8"><i class="bi bi-percent"></i></div><div><div class="card-title">LTV·DTI·DSR<span class="badge-soon">준비중</span></div></div></div>
+      <div class="card-desc">대출 한도와 상환비율 계산</div>
+    </div>
+    <div class="calc-card wip">
+      <div class="card-top"><div class="card-icon" style="background:#f1f5f9;color:#94a3b8"><i class="bi bi-cash-stack"></i></div><div><div class="card-title">임대수익<span class="badge-soon">준비중</span></div></div></div>
+      <div class="card-desc">임대사업자 수익·세금 시뮬레이터</div>
+    </div>
+    <div class="calc-card wip">
+      <div class="card-top"><div class="card-icon" style="background:#f1f5f9;color:#94a3b8"><i class="bi bi-buildings"></i></div><div><div class="card-title">빌라수익률<span class="badge-soon">준비중</span></div></div></div>
+      <div class="card-desc">빌라/상가 투자 수익률 계산</div>
+    </div>
+    <div class="calc-card wip">
+      <div class="card-top"><div class="card-icon" style="background:#f1f5f9;color:#94a3b8"><i class="bi bi-geo-alt"></i></div><div><div class="card-title">학군<span class="badge-soon">준비중</span></div></div></div>
+      <div class="card-desc">학군·학교 배정 확인</div>
+    </div>
+  </div>
+</div>
+
+<footer>© 2026 mycalc · 참고용 계산기입니다. | <a href="../index.html">메인으로</a></footer>
+</body>
+</html>

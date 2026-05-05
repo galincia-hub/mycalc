@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mycalc.co.kr</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Pretendard Variable', sans-serif; background: #f8f9fa; color: #222; }
+
+  /* 상단 네비게이션 */
+  nav { background: #1e3a5f; overflow-x: auto; white-space: nowrap; position: sticky; top: 0; z-index: 100; }
+  nav .inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; padding: 0 16px; }
+  nav .site-name { color: #fff; font-size: 15px; font-weight: 700; padding: 12px 16px 12px 0; border-right: 1px solid rgba(255,255,255,0.15); margin-right: 4px; flex-shrink: 0; }
+  nav .site-name span { color: #7eb8ff; }
+  nav a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 13px; padding: 12px 12px; display: inline-block; transition: all 0.15s; flex-shrink: 0; }
+  nav a:hover { color: #fff; background: rgba(255,255,255,0.08); }
+  nav a.active { color: #fff; background: rgba(255,255,255,0.12); border-bottom: 2px solid #7eb8ff; font-weight: 600; }
+
+  /* 메인 */
+  main { max-width: 1200px; margin: 24px auto; padding: 0 16px; }
+
+  /* 도메인 카드 */
+  .domain-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+  .domain-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 6px; padding: 16px 18px; }
+  .domain-card.active { border-left: 4px solid #1e3a5f; }
+
+  .domain-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .domain-header h2 { font-size: 15px; font-weight: 700; }
+  .badge { font-size: 10px; padding: 2px 7px; border-radius: 8px; font-weight: 600; }
+  .badge-active { background: #dbeafe; color: #1d4ed8; }
+  .badge-wait { background: #f3f4f6; color: #9ca3af; }
+  .domain-meta { font-size: 11px; color: #999; margin-bottom: 8px; }
+
+  .item-list { list-style: none; }
+  .item-list li { font-size: 12px; padding: 3px 0; border-bottom: 1px solid #fafafa; display: flex; justify-content: space-between; align-items: center; }
+  .item-list li:last-child { border-bottom: none; }
+  .grade { font-size: 10px; font-weight: 700; padding: 0 5px; border-radius: 3px; margin-left: 4px; }
+  .grade-S { background: #fef3c7; color: #92400e; }
+  .grade-A { background: #dbeafe; color: #1e40af; }
+  .grade-B { background: #f3f4f6; color: #6b7280; }
+  .grade-C { background: #f9fafb; color: #b0b0b0; }
+  .status { font-size: 11px; }
+  .s-done { color: #16a34a; font-weight: 600; }
+  .s-next { color: #2563eb; }
+  .s-wait { color: #ccc; }
+
+  .shared { margin-top: 8px; padding-top: 6px; border-top: 1px dashed #e5e7eb; }
+  .shared-title { font-size: 10px; color: #b0b0b0; margin-bottom: 2px; }
+  .shared li { color: #b0b0b0; font-size: 11px; border: none; padding: 1px 0; }
+
+  footer { text-align: center; padding: 24px; font-size: 11px; color: #bbb; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="inner">
+    <div class="site-name"><span>my</span>calc</div>
+    <a href="#tax" class="active">세금</a>
+    <a href="#work">급여·노동</a>
+    <a href="#tools">도구</a>
+    <a href="#realestate">부동산</a>
+    <a href="#money">금융·투자</a>
+    <a href="#student">학생</a>
+    <a href="#parent">학부모·육아</a>
+    <a href="#life">생활</a>
+  </div>
+</nav>
+
+<main>
+  <div class="domain-grid">
+
+    <!-- ① 세금 -->
+    <div class="domain-card active" id="tax">
+      <div class="domain-header">
+        <h2>세금 계산기</h2>
+        <span class="badge badge-active">① 제작중</span>
+      </div>
+      <div class="domain-meta">tax.mycalc.co.kr · 15개 · CPC ₩1,500 · 월 200~800만</div>
+      <ul class="item-list">
+        <li><span>종합소득세 <span class="grade grade-A">A</span></span> <span class="status s-done">✅ 준비완료</span></li>
+        <li><span>프리랜서 3.3% <span class="grade grade-B">B</span></span> <span class="status s-next">② 다음</span></li>
+        <li><span>부가세 역산 <span class="grade grade-B">B</span></span> <span class="status s-next">③</span></li>
+        <li><span>일용직 소득세 <span class="grade grade-B">B</span></span> <span class="status s-wait">④</span></li>
+        <li><span>근로소득세 <span class="grade grade-A">A</span></span> <span class="status s-wait">⑤</span></li>
+        <li><span>퇴직소득세 <span class="grade grade-A">A</span></span> <span class="status s-wait">⑥</span></li>
+        <li><span>양도소득세 <span class="grade grade-A">A</span></span> <span class="status s-wait">⑦</span></li>
+        <li><span>연말정산 <span class="grade grade-S">S</span></span> <span class="status s-wait">⑧ ~10월</span></li>
+        <li><span>부동산 세금 통합 <span class="grade grade-S">S</span></span> <span class="status s-wait">⑨</span></li>
+        <li><span>상속·증여세 <span class="grade grade-S">S</span></span> <span class="status s-wait">⑩</span></li>
+        <li><span>가상자산 <span class="grade grade-C">C</span></span> <span class="status s-wait">⑪</span></li>
+        <li><span>상금 세후 <span class="grade grade-C">C</span></span> <span class="status s-wait">⑫</span></li>
+      </ul>
+      <div class="shared"><div class="shared-title">공유수신</div>
+        <ul class="item-list">
+          <li>← 4대보험 (급여) · 관부가세 (생활) · 중고차세금 (생활)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ② 급여·노동 -->
+    <div class="domain-card" id="work">
+      <div class="domain-header">
+        <h2>급여·노동 계산기</h2>
+        <span class="badge badge-wait">② 대기</span>
+      </div>
+      <div class="domain-meta">work.mycalc.co.kr · 12개 · CPC ₩800 · 월 150~300만</div>
+      <ul class="item-list">
+        <li><span>시급·급여 계산기 <span class="grade grade-A">A</span></span> <span class="status s-wait">①</span></li>
+        <li><span>퇴직금 계산기 <span class="grade grade-A">A</span></span> <span class="status s-wait">②</span></li>
+        <li><span>실업급여 계산기 <span class="grade grade-A">A</span></span> <span class="status s-wait">③</span></li>
+        <li><span>4대보험 계산기 <span class="grade grade-B">B</span></span> <span class="status s-wait">④</span></li>
+        <li><span>주휴수당 계산기 <span class="grade grade-B">B</span></span> <span class="status s-wait">⑤</span></li>
+      </ul>
+      <div class="shared"><div class="shared-title">공유수신</div>
+        <ul class="item-list">
+          <li>← 근로소득세·퇴직소득세·프리랜서·일용직·연말정산 (세금)</li>
+          <li>← 은퇴자금·국민연금 (금융)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ③ 도구 -->
+    <div class="domain-card" id="tools">
+      <div class="domain-header">
+        <h2>온라인 도구</h2>
+        <span class="badge badge-wait">③ 멀티가능 ②와</span>
+      </div>
+      <div class="domain-meta">tools.mycalc.co.kr · 16개 · 글로벌 확장 · 월 30~100만</div>
+      <ul class="item-list">
+        <li><span>QR코드 생성기 <span class="grade grade-B">B</span></span> <span class="status s-wait">① 2~3h</span></li>
+        <li><span>색상 추출기 <span class="grade grade-B">B</span></span> <span class="status s-wait">②</span></li>
+        <li><span>이미지 리사이즈 <span class="grade grade-B">B</span></span> <span class="status s-wait">③</span></li>
+        <li><span>PDF 합치기 <span class="grade grade-A">A</span></span> <span class="status s-wait">④</span></li>
+        <li><span>PDF 분할 <span class="grade grade-B">B</span></span> <span class="status s-wait">⑤</span></li>
+        <li><span>PDF 압축 <span class="grade grade-B">B</span></span> <span class="status s-wait">⑥</span></li>
+        <li><span>HWP→PDF <span class="grade grade-S">S</span></span> <span class="status s-wait">⑦</span></li>
+        <li><span>서명 생성기 <span class="grade grade-A">A</span></span> <span class="status s-wait">⑧</span></li>
+        <li><span>배경 제거기 <span class="grade grade-S">S</span></span> <span class="status s-wait">⑨</span></li>
+        <li><span>증명사진 규격 <span class="grade grade-A">A</span></span> <span class="status s-wait">⑩</span></li>
+        <li><span>동영상→GIF <span class="grade grade-A">A</span></span> <span class="status s-wait">⑪</span></li>
+        <li><span>오디오 추출 <span class="grade grade-B">B</span></span> <span class="status s-wait">⑫</span></li>
+        <li><span>목업 생성기 <span class="grade grade-B">B</span></span> <span class="status s-wait">⑬</span></li>
+        <li><span>엑셀→표 이미지 <span class="grade grade-B">B</span></span> <span class="status s-wait">⑭</span></li>
+        <li><span>TTS <span class="grade grade-C">C</span></span> <span class="status s-wait">⑮</span></li>
+        <li><span>워터마크 <span class="grade grade-C">C</span></span> <span class="status s-wait">⑯</span></li>
+      </ul>
+    </div>
+
+    <!-- ④ 부동산 -->
+    <div class="domain-card" id="realestate">
+      <div class="domain-header">
+        <h2>부동산 계산기</h2>
+        <span class="badge badge-wait">④ 대기</span>
+      </div>
+      <div class="domain-meta">realestate.mycalc.co.kr · 14개 · CPC ₩3,000 · 월 200~600만</div>
+      <ul class="item-list">
+        <li><span>복비 계산기 <span class="grade grade-S">S</span></span> <span class="status s-wait">①</span></li>
+        <li><span>전월세 전환율 <span class="grade grade-B">B</span></span> <span class="status s-wait">②</span></li>
+        <li><span>평↔㎡ 변환 <span class="grade grade-C">C</span></span> <span class="status s-wait">③</span></li>
+        <li><span>LTV/DTI/DSR <span class="grade grade-A">A</span></span> <span class="status s-wait">④</span></li>
+        <li><span>임대수익 시뮬레이터 <span class="grade grade-A">A</span></span> <span class="status s-wait">⑤</span></li>
+        <li><span>경매 수익률 <span class="grade grade-A">A</span></span> <span class="status s-wait">⑥</span></li>
+        <li><span>빌라/상가 수익률 <span class="grade grade-B">B</span></span> <span class="status s-wait">⑦</span></li>
+        <li><span>관리비 비교 <span class="grade grade-B">B</span></span> <span class="status s-wait">⑧</span></li>
+        <li><span>학군·학교 배정 <span class="grade grade-S">S</span></span> <span class="status s-wait">⑨</span></li>
+        <li><span>명도비용 예측 <span class="grade grade-C">C</span></span> <span class="status s-wait">⑩</span></li>
+      </ul>
+      <div class="shared"><div class="shared-title">공유수신</div>
+        <ul class="item-list">
+          <li>← 양도소득세·부동산세금 (세금) · 복리이자·대출상환 (금융)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ⑤ 금융·투자 -->
+    <div class="domain-card" id="money">
+      <div class="domain-header">
+        <h2>금융·투자 계산기</h2>
+        <span class="badge badge-wait">⑤ 멀티가능 ④와</span>
+      </div>
+      <div class="domain-meta">money.mycalc.co.kr · 14개 · CPC ₩2,500 · 월 100~300만</div>
+      <ul class="item-list">
+        <li><span>복리 이자 시뮬레이터 <span class="grade grade-B">B</span></span> <span class="status s-wait">①</span></li>
+        <li><span>대출 상환 시뮬레이터 <span class="grade grade-B">B</span></span> <span class="status s-wait">②</span></li>
+        <li><span>물타기 계산기 <span class="grade grade-B">B</span></span> <span class="status s-wait">③</span></li>
+        <li><span>배당금 실수령액 <span class="grade grade-A">A</span></span> <span class="status s-wait">④</span></li>
+        <li><span>은퇴 자금 고갈 시점 <span class="grade grade-S">S</span></span> <span class="status s-wait">⑤</span></li>
+        <li><span>국민연금 수령액 <span class="grade grade-C">C</span></span> <span class="status s-wait">⑥</span></li>
+        <li><span>공모주 수익률 <span class="grade grade-C">C</span></span> <span class="status s-wait">⑦</span></li>
+        <li><span>인플레이션 계산기 <span class="grade grade-C">C</span></span> <span class="status s-wait">⑧</span></li>
+      </ul>
+      <div class="shared"><div class="shared-title">공유수신</div>
+        <ul class="item-list">
+          <li>← 양도소득세·상속증여·가상자산 (세금) · 경매·LTV (부동산) · 학자금 (학생)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ⑥ 학생 -->
+    <div class="domain-card" id="student">
+      <div class="domain-header">
+        <h2>학생 계산기</h2>
+        <span class="badge badge-wait">⑥ 대기</span>
+      </div>
+      <div class="domain-meta">student.mycalc.co.kr · 14개 · 9월 수능 · 월 50~400만</div>
+      <ul class="item-list">
+        <li><span>학점 GPA <span class="grade grade-B">B</span></span> <span class="status s-wait">①</span></li>
+        <li><span>내신 등급 <span class="grade grade-A">A</span></span> <span class="status s-wait">②</span></li>
+        <li><span>수능 등급컷 <span class="grade grade-S">S</span></span> <span class="status s-wait">③ ~9월</span></li>
+        <li><span>출석 F방지 <span class="grade grade-B">B</span></span> <span class="status s-wait">④</span></li>
+        <li><span>군 전역일+군적금 <span class="grade grade-B">B</span></span> <span class="status s-wait">⑤</span></li>
+        <li><span>학자금 대출 상환 <span class="grade grade-A">A</span></span> <span class="status s-wait">⑥</span></li>
+        <li><span>장학금 소득분위 <span class="grade grade-A">A</span></span> <span class="status s-wait">⑦</span></li>
+        <li><span>토익 점수 목표 <span class="grade grade-A">A</span></span> <span class="status s-wait">⑧</span></li>
+        <li><span>편입 환산점수 <span class="grade grade-B">B</span></span> <span class="status s-wait">⑨</span></li>
+        <li><span>자격증 D-day <span class="grade grade-B">B</span></span> <span class="status s-wait">⑩</span></li>
+        <li><span>자취 생활비 <span class="grade grade-C">C</span></span> <span class="status s-wait">⑪</span></li>
+        <li><span>수강신청 반응속도 <span class="grade grade-C">C</span></span> <span class="status s-wait">⑫</span></li>
+      </ul>
+      <div class="shared"><div class="shared-title">공유수신</div>
+        <ul class="item-list"><li>← 대입전형·교육급여 (학부모)</li></ul>
+      </div>
+    </div>
+
+    <!-- ⑦ 학부모·육아 -->
+    <div class="domain-card" id="parent">
+      <div class="domain-header">
+        <h2>학부모·육아 계산기</h2>
+        <span class="badge badge-wait">⑦ 대기</span>
+      </div>
+      <div class="domain-meta">parent.mycalc.co.kr · 14개 · CPC ₩1,500 · 월 100~200만</div>
+      <ul class="item-list">
+        <li><span>출산예정일+육아휴직 <span class="grade grade-A">A</span></span> <span class="status s-wait">①</span></li>
+        <li><span>성장발달 백분위 <span class="grade grade-A">A</span></span> <span class="status s-wait">②</span></li>
+        <li><span>어린이집 비용 <span class="grade grade-A">A</span></span> <span class="status s-wait">③</span></li>
+        <li><span>교육급여 자격 확인 <span class="grade grade-A">A</span></span> <span class="status s-wait">④</span></li>
+        <li><span>대입 전형 비교 <span class="grade grade-A">A</span></span> <span class="status s-wait">⑤</span></li>
+        <li><span>예방접종 일정 <span class="grade grade-B">B</span></span> <span class="status s-wait">⑥</span></li>
+        <li><span>학원비 예산 <span class="grade grade-B">B</span></span> <span class="status s-wait">⑦</span></li>
+        <li><span>자녀 보험·의료비 <span class="grade grade-B">B</span></span> <span class="status s-wait">⑧</span></li>
+        <li><span>돌봄 시간표 <span class="grade grade-C">C</span></span> <span class="status s-wait">⑨</span></li>
+        <li><span>용돈·금융교육 <span class="grade grade-C">C</span></span> <span class="status s-wait">⑩</span></li>
+      </ul>
+      <div class="shared"><div class="shared-title">공유수신</div>
+        <ul class="item-list"><li>← 수능·내신 (학생) · 학군 (부동산) · 육아휴직급여 (급여)</li></ul>
+      </div>
+    </div>
+
+    <!-- ⑧ 생활 -->
+    <div class="domain-card" id="life">
+      <div class="domain-header">
+        <h2>생활 계산기</h2>
+        <span class="badge badge-wait">⑧ 대기</span>
+      </div>
+      <div class="domain-meta">life.mycalc.co.kr · 13개 · 트래픽 높음 · 월 30~60만</div>
+      <ul class="item-list">
+        <li><span>관부가세 계산기 <span class="grade grade-A">A</span></span> <span class="status s-wait">① ~10월</span></li>
+        <li><span>음주 BAC <span class="grade grade-A">A</span></span> <span class="status s-wait">②</span></li>
+        <li><span>칼로리 TDEE <span class="grade grade-B">B</span></span> <span class="status s-wait">③</span></li>
+        <li><span>전기·가스·수도 <span class="grade grade-B">B</span></span> <span class="status s-wait">④</span></li>
+        <li><span>과태료·범칙금 <span class="grade grade-B">B</span></span> <span class="status s-wait">⑤</span></li>
+        <li><span>중고차 시세·세금 <span class="grade grade-C">C</span></span> <span class="status s-wait">⑥</span></li>
+        <li><span>유튜브 수익 예측 <span class="grade grade-B">B</span></span> <span class="status s-wait">⑦</span></li>
+        <li><span>금연·금주 절약 <span class="grade grade-B">B</span></span> <span class="status s-wait">⑧</span></li>
+        <li><span>글자수 카운터 <span class="grade grade-C">C</span></span> <span class="status s-wait">⑨</span></li>
+        <li><span>택배 배송비 비교 <span class="grade grade-C">C</span></span> <span class="status s-wait">⑩</span></li>
+        <li><span>수면 사이클 <span class="grade grade-C">C</span></span> <span class="status s-wait">⑪</span></li>
+        <li><span>반려동물 나이 <span class="grade grade-C">C</span></span> <span class="status s-wait">⑫</span></li>
+      </ul>
+      <div class="shared"><div class="shared-title">공유수신</div>
+        <ul class="item-list"><li>← 인플레이션 (금융)</li></ul>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>mycalc.co.kr · 8개 도메인 · 114개 계산기·도구</footer>
+
+</body>
+</html>

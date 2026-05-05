@@ -1,0 +1,673 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>종합소득세 계산기 – mycalc</title>
+<meta name="description" content="2025년 신고(2024년 귀속) 종합소득세를 빠르고 쉽게 계산해보세요.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b}
+.main-nav{background:#1e3a8a;z-index:1000}
+.nav-inner{display:flex;align-items:center;padding:0 16px;min-height:52px;flex-wrap:wrap}
+.nav-brand{color:#fff;font-weight:700;font-size:.95rem;text-decoration:none;white-space:nowrap;padding:12px 0;margin-right:8px}
+.nav-brand i{margin-right:4px}
+.nav-links{list-style:none;display:flex;flex-wrap:wrap;gap:2px;margin:0;padding:4px 0;margin-left:auto}
+.nav-links a{color:rgba(255,255,255,.72);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.8rem;transition:all .15s;white-space:nowrap}
+.nav-links a:hover,.nav-links a.active{color:#fff;background:rgba(255,255,255,.18)}
+.nav-toggle{display:none;background:none;border:none;color:#fff;font-size:1.3rem;padding:8px;cursor:pointer;margin-left:auto}
+@media(max-width:768px){
+  .nav-toggle{display:block}
+  .nav-links{display:none;width:100%;flex-direction:column;padding-bottom:8px}
+  .nav-links.open{display:flex}
+  .nav-links a{padding:8px 12px}
+}
+.page-hero{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 60%,#2563eb 100%);color:#fff;padding:1.75rem 0 1.5rem;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.hero-content{position:relative}
+.breadcrumb-nav{font-size:.75rem;color:rgba(255,255,255,.7);margin-bottom:.5rem}
+.breadcrumb-nav a{color:rgba(255,255,255,.8);text-decoration:none}
+.breadcrumb-nav a:hover{color:#fff}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.75rem;margin-bottom:.5rem}
+.page-hero h1{font-size:1.4rem;font-weight:800;margin:0 0 .3rem}
+.page-hero p{font-size:.83rem;opacity:.85;margin:0}
+.main-layout{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start;padding:16px 0 32px}
+@media(max-width:991px){.main-layout{grid-template-columns:1fr}}
+.acc-wrap{display:flex;flex-direction:column;gap:10px}
+.acc-card{background:#fff;border-radius:10px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden}
+.acc-header{display:flex;align-items:center;gap:10px;padding:14px 16px;cursor:pointer;user-select:none;border:none;background:none;width:100%;text-align:left;transition:background .15s}
+.acc-header:hover{background:#f8fafc}
+.acc-header.open{background:#f0f7ff}
+.acc-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+.ic-blue{background:#dbeafe;color:#1d4ed8}
+.ic-green{background:#dcfce7;color:#16a34a}
+.ic-yellow{background:#fef9c3;color:#a16207}
+.ic-pink{background:#fce7f3;color:#be185d}
+.acc-title{font-weight:700;font-size:.9rem;flex:1}
+.acc-badge{font-size:.72rem;font-weight:700;padding:3px 9px;border-radius:10px;white-space:nowrap}
+.acc-chevron{font-size:.9rem;color:#94a3b8;transition:transform .2s;margin-left:4px}
+.acc-header.open .acc-chevron{transform:rotate(180deg)}
+.acc-body{padding:0 16px 16px;display:none}
+.acc-body.open{display:block}
+.sub-sec{background:#f8fafc;border:1px solid #e8edf2;border-radius:8px;padding:12px;margin-bottom:10px}
+.sub-sec:last-child{margin-bottom:0}
+.sub-title{font-size:.8rem;font-weight:700;color:#1e40af;margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.form-label{font-weight:600;font-size:.8rem;color:#374151;margin-bottom:4px;display:block}
+.form-label .help{cursor:pointer;color:#94a3b8;font-size:.82rem;vertical-align:middle}
+.form-label .help:hover{color:#1e40af}
+.form-control,.form-select{font-size:.85rem;border-color:#d1d5db;border-radius:7px}
+.form-control:focus,.form-select:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+.input-group-text{background:#f1f5f9;border-color:#d1d5db;font-size:.8rem;color:#64748b;min-width:36px;justify-content:center}
+.form-text{font-size:.72rem;color:#64748b;margin-top:3px}
+.auto-field{background:#f0f7ff!important;border-color:#bfdbfe!important;color:#1e40af!important;font-weight:600}
+.member-card{background:#fff;border:1px solid #e2e8f0;border-radius:7px;padding:10px 12px;margin-bottom:8px;position:relative}
+.member-remove{position:absolute;top:6px;right:8px;background:none;border:none;color:#ef4444;font-size:1rem;cursor:pointer;padding:2px 6px;border-radius:4px}
+.member-remove:hover{background:#fee2e2}
+.result-panel{background:linear-gradient(160deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;color:#fff;padding:18px 20px;position:sticky;top:88px;box-shadow:0 4px 20px rgba(30,58,138,.3)}
+.result-title{font-size:.88rem;font-weight:700;opacity:.85;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.result-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:.82rem;border-bottom:1px solid rgba(255,255,255,.1)}
+.result-row:last-child{border:none}
+.result-label{opacity:.8}
+.result-val{font-weight:600}
+.result-divider{border:none;border-top:1.5px solid rgba(255,255,255,.25);margin:8px 0}
+.result-final{display:flex;justify-content:space-between;align-items:center;margin-top:4px}
+.result-final-label{font-size:.95rem;font-weight:700}
+.result-final-val{font-size:1.35rem;font-weight:800}
+.val-refund{color:#86efac}
+.val-pay{color:#fca5a5}
+.rate-chip{background:rgba(255,255,255,.2);border-radius:12px;padding:1px 8px;font-size:.72rem}
+.metric-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
+.metric-card{background:#fff;border-radius:8px;padding:8px;text-align:center;border:1px solid #e2e8f0}
+.metric-label{font-size:.68rem;color:#64748b;margin-bottom:2px}
+.metric-val{font-size:.88rem;font-weight:700;color:#1e3a8a}
+.rate-table-card{background:#fff;border-radius:10px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-top:10px;overflow:hidden}
+.rate-table-card .card-hd{background:#f0f4ff;padding:10px 14px;font-size:.82rem;font-weight:700;color:#1e3a8a;border-bottom:1px solid #dbeafe}
+.rate-table-card table{width:100%;border-collapse:collapse;font-size:.76rem}
+.rate-table-card th{background:#f8fafc;padding:6px 10px;font-weight:600;color:#475569;border-bottom:1px solid #e2e8f0}
+.rate-table-card td{padding:5px 10px;border-bottom:1px solid #f1f5f9;color:#334155}
+.rate-table-card tr.active-row td{background:#dbeafe;color:#1e40af;font-weight:700}
+.rate-table-card tr:last-child td{border:none}
+.info-tabs{margin-top:24px}
+.info-tabs .nav-tabs{border-bottom:2px solid #e2e8f0}
+.info-tabs .nav-link{color:#64748b;font-size:.82rem;font-weight:600;padding:8px 14px;border:none;border-bottom:2px solid transparent;margin-bottom:-2px}
+.info-tabs .nav-link.active{color:#1e40af;border-bottom-color:#1e40af;background:none}
+.info-tab-content{background:#fff;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 8px 8px;padding:16px}
+.modal-header{background:#f0f7ff;border-bottom:1px solid #bfdbfe}
+.modal-title{color:#1e3a8a;font-size:.92rem;font-weight:700}
+.help-table th{background:#f0f4ff;font-size:.78rem}
+.help-table td{font-size:.78rem}
+.disclaimer{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.75rem;color:#713f12;margin-top:16px;display:flex;gap:8px;align-items:flex-start}
+footer{background:#1e3a8a;color:rgba(255,255,255,.65);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}
+@media(max-width:576px){
+  .result-final-val{font-size:1.1rem}
+  .page-hero h1{font-size:1.2rem}
+}
+/* ── mc-nav: 2단 공통 네비게이션 ── */
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul{justify-content:flex-end}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.gi-tabs-wrap{background:#fff;border-bottom:2px solid #e2e8f0}
+.gi-tabs{list-style:none;display:flex;overflow-x:auto;margin:0;padding:0 12px;-ms-overflow-style:none;scrollbar-width:none}
+.gi-tabs::-webkit-scrollbar{display:none}
+.gi-tabs li a{display:inline-block;padding:9px 13px;font-size:.82rem;font-weight:600;color:#64748b;text-decoration:none;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;margin-bottom:-2px}
+.gi-tabs li a:hover{color:#1e3a8a}
+.gi-tabs li a.cur{color:#1e3a8a;border-bottom-color:#1e3a8a;font-weight:700}
+</style>
+</head>
+<body>
+
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../../tax/index.html" class="on">세금</a></li>
+<li><a href="../../work/index.html">급여·노동</a></li>
+<li><a href="../../tools/index.html">도구</a></li>
+<li><a href="../../realestate/index.html">부동산</a></li>
+<li><a href="../../money/index.html">금융·투자</a></li>
+<li><a href="../../student/index.html">학생</a></li>
+<li><a href="../../parent/index.html">학부모·육아</a></li>
+<li><a href="../../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="index.html" class="on mc-done">종합소득세</a></li>
+<li><a href="../freelancer/index.html" class="mc-done">프리랜서 3.3%</a></li>
+<li><a href="../vat/index.html" class="mc-done">부가세</a></li>
+<li><a href="../day-laborer/index.html" class="mc-done">일용직</a></li>
+<li><a href="../earned-income/index.html" class="mc-done">근로소득세</a></li>
+<li><a href="../retirement-income/index.html" class="mc-done">퇴직소득세</a></li>
+<li><a href="../capital-gains/index.html" class="mc-done">양도소득세</a></li>
+<li><span class="wip">연말정산</span></li>
+<li><a href="../property/index.html" class="mc-done">부동산세금</a></li>
+<li><a href="../inheritance/index.html" class="mc-done">상속증여</a></li>
+<li><span class="wip">가상자산</span></li>
+<li><span class="wip">상금</span></li>
+</ul></div></div>
+</div>
+
+<div class="page-hero">
+  <div class="container hero-content">
+
+    <div class="hero-badge">2025년 신고 · 2024년 귀속</div>
+    <h1><i class="bi bi-calculator me-2"></i>종합소득세 계산기</h1>
+    <p>사업·근로·연금·금융·기타소득을 입력하면 납부(환급)세액을 자동 계산합니다</p>
+  </div>
+</div>
+<div class="gi-tabs-wrap"><div class="container"><ul class="gi-tabs">
+<li><a href="index.html" class="cur">계산기</a></li>
+<li><a href="about.html">종합소득세란?</a></li>
+<li><a href="tax-rate.html">세율</a></li>
+<li><a href="flow.html">세액계산흐름도</a></li>
+<li><a href="penalty-calc.html">가산세 계산기</a></li>
+<li><a href="penalty.html">가산세</a></li>
+</ul></div></div>
+
+<div class="container">
+<div class="main-layout">
+
+<div>
+<div class="acc-wrap">
+
+<div class="acc-card">
+  <button class="acc-header open" onclick="toggle(this)">
+    <span class="acc-icon ic-blue"><i class="bi bi-wallet2"></i></span>
+    <span class="acc-title">종합소득금액</span>
+    <span class="acc-badge bg-primary text-white" id="b-income">0원</span>
+    <i class="bi bi-chevron-down acc-chevron"></i>
+  </button>
+  <div class="acc-body open">
+    <div class="sub-sec">
+      <div class="sub-title"><i class="bi bi-briefcase"></i> 사업소득</div>
+      <div class="row g-2">
+        <div class="col-12">
+          <label class="form-label">업종 구분 <i class="bi bi-question-circle help" onclick="showHelp('biz')"></i></label>
+          <select class="form-select" id="bizType" onchange="onBizTypeChange()">
+            <option value="none">해당없음</option>
+            <optgroup label="단순경비율">
+              <option value="simple_94_low">인적용역 94코드 (수입 4천만 이하, 경비율 64.1%)</option>
+              <option value="simple_94_high">인적용역 94코드 (수입 4천만 초과, 경비율 48.0%)</option>
+              <option value="simple_custom">기타 단순경비율 (경비율 직접 입력)</option>
+            </optgroup>
+            <optgroup label="기준경비율">
+              <option value="standard_custom">기준경비율 (경비율 직접 입력)</option>
+            </optgroup>
+            <optgroup label="직접 입력">
+              <option value="direct">소득금액 직접 입력</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="col-sm-6" id="row-expRate">
+          <label class="form-label">경비율 (%)</label>
+          <div class="input-group">
+            <input type="number" class="form-control" id="expenseRate" min="0" max="100" step="0.1" placeholder="예) 64.1" oninput="calc()">
+            <span class="input-group-text">%</span>
+          </div>
+        </div>
+        <div class="col-sm-6" id="row-bizRev">
+          <label class="form-label">총수입금액</label>
+          <div class="input-group">
+            <input type="number" class="form-control" id="bizRevenue" min="0" step="10000" placeholder="0" oninput="calc()">
+            <span class="input-group-text">원</span>
+          </div>
+        </div>
+        <div class="col-sm-6" id="row-bizDirect" style="display:none">
+          <label class="form-label">사업소득금액 (직접 입력)</label>
+          <div class="input-group">
+            <input type="number" class="form-control" id="bizDirect" min="0" step="10000" placeholder="0" oninput="calc()">
+            <span class="input-group-text">원</span>
+          </div>
+        </div>
+        <div class="col-12" id="row-bizNote" style="font-size:.75rem;color:#1e40af;padding:0 8px"></div>
+      </div>
+    </div>
+    <div class="sub-sec">
+      <div class="sub-title"><i class="bi bi-person-badge"></i> 근로소득 <i class="bi bi-question-circle help" onclick="showHelp('earned')"></i></div>
+      <div class="row g-2">
+        <div class="col-sm-6">
+          <label class="form-label">총급여액</label>
+          <div class="input-group">
+            <input type="number" class="form-control" id="totalSalary" min="0" step="100000" placeholder="0" oninput="calc()">
+            <span class="input-group-text">원</span>
+          </div>
+          <div class="form-text" id="earnedDeductNote"></div>
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label">근로소득금액 <small class="text-muted">(자동)</small></label>
+          <div class="input-group">
+            <input type="text" class="form-control auto-field" id="earnedIncomeDisp" readonly placeholder="총급여 입력 시 자동계산">
+            <span class="input-group-text">원</span>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label">원천징수세액</label>
+          <div class="input-group">
+            <input type="number" class="form-control" id="withheldEarned" min="0" step="10000" placeholder="0" oninput="calc()">
+            <span class="input-group-text">원</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sub-sec">
+      <div class="sub-title"><i class="bi bi-piggy-bank"></i> 연금소득 <i class="bi bi-question-circle help" onclick="showHelp('pension')"></i></div>
+      <div class="row g-2">
+        <div class="col-sm-6">
+          <label class="form-label">총연금액</label>
+          <div class="input-group">
+            <input type="number" class="form-control" id="totalPension" min="0" step="100000" placeholder="0" oninput="calc()">
+            <span class="input-group-text">원</span>
+          </div>
+          <div class="form-text" id="pensionDeductNote"></div>
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label">연금소득금액 <small class="text-muted">(자동)</small></label>
+          <div class="input-group">
+            <input type="text" class="form-control auto-field" id="pensionIncomeDisp" readonly placeholder="총연금 입력 시 자동계산">
+            <span class="input-group-text">원</span>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label">원천징수세액</label>
+          <div class="input-group">
+            <input type="number" class="form-control" id="withheldPension" min="0" step="10000" placeholder="0" oninput="calc()">
+            <span class="input-group-text">원</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sub-sec">
+      <div class="sub-title"><i class="bi bi-graph-up-arrow"></i> 금융소득 <i class="bi bi-question-circle help" onclick="showHelp('financial')"></i></div>
+      <div class="row g-2">
+        <div class="col-sm-4">
+          <label class="form-label">이자소득</label>
+          <div class="input-group">
+            <input type="number" class="form-control" id="interestIncome" min="0" step="10000" placeholder="0" oninput="calc()">
+            <span class="input-group-text">원</span>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <label class="form-label">배당소득</label>
+          <div class="input-group">
+            <input type="number" class="form-control" id="dividendIncome" min="0" step="10000" placeholder="0" oninput="calc()">
+            <span class="input-group-text">원</span>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <label class="form-label">배당 Gross-up 대상액</label>
+          <div class="input-group">
+            <input type="number" class="form-control" id="grossUpBase" min="0" step="10000" placeholder="0" oninput="calc()">
+            <span class="input-group-text">원</span>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label">원천징수세액</label>
+          <div class="input-group">
+            <input type="number" class="form-control" id="withheldFinancial" min="0" step="10000" placeholder="0" oninput="calc()">
+            <span class="input-group-text">원</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-text mt-1" id="financialNote" style="color:#1e40af"></div>
+    </div>
+    <div class="sub-sec">
+      <div class="sub-title"><i class="bi bi-three-dots"></i> 기타소득 <i class="bi bi-question-circle help" onclick="showHelp('other')"></i></div>
+      <div class="row g-2">
+        <div class="col-sm-6">
+          <label class="form-label">필요경비율</label>
+          <select class="form-select" id="otherRate" onchange="calc()">
+            <option value="60">60% (강연료·원고료 등)</option>
+            <option value="80">80% (일시적 인적용역 특정)</option>
+            <option value="0">0% (소득금액 직접 입력)</option>
+          </select>
+        </div>
+        <div class="col-sm-6" id="row-otherRev">
+          <label class="form-label">기타소득 수입금액</label>
+          <div class="input-group">
+            <input type="number" class="form-control" id="otherRevenue" min="0" step="10000" placeholder="0" oninput="calc()">
+            <span class="input-group-text">원</span>
+          </div>
+        </div>
+        <div class="col-sm-6" id="row-otherDirect" style="display:none">
+          <label class="form-label">기타소득금액</label>
+          <div class="input-group">
+            <input type="number" class="form-control" id="otherDirect" min="0" step="10000" placeholder="0" oninput="calc()">
+            <span class="input-group-text">원</span>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label">원천징수세액</label>
+          <div class="input-group">
+            <input type="number" class="form-control" id="withheldOther" min="0" step="10000" placeholder="0" oninput="calc()">
+            <span class="input-group-text">원</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-text mt-1 text-muted">※ 기타소득금액 300만원 이하 시 분리과세 선택 가능</div>
+    </div>
+  </div>
+</div>
+
+<div class="acc-card">
+  <button class="acc-header" onclick="toggle(this)">
+    <span class="acc-icon ic-green"><i class="bi bi-dash-circle"></i></span>
+    <span class="acc-title">소득공제</span>
+    <span class="acc-badge bg-success text-white" id="b-deduct">0원</span>
+    <i class="bi bi-chevron-down acc-chevron"></i>
+  </button>
+  <div class="acc-body">
+    <div class="sub-sec">
+      <div class="sub-title"><i class="bi bi-people"></i> 인적공제 <i class="bi bi-question-circle help" onclick="showHelp('personal')"></i></div>
+      <p style="font-size:.78rem;color:#64748b;margin-bottom:8px">본인은 기본공제 150만원이 자동 적용됩니다.</p>
+      <div class="row g-2 mb-2">
+        <div class="col-12">
+          <label class="form-label">본인 추가공제</label>
+          <div class="d-flex flex-wrap gap-3">
+            <div class="form-check"><input class="form-check-input" type="checkbox" id="selfSenior" onchange="calc()"><label class="form-check-label" for="selfSenior">경로우대 (70세↑, +100만)</label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" id="selfDisabled" onchange="calc()"><label class="form-check-label" for="selfDisabled">장애인 (+200만)</label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" id="selfWoman" onchange="calc()"><label class="form-check-label" for="selfWoman">부녀자 (+50만)</label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" id="selfSingle" onchange="calc()"><label class="form-check-label" for="selfSingle">한부모 (+100만)</label></div>
+          </div>
+        </div>
+      </div>
+      <div id="memberList"></div>
+      <button class="btn btn-sm btn-outline-primary" onclick="addMember()"><i class="bi bi-plus-circle me-1"></i>부양가족 추가</button>
+      <div id="personalSummary" class="mt-2 p-2 rounded" style="background:#f0f7ff;font-size:.75rem;color:#1e3a8a;display:none"></div>
+    </div>
+    <div class="sub-sec">
+      <div class="sub-title"><i class="bi bi-shield-check"></i> 보험료·연금·주택 공제</div>
+      <div class="row g-2">
+        <div class="col-sm-6"><label class="form-label">국민연금 보험료</label><div class="input-group"><input type="number" class="form-control" id="natPension" min="0" step="10000" placeholder="0" oninput="calc()"><span class="input-group-text">원</span></div></div>
+        <div class="col-sm-6"><label class="form-label">건강보험료 <small class="text-muted">(근로자)</small></label><div class="input-group"><input type="number" class="form-control" id="healthIns" min="0" step="10000" placeholder="0" oninput="calc()"><span class="input-group-text">원</span></div></div>
+        <div class="col-sm-6"><label class="form-label">고용보험료</label><div class="input-group"><input type="number" class="form-control" id="emplIns" min="0" step="10000" placeholder="0" oninput="calc()"><span class="input-group-text">원</span></div></div>
+        <div class="col-sm-6"><label class="form-label">주택임차차입금 원리금</label><div class="input-group"><input type="number" class="form-control" id="housingLoan" min="0" step="10000" placeholder="0" oninput="calc()"><span class="input-group-text">원</span></div><div class="form-text">공제율 40%, 한도 400만원</div></div>
+        <div class="col-sm-6"><label class="form-label">장기주택저당차입금 이자</label><div class="input-group"><input type="number" class="form-control" id="mortgage" min="0" step="10000" placeholder="0" oninput="calc()"><span class="input-group-text">원</span></div><div class="form-text">한도 600만~2,000만원</div></div>
+        <div class="col-sm-6"><label class="form-label">개인연금저축 납입액</label><div class="input-group"><input type="number" class="form-control" id="perPension" min="0" step="10000" placeholder="0" oninput="calc()"><span class="input-group-text">원</span></div><div class="form-text">납입액×40%, 한도 72만원</div></div>
+        <div class="col-sm-6"><label class="form-label">소기업·소상공인 공제부금</label><div class="input-group"><input type="number" class="form-control" id="smallBiz" min="0" step="10000" placeholder="0" oninput="calc()"><span class="input-group-text">원</span></div></div>
+      </div>
+    </div>
+    <div class="sub-sec">
+      <div class="sub-title"><i class="bi bi-credit-card"></i> 신용카드 등 소득공제 <i class="bi bi-question-circle help" onclick="showHelp('card')"></i></div>
+      <div class="row g-2">
+        <div class="col-sm-6"><label class="form-label">신용카드 사용액</label><div class="input-group"><input type="number" class="form-control" id="ccCard" min="0" step="10000" placeholder="0" oninput="calc()"><span class="input-group-text">원</span></div></div>
+        <div class="col-sm-6"><label class="form-label">현금영수증·직불카드</label><div class="input-group"><input type="number" class="form-control" id="ccCash" min="0" step="10000" placeholder="0" oninput="calc()"><span class="input-group-text">원</span></div></div>
+        <div class="col-sm-6"><label class="form-label">전통시장 사용액</label><div class="input-group"><input type="number" class="form-control" id="ccTrad" min="0" step="10000" placeholder="0" oninput="calc()"><span class="input-group-text">원</span></div></div>
+        <div class="col-sm-6"><label class="form-label">대중교통 이용액</label><div class="input-group"><input type="number" class="form-control" id="ccTrans" min="0" step="10000" placeholder="0" oninput="calc()"><span class="input-group-text">원</span></div></div>
+        <div class="col-sm-6"><label class="form-label">도서·공연 신용카드 <small class="text-muted">(급여 7천↓)</small></label><div class="input-group"><input type="number" class="form-control" id="ccCulCC" min="0" step="10000" placeholder="0" oninput="calc()"><span class="input-group-text">원</span></div></div>
+        <div class="col-sm-6"><label class="form-label">도서·공연 현금영수증 <small class="text-muted">(급여 7천↓)</small></label><div class="input-group"><input type="number" class="form-control" id="ccCulCash" min="0" step="10000" placeholder="0" oninput="calc()"><span class="input-group-text">원</span></div></div>
+      </div>
+      <div class="form-text mt-1" id="cardNote" style="color:#1e40af"></div>
+    </div>
+    <div class="sub-sec">
+      <div class="sub-title"><i class="bi bi-list-check"></i> 기타 소득공제</div>
+      <div class="row g-2">
+        <div class="col-sm-6"><label class="form-label">기부금 소득공제</label><div class="input-group"><input type="number" class="form-control" id="donation" min="0" step="10000" placeholder="0" oninput="calc()"><span class="input-group-text">원</span></div></div>
+        <div class="col-sm-6"><label class="form-label">기타 소득공제 합계</label><div class="input-group"><input type="number" class="form-control" id="otherDeduct" min="0" step="10000" placeholder="0" oninput="calc()"><span class="input-group-text">원</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="acc-card">
+  <button class="acc-header" onclick="toggle(this)">
+    <span class="acc-icon ic-yellow"><i class="bi bi-award"></i></span>
+    <span class="acc-title">세액공제</span>
+    <span class="acc-badge bg-warning text-dark" id="b-credit">0원</span>
+    <i class="bi bi-chevron-down acc-chevron"></i>
+  </button>
+  <div class="acc-body">
+    <div class="sub-sec">
+      <div class="sub-title"><i class="bi bi-emoji-smile"></i> 혼인·자녀 세액공제 <i class="bi bi-question-circle help" onclick="showHelp('child')"></i></div>
+      <div class="row g-2">
+        <div class="col-sm-4"><label class="form-label">혼인 세액공제</label><select class="form-select" id="marriageCredit" onchange="calc()"><option value="0">해당없음</option><option value="500000">50만원 (2024~2026 혼인)</option></select></div>
+        <div class="col-sm-4"><label class="form-label">기본공제 자녀 수</label><select class="form-select" id="childCount" onchange="calc()"><option value="0">0명</option><option value="1">1명 (25만원)</option><option value="2">2명 (55만원)</option><option value="3">3명 (95만원)</option><option value="4">4명 (135만원)</option><option value="5">5명 (175만원)</option></select></div>
+        <div class="col-sm-4"><label class="form-label">출산·입양 자녀 순서</label><select class="form-select" id="birthOrder" onchange="calc()"><option value="0">해당없음</option><option value="1">첫째 (30만원)</option><option value="2">둘째 (50만원)</option><option value="3">셋째↑ (70만원)</option></select></div>
+      </div>
+    </div>
+    <div class="sub-sec">
+      <div class="sub-title"><i class="bi bi-safe2"></i> 연금계좌 세액공제 <i class="bi bi-question-circle help" onclick="showHelp('pensionCredit')"></i></div>
+      <div class="row g-2">
+        <div class="col-sm-6"><label class="form-label">퇴직연금(IRP) 납입액</label><div class="input-group"><input type="number" class="form-control" id="irp" min="0" step="10000" placeholder="0" oninput="calc()"><span class="input-group-text">원</span></div><div class="form-text">한도 900만원</div></div>
+        <div class="col-sm-6"><label class="form-label">연금저축 납입액</label><div class="input-group"><input type="number" class="form-control" id="pensionSave" min="0" step="10000" placeholder="0" oninput="calc()"><span class="input-group-text">원</span></div><div class="form-text">한도 600만원 (IRP 포함 900만원)</div></div>
+      </div>
+      <div class="form-text mt-1" id="pensionCreditNote" style="color:#1e40af"></div>
+    </div>
+    <div class="sub-sec">
+      <div class="sub-title"><i class="bi bi-list-stars"></i> 기타 세액공제</div>
+      <div class="row g-2">
+        <div class="col-sm-6"><label class="form-label">전자신고 세액공제</label><select class="form-select" id="electronicCredit" onchange="calc()"><option value="0">해당없음</option><option value="20000">2만원 (직접 전자신고)</option></select></div>
+        <div class="col-sm-6"><label class="form-label">배당 세액공제</label><div class="input-group"><input type="number" class="form-control" id="dividendCredit" min="0" step="10000" placeholder="0" oninput="calc()"><span class="input-group-text">원</span></div><div class="form-text">Gross-up 금액의 11%</div></div>
+        <div class="col-sm-6"><label class="form-label">기타 세액공제·감면 합계</label><div class="input-group"><input type="number" class="form-control" id="otherCredit" min="0" step="10000" placeholder="0" oninput="calc()"><span class="input-group-text">원</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="acc-card">
+  <button class="acc-header" onclick="toggle(this)">
+    <span class="acc-icon ic-pink"><i class="bi bi-receipt"></i></span>
+    <span class="acc-title">가산세 · 기납부세액</span>
+    <span class="acc-badge bg-danger text-white" id="b-prepaid">0원</span>
+    <i class="bi bi-chevron-down acc-chevron"></i>
+  </button>
+  <div class="acc-body">
+    <div class="sub-sec">
+      <div class="sub-title"><i class="bi bi-plus-circle"></i> 가산세 <a href="penalty-calc.html" class="ms-2" style="font-size:.75rem">→ 가산세 계산기</a></div>
+      <div class="row g-2">
+        <div class="col-sm-6"><label class="form-label">가산세 합계</label><div class="input-group"><input type="number" class="form-control" id="penaltyTax" min="0" step="10000" placeholder="0" oninput="calc()"><span class="input-group-text">원</span></div></div>
+      </div>
+    </div>
+    <div class="sub-sec">
+      <div class="sub-title"><i class="bi bi-minus-circle"></i> 기납부세액 (원천징수 합산)</div>
+      <div class="row g-2">
+        <div class="col-sm-6"><label class="form-label">원천징수 기납부세액 <small class="text-muted">(자동합산)</small></label><div class="input-group"><input type="text" class="form-control auto-field" id="withheldAutoDisp" readonly placeholder="소득별 원천징수 합계"><span class="input-group-text">원</span></div></div>
+        <div class="col-sm-6"><label class="form-label">중간예납 세액</label><div class="input-group"><input type="number" class="form-control" id="interimTax" min="0" step="10000" placeholder="0" oninput="calc()"><span class="input-group-text">원</span></div></div>
+        <div class="col-sm-6"><label class="form-label">수시부과 기납부세액</label><div class="input-group"><input type="number" class="form-control" id="periodicTax" min="0" step="10000" placeholder="0" oninput="calc()"><span class="input-group-text">원</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div class="info-tabs mt-3">
+  <ul class="nav nav-tabs" id="infoTab">
+    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-guide">신고·납부 안내</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-exclude">확정신고 제외대상</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-penalty">가산세 요약</button></li>
+  </ul>
+  <div class="tab-content info-tab-content">
+    <div class="tab-pane fade show active" id="tab-guide">
+      <div class="row g-3" style="font-size:.8rem">
+        <div class="col-sm-6"><strong>📋 확정신고 기간</strong><ul class="mt-1 mb-0 ps-3"><li>일반: 다음 해 <strong>5월 1일 ~ 5월 31일</strong></li><li>성실신고확인 대상: <strong>6월 1일 ~ 6월 30일</strong></li><li>사망: 상속개시일로부터 6개월 이내</li><li>출국: 출국일 전날까지</li></ul></div>
+        <div class="col-sm-6"><strong>💳 납부 방법</strong><ul class="mt-1 mb-0 ps-3"><li>홈택스(hometax.go.kr) 전자납부</li><li>금융기관·세무서 방문 납부</li><li><strong>분납:</strong> 납부세액 1,000만원 초과 시 2개월 내 분납 가능</li></ul></div>
+        <div class="col-sm-6"><strong>🔄 환급</strong><ul class="mt-1 mb-0 ps-3"><li>신고 후 통상 30일 이내 환급</li><li>환급계좌 사전 등록 필요 (홈택스)</li></ul></div>
+        <div class="col-sm-6"><strong>📍 중간예납</strong><ul class="mt-1 mb-0 ps-3"><li>매년 11월 (전년 납부세액의 1/2)</li><li>중간예납세액 50만원 미만 시 징수 제외</li></ul></div>
+      </div>
+    </div>
+    <div class="tab-pane fade" id="tab-exclude">
+      <p style="font-size:.8rem;color:#64748b;margin-bottom:10px">다음에 해당하는 경우 종합소득세 확정신고 의무가 없습니다.</p>
+      <div class="row g-2" style="font-size:.78rem">
+        <div class="col-sm-6"><div class="p-2 rounded" style="background:#f0fdf4;border:1px solid #bbf7d0"><strong class="text-success">✓</strong> 근로소득만 있고 연말정산을 마친 경우<br><small class="text-muted">(2곳 이상 근로소득 합산신고 누락 시 예외)</small></div></div>
+        <div class="col-sm-6"><div class="p-2 rounded" style="background:#f0fdf4;border:1px solid #bbf7d0"><strong class="text-success">✓</strong> 직전년도 수입 7,500만원 미만 보험모집인·방문판매원</div></div>
+        <div class="col-sm-6"><div class="p-2 rounded" style="background:#f0fdf4;border:1px solid #bbf7d0"><strong class="text-success">✓</strong> 퇴직소득과 연말정산 대상 사업소득만 있는 경우</div></div>
+        <div class="col-sm-6"><div class="p-2 rounded" style="background:#f0fdf4;border:1px solid #bbf7d0"><strong class="text-success">✓</strong> 비과세·분리과세 소득만 있는 경우</div></div>
+        <div class="col-sm-6"><div class="p-2 rounded" style="background:#f0fdf4;border:1px solid #bbf7d0"><strong class="text-success">✓</strong> 연 300만원 이하 기타소득으로 분리과세 선택 시</div></div>
+        <div class="col-sm-6"><div class="p-2 rounded" style="background:#fff7ed;border:1px solid #fed7aa"><strong class="text-danger">⚠</strong> 금융소득 2천만원 초과, 복수 근무지 합산 누락 등은 신고 필요</div></div>
+      </div>
+    </div>
+    <div class="tab-pane fade" id="tab-penalty">
+      <table class="table table-sm table-bordered mb-0" style="font-size:.78rem">
+        <thead><tr><th>종류</th><th>부과사유</th><th>가산세액</th></tr></thead>
+        <tbody>
+          <tr><td>무신고 (일반)</td><td>기한 내 미신고</td><td>무신고납부세액 × 20%</td></tr>
+          <tr><td>무신고 (복식부기)</td><td>기한 내 미신고</td><td>MAX[납부세액×20%, 수입금액×0.07%]</td></tr>
+          <tr><td>무신고 (부정)</td><td>부정무신고</td><td>납부세액 × 40% (국제거래 60%)</td></tr>
+          <tr><td>무신고 (부정+복식부기)</td><td>부정무신고</td><td>MAX[납부세액×40%(국제60%), 수입금액×0.14%]</td></tr>
+          <tr><td>납부지연</td><td>미납·미달납부</td><td>미납세액 × 경과일수 × 0.022%</td></tr>
+        </tbody>
+      </table>
+      <div class="mt-2 text-center"><a href="penalty.html" class="btn btn-sm btn-outline-primary">전체 가산세 안내 →</a></div>
+    </div>
+  </div>
+</div>
+
+<div class="disclaimer"><i class="bi bi-info-circle flex-shrink-0 mt-1"></i><span>이 계산 결과는 모의계산의 결과이므로 <strong>참고용으로만</strong> 사용하시기 바랍니다. 정확한 세액은 세무사 또는 홈택스를 통해 확인하세요.</span></div>
+</div>
+
+<div>
+  <div class="result-panel">
+    <div class="result-title"><i class="bi bi-receipt-cutoff"></i> 세액 계산 결과</div>
+    <div class="result-row"><span class="result-label">종합소득금액</span><span class="result-val" id="r-income">0원</span></div>
+    <div class="result-row"><span class="result-label">(-) 소득공제 합계</span><span class="result-val" id="r-deduct">0원</span></div>
+    <div class="result-row"><span class="result-label">= 과세표준</span><span class="result-val" id="r-taxbase">0원</span></div>
+    <div class="result-row"><span class="result-label">적용세율 <span class="rate-chip" id="r-ratechip">6%</span></span><span class="result-val" id="r-rate">6%</span></div>
+    <div class="result-row"><span class="result-label">누진공제</span><span class="result-val" id="r-progdeduct">0원</span></div>
+    <div class="result-row"><span class="result-label">= 산출세액</span><span class="result-val" id="r-calctax">0원</span></div>
+    <div class="result-row"><span class="result-label">(-) 세액공제 합계</span><span class="result-val" id="r-credit">0원</span></div>
+    <div class="result-row"><span class="result-label">= 결정세액</span><span class="result-val" id="r-determined">0원</span></div>
+    <div class="result-row"><span class="result-label">(+) 가산세</span><span class="result-val" id="r-penalty">0원</span></div>
+    <div class="result-row"><span class="result-label">(-) 기납부세액</span><span class="result-val" id="r-prepaid">0원</span></div>
+    <hr class="result-divider">
+    <div class="result-final">
+      <span class="result-final-label">납부(환급)세액</span>
+      <span class="result-final-val" id="r-final">0원</span>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.2);margin-top:12px;padding-top:10px">
+      <div class="result-row" style="font-size:.78rem"><span class="result-label" style="opacity:.7">지방소득세 (10%)</span><span class="result-val" id="r-local" style="opacity:.8">0원</span></div>
+      <div class="result-row" style="font-size:.82rem;border:none"><span class="result-label">총 부담세액 (국+지방)</span><span class="result-val" id="r-total">0원</span></div>
+    </div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card"><div class="metric-label">실효세율</div><div class="metric-val" id="m-effective">0.0%</div></div>
+    <div class="metric-card"><div class="metric-label">적용세율</div><div class="metric-val" id="m-rate">6%</div></div>
+    <div class="metric-card"><div class="metric-label">과세표준</div><div class="metric-val" id="m-base">0</div></div>
+  </div>
+  <div class="rate-table-card">
+    <div class="card-hd"><i class="bi bi-bar-chart-line me-1"></i>세율 구간 (2024 귀속)</div>
+    <table>
+      <thead><tr><th>과세표준</th><th>세율</th><th>누진공제</th></tr></thead>
+      <tbody id="rateTableBody"></tbody>
+    </table>
+  </div>
+  <div class="text-center mt-2">
+    <button class="btn btn-sm btn-outline-secondary" onclick="resetAll()"><i class="bi bi-arrow-counterclockwise me-1"></i>전체 초기화</button>
+  </div>
+</div>
+
+</div>
+</div>
+
+<div class="modal fade" id="helpModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header py-2"><h5 class="modal-title" id="helpTitle">도움말</h5><button type="button" class="btn-close btn-sm" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body" id="helpBody"></div>
+    </div>
+  </div>
+</div>
+
+<footer><div class="container">© 2025 mycalc · 본 사이트는 참고용이며 법적 효력이 없습니다. | <a href="../../index.html" style="color:rgba(255,255,255,.7);text-decoration:none">← 메인으로</a></div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const TAX_RATES=[{min:0,max:14000000,rate:.06,deduction:0},{min:14000000,max:50000000,rate:.15,deduction:1260000},{min:50000000,max:88000000,rate:.24,deduction:5760000},{min:88000000,max:150000000,rate:.35,deduction:15440000},{min:150000000,max:300000000,rate:.38,deduction:19940000},{min:300000000,max:500000000,rate:.40,deduction:25900000},{min:500000000,max:1000000000,rate:.42,deduction:35900000},{min:1000000000,max:Infinity,rate:.45,deduction:65900000}];
+const RATE_LABELS=['1,400만 이하','5,000만 이하','8,800만 이하','1.5억 이하','3억 이하','5억 이하','10억 이하','10억 초과'];
+function getBracket(b){return TAX_RATES.find(x=>b<=x.max)||TAX_RATES[TAX_RATES.length-1]}
+function calcTax(b){if(b<=0)return 0;const br=getBracket(b);return Math.max(b*br.rate-br.deduction,0)}
+function earnedDeduction(s){if(s<=0)return 0;let d;if(s<=5000000)d=s*.7;else if(s<=15000000)d=3500000+(s-5000000)*.4;else if(s<=45000000)d=7500000+(s-15000000)*.15;else if(s<=100000000)d=12000000+(s-45000000)*.05;else d=14750000+(s-100000000)*.02;return Math.min(d,20000000)}
+function pensionDeduction(p){if(p<=0)return 0;let d;if(p<=3500000)d=p;else if(p<=7000000)d=3500000+(p-3500000)*.4;else if(p<=14000000)d=4900000+(p-7000000)*.2;else d=6300000+(p-14000000)*.1;return Math.min(d,9000000)}
+function cardDeduction(salary,trad,trans,cash,cc,culCC,culCash,childCount){if(salary<=0)return 0;const threshold=salary*.25;const over70=salary>70000000;const baseLimit=over70?2500000:3000000;let childBonus=0;if(childCount>=2)childBonus=over70?500000:1000000;else if(childCount===1)childBonus=over70?250000:500000;const totalLimit=baseLimit+childBonus;const culElig=!over70?(culCC+culCash):0;const totalUsage=cc+cash+culElig+trad+trans;if(totalUsage<=threshold)return 0;const ccDeduct=cc*.15,cashDeduct=cash*.3,culDeduct=culElig*.3;const tradDeduct=trad*.4,transDeduct=trans*.4;let minDeduct=0,rem=threshold;if(rem<=cc){minDeduct=rem*.15;rem=0}else{minDeduct+=cc*.15;rem-=cc}if(rem>0){const cashCul=cash+culElig;if(rem<=cashCul){minDeduct+=rem*.3;rem=0}else{minDeduct+=cashCul*.3;rem-=cashCul}}if(rem>0)minDeduct+=Math.min(rem,trad+trans)*.4;const raw=ccDeduct+cashDeduct+culDeduct+tradDeduct+transDeduct-minDeduct;if(raw<=0)return 0;if(raw<=totalLimit)return raw;const addCap=over70?2000000:3000000;const specials=tradDeduct+transDeduct+culDeduct;const bonus=Math.min(raw-totalLimit,Math.min(specials,addCap));return totalLimit+bonus}
+function childBasicCredit(n){if(n===1)return 250000;if(n===2)return 550000;if(n>=3)return 950000+(n-2)*400000;return 0}
+function birthCredit(o){return[0,300000,500000,700000][o]||0}
+function earnedCredit(compIncome,earnIncome,finIncome,salary,totalDeduct){if(earnIncome<=0||salary<=0)return 0;const adj=compIncome-finIncome+Math.max(finIncome-20000000,0);if(adj<=0)return 0;const tb=Math.max(adj-totalDeduct,0);const ct=calcTax(tb);const portion=ct*(earnIncome/adj);let cr=portion<=1300000?portion*.55:715000+(portion-1300000)*.3;cr=Math.max(cr,0);let lim;const s=salary;if(s<=33000000)lim=740000;else if(s<=70000000)lim=Math.max(740000-(s-33000000)*8/1000,660000);else if(s<=120000000)lim=Math.max(660000-(s-70000000)*.5,500000);else lim=Math.max(500000-(s-120000000)*.5,200000);return Math.min(cr,lim)}
+function pensionCredit(compIncome,irp,ps){const rate=compIncome>45000000?.12:.15;const rpC=Math.min(irp,9000000),psC=Math.min(ps,6000000);return Math.min(rpC+psC,9000000)*rate}
+let members=[],memberId=0;
+function addMember(){members.push({id:++memberId,rel:'spouse',senior:false,disabled:false});renderMembers();calc()}
+function removeMember(id){members=members.filter(m=>m.id!==id);renderMembers();calc()}
+function updateMember(id,field,val){const m=members.find(m=>m.id===id);if(m)m[field]=(val==='true'||val===true)?true:(val==='false'||val===false?false:val);calc()}
+function renderMembers(){const relLabel={spouse:'배우자',parent:'부모',child:'자녀',sibling:'형제자매'};document.getElementById('memberList').innerHTML=members.map(m=>`<div class="member-card"><button class="member-remove" onclick="removeMember(${m.id})"><i class="bi bi-x-lg"></i></button><div class="row g-2"><div class="col-5 col-sm-3"><label class="form-label">관계</label><select class="form-select form-select-sm" onchange="updateMember(${m.id},'rel',this.value)">${['spouse','parent','child','sibling'].map(r=>`<option value="${r}"${m.rel===r?' selected':''}>${relLabel[r]}</option>`).join('')}</select></div><div class="col-7 col-sm-5"><label class="form-label">추가공제</label><div class="d-flex gap-3 flex-wrap"><div class="form-check form-check-sm"><input class="form-check-input" type="checkbox" ${m.senior?'checked':''} id="ms${m.id}" onchange="updateMember(${m.id},'senior',this.checked)"><label class="form-check-label" for="ms${m.id}">경로우대</label></div><div class="form-check form-check-sm"><input class="form-check-input" type="checkbox" ${m.disabled?'checked':''} id="md${m.id}" onchange="updateMember(${m.id},'disabled',this.checked)"><label class="form-check-label" for="md${m.id}">장애인</label></div></div></div></div></div>`).join('')}
+function toggle(btn){btn.classList.toggle('open');const body=btn.nextElementSibling;body.classList.toggle('open')}
+function onBizTypeChange(){const t=document.getElementById('bizType').value;const isDirect=t==='direct',isNone=t==='none';document.getElementById('row-expRate').style.display=isDirect||isNone?'none':'';document.getElementById('row-bizRev').style.display=isDirect?'none':'';document.getElementById('row-bizDirect').style.display=isDirect?'':'none';if(t==='simple_94_low')document.getElementById('expenseRate').value='64.1';else if(t==='simple_94_high')document.getElementById('expenseRate').value='48.0';else if(t!=='simple_custom'&&t!=='standard_custom')document.getElementById('expenseRate').value='';calc()}
+document.getElementById('otherRate').addEventListener('change',function(){const isDirect=this.value==='0';document.getElementById('row-otherRev').style.display=isDirect?'none':'';document.getElementById('row-otherDirect').style.display=isDirect?'':'none';calc()});
+function n(id){return parseFloat(document.getElementById(id).value)||0}
+function chk(id){return document.getElementById(id).checked}
+function calc(){
+  const bizType=document.getElementById('bizType').value;let bizIncome=0;
+  if(bizType==='direct'){bizIncome=n('bizDirect');document.getElementById('row-bizNote').textContent=''}
+  else if(bizType!=='none'){const rev=n('bizRevenue'),er=n('expenseRate')/100;if(rev>0&&er>0){bizIncome=rev*(1-er);document.getElementById('row-bizNote').textContent=`사업소득금액 = ${fmt(rev)} × (1 - ${(er*100).toFixed(1)}%) = ${fmt(bizIncome)}`}else{document.getElementById('row-bizNote').textContent=''}}
+  const salary=n('totalSalary');const earnDeduct=earnedDeduction(salary);const earnIncome=Math.max(salary-earnDeduct,0);
+  document.getElementById('earnedIncomeDisp').value=salary>0?fmt(earnIncome):'';
+  document.getElementById('earnedDeductNote').textContent=salary>0?`근로소득공제 ${fmt(earnDeduct)} 차감`:'';
+  const totalPen=n('totalPension');const penDeduct=pensionDeduction(totalPen);const penIncome=Math.max(totalPen-penDeduct,0);
+  document.getElementById('pensionIncomeDisp').value=totalPen>0?fmt(penIncome):'';
+  document.getElementById('pensionDeductNote').textContent=totalPen>0?`연금소득공제 ${fmt(penDeduct)} 차감`:'';
+  const interest=n('interestIncome'),dividend=n('dividendIncome');const grossUpBase=n('grossUpBase'),grossUp=grossUpBase*.10;const rawFin=interest+dividend+grossUp;const finForComp=rawFin>20000000?rawFin:0;
+  if(rawFin>0&&rawFin<=20000000)document.getElementById('financialNote').textContent=`금융소득 ${fmt(rawFin)} ≤ 2,000만원 → 분리과세(14%) 적용, 종합과세 제외`;
+  else if(rawFin>20000000)document.getElementById('financialNote').textContent=`금융소득 ${fmt(rawFin)} > 2,000만원 → 전액 종합과세`;
+  else document.getElementById('financialNote').textContent='';
+  const otherRateEl=document.getElementById('otherRate');const otherRateVal=parseInt(otherRateEl.value);const otherIncome=otherRateVal===0?n('otherDirect'):n('otherRevenue')*(1-otherRateVal/100);
+  const compIncome=bizIncome+earnIncome+penIncome+finForComp+otherIncome;
+  let personalDeduct=1500000;let pNote=['본인 150만'];
+  if(chk('selfSenior')){personalDeduct+=1000000;pNote.push('경로 100만')}
+  if(chk('selfDisabled')){personalDeduct+=2000000;pNote.push('장애 200만')}
+  const isSingle=chk('selfSingle'),isWoman=chk('selfWoman');
+  if(isSingle){personalDeduct+=1000000;pNote.push('한부모 100만')}else if(isWoman){personalDeduct+=500000;pNote.push('부녀자 50만')}
+  for(const m of members){personalDeduct+=1500000;pNote.push(`${m.rel} 150만`);if(m.senior){personalDeduct+=1000000;pNote.push('+경로')}if(m.disabled){personalDeduct+=2000000;pNote.push('+장애')}}
+  const pSummary=document.getElementById('personalSummary');pSummary.style.display='block';pSummary.textContent=`인적공제 합계: ${fmt(personalDeduct)} (${pNote.join(', ')})`;
+  const houseLoan=Math.min(n('housingLoan')*.4,4000000);const mortgage=n('mortgage');const perPen=Math.min(n('perPension')*.4,720000);const smallBizAmt=n('smallBiz');const natPen=n('natPension');const healthAmt=n('healthIns');const emplInsAmt=n('emplIns');
+  const childCnt=parseInt(document.getElementById('childCount').value)||0;
+  const cardDeduct=cardDeduction(salary,n('ccTrad'),n('ccTrans'),n('ccCash'),n('ccCard'),n('ccCulCC'),n('ccCulCash'),childCnt);
+  if(salary>0)document.getElementById('cardNote').textContent=`신용카드 등 공제액: ${fmt(cardDeduct)}`;
+  else document.getElementById('cardNote').textContent='총급여를 먼저 입력하면 자동 계산됩니다';
+  const donationAmt=n('donation'),otherDeductAmt=n('otherDeduct');
+  const totalDeduct=Math.min(personalDeduct+natPen+healthAmt+emplInsAmt+houseLoan+mortgage+perPen+smallBizAmt+cardDeduct+donationAmt+otherDeductAmt,compIncome);
+  const taxBase=Math.max(compIncome-totalDeduct,0);const bracket=getBracket(taxBase);const taxRate=bracket.rate,progDeduct=bracket.deduction;const calculatedTax=calcTax(taxBase);
+  const marriageCr=parseInt(document.getElementById('marriageCredit').value)||0;const childCr=childBasicCredit(childCnt)+birthCredit(parseInt(document.getElementById('birthOrder').value)||0);
+  const irpAmt=n('irp'),pSaveAmt=n('pensionSave');const pensCr=pensionCredit(compIncome,irpAmt,pSaveAmt);const earnCr=earnedCredit(compIncome,earnIncome,finForComp,salary,totalDeduct);const stdCr=earnIncome>0?130000:70000;const electronicCr=parseInt(document.getElementById('electronicCredit').value)||0;const divCr=n('dividendCredit'),otherCr=n('otherCredit');
+  if(irpAmt>0||pSaveAmt>0){const rate=compIncome>45000000?12:15;document.getElementById('pensionCreditNote').textContent=`적용세율 ${rate}% → 연금계좌 세액공제 ${fmt(pensCr)}`}else document.getElementById('pensionCreditNote').textContent='';
+  const totalCredit=marriageCr+childCr+pensCr+earnCr+stdCr+electronicCr+divCr+otherCr;const determinedTax=Math.max(calculatedTax-totalCredit,0);
+  const penalty=n('penaltyTax');const withheldAuto=n('withheldEarned')+n('withheldPension')+n('withheldFinancial')+n('withheldOther');
+  document.getElementById('withheldAutoDisp').value=withheldAuto>0?fmt(withheldAuto):'';
+  const prePaid=withheldAuto+n('interimTax')+n('periodicTax');const finalTax=determinedTax+penalty-prePaid;const localTax=Math.max(determinedTax*.1,0);const totalBurden=determinedTax+localTax;const effectiveRate=compIncome>0?determinedTax/compIncome*100:0;
+  const isRefund=finalTax<0;
+  set('r-income',compIncome);set('r-deduct',totalDeduct);set('r-taxbase',taxBase);
+  document.getElementById('r-rate').textContent=(taxRate*100).toFixed(0)+'%';
+  document.getElementById('r-ratechip').textContent=(taxRate*100).toFixed(0)+'%';
+  set('r-progdeduct',progDeduct);set('r-calctax',calculatedTax);set('r-credit',totalCredit);set('r-determined',determinedTax);set('r-penalty',penalty);set('r-prepaid',prePaid);
+  const finEl=document.getElementById('r-final');finEl.textContent=(isRefund?'환급 ':'')+fmt(Math.abs(finalTax));finEl.className='result-final-val '+(isRefund?'val-refund':finalTax>0?'val-pay':'');
+  set('r-local',localTax);set('r-total',totalBurden);
+  document.getElementById('m-effective').textContent=effectiveRate.toFixed(1)+'%';
+  document.getElementById('m-rate').textContent=(taxRate*100).toFixed(0)+'%';
+  document.getElementById('m-base').textContent=fmtShort(taxBase);
+  setBadge('b-income',compIncome);setBadge('b-deduct',totalDeduct);setBadge('b-credit',totalCredit);setBadge('b-prepaid',prePaid+penalty);
+  renderRateTable(taxBase);
+}
+function set(id,v){document.getElementById(id).textContent=fmt(v)}
+function setBadge(id,v){document.getElementById(id).textContent=fmt(v)}
+function fmt(n){return Math.round(n||0).toLocaleString('ko-KR')+'원'}
+function fmtShort(n){if(n>=100000000)return(n/100000000).toFixed(1)+'억';if(n>=10000)return Math.round(n/10000)+'만원';return fmt(n)}
+function renderRateTable(activeTaxBase){document.getElementById('rateTableBody').innerHTML=TAX_RATES.map((b,i)=>{const isActive=activeTaxBase>0&&activeTaxBase<=b.max&&(i===0||activeTaxBase>TAX_RATES[i-1].max);return`<tr class="${isActive?'active-row':''}"><td>${RATE_LABELS[i]}</td><td>${(b.rate*100).toFixed(0)}%</td><td>${b.deduction>0?(b.deduction/10000).toFixed(0)+'만':'—'}</td></tr>`}).join('')}
+function resetAll(){document.querySelectorAll('input[type=number],input[type=text]:not(.auto-field)').forEach(el=>el.value='');document.querySelectorAll('input[type=checkbox]').forEach(el=>el.checked=false);document.querySelectorAll('select').forEach(el=>el.selectedIndex=0);members=[];renderMembers();onBizTypeChange();calc()}
+const HELPS={biz:{title:'사업소득 업종 구분',body:`<p>사업소득금액 = 총수입금액 − 필요경비</p><table class="table table-sm table-bordered help-table"><thead><tr><th>구분</th><th>경비율</th><th>비고</th></tr></thead><tbody><tr><td>인적용역 94코드 (수입 4천만↓)</td><td>64.1%</td><td>프리랜서, 강사, 보험설계사 등</td></tr><tr><td>인적용역 94코드 (수입 4천만↑)</td><td>48.0%</td><td>4천만원 초과 구간 적용</td></tr><tr><td>기타 단순경비율</td><td>업종별 상이</td><td>홈택스 &gt; 업종코드 조회</td></tr><tr><td>기준경비율</td><td>주요경비 + 기준경비율</td><td>직전년 수입 일정액 초과 시</td></tr><tr><td>직접 입력</td><td>—</td><td>장부 작성 사업자</td></tr></tbody></table>`},earned:{title:'근로소득공제 계산표',body:`<table class="table table-sm table-bordered help-table"><thead><tr><th>총급여액</th><th>공제액 계산식</th></tr></thead><tbody><tr><td>500만원 이하</td><td>총급여 × 70%</td></tr><tr><td>500만 ~ 1,500만</td><td>350만 + 초과분 × 40%</td></tr><tr><td>1,500만 ~ 4,500만</td><td>750만 + 초과분 × 15%</td></tr><tr><td>4,500만 ~ 1억</td><td>1,200만 + 초과분 × 5%</td></tr><tr><td>1억 초과</td><td>1,475만 + 초과분 × 2%</td></tr></tbody></table><p class="text-muted mb-0" style="font-size:.8rem">※ 상한 2,000만원</p>`},pension:{title:'연금소득공제',body:`<table class="table table-sm table-bordered help-table"><thead><tr><th>총연금액</th><th>공제액</th></tr></thead><tbody><tr><td>350만원 이하</td><td>전액</td></tr><tr><td>350만~700만</td><td>350만 + 초과분×40%</td></tr><tr><td>700만~1,400만</td><td>490만 + 초과분×20%</td></tr><tr><td>1,400만 초과</td><td>630만 + 초과분×10%</td></tr></tbody></table>`},financial:{title:'금융소득 종합과세',body:`<div class="alert alert-info py-2" style="font-size:.82rem"><strong>기준:</strong> 이자+배당 합계가 2,000만원 초과 시 전액 종합과세</div>`},other:{title:'기타소득 필요경비율',body:`<table class="table table-sm table-bordered help-table"><thead><tr><th>소득 종류</th><th>경비율</th></tr></thead><tbody><tr><td>강연료·원고료 등</td><td>60%</td></tr><tr><td>일시적 인적용역</td><td>80%</td></tr><tr><td>직접 입력</td><td>0%</td></tr></tbody></table>`},personal:{title:'인적공제',body:`<table class="table table-sm table-bordered help-table"><thead><tr><th>구분</th><th>공제액</th><th>요건</th></tr></thead><tbody><tr><td>기본공제(1인당)</td><td>150만원</td><td>연소득 100만원 이하</td></tr><tr><td>경로우대</td><td>100만원</td><td>만 70세 이상</td></tr><tr><td>장애인</td><td>200만원</td><td>장애인복지법 등</td></tr><tr><td>부녀자</td><td>50만원</td><td>근로소득 3천만↓ 여성</td></tr><tr><td>한부모</td><td>100만원</td><td>배우자 없이 자녀 있는 경우</td></tr></tbody></table>`},card:{title:'신용카드 등 소득공제',body:`<p>총급여액의 25% 초과 사용액부터 공제</p><table class="table table-sm table-bordered help-table"><thead><tr><th>사용처</th><th>공제율</th></tr></thead><tbody><tr><td>신용카드</td><td>15%</td></tr><tr><td>현금영수증·직불카드</td><td>30%</td></tr><tr><td>도서·공연(급여 7천↓)</td><td>30%</td></tr><tr><td>전통시장</td><td>40%</td></tr><tr><td>대중교통</td><td>40%</td></tr></tbody></table>`},child:{title:'자녀 세액공제',body:`<table class="table table-sm table-bordered help-table"><thead><tr><th>구분</th><th>공제액</th></tr></thead><tbody><tr><td>1명</td><td>25만원</td></tr><tr><td>2명</td><td>55만원</td></tr><tr><td>3명 이상</td><td>95만+초과1명당40만</td></tr></tbody></table>`},pensionCredit:{title:'연금계좌 세액공제',body:`<table class="table table-sm table-bordered help-table"><thead><tr><th>소득기준</th><th>공제율</th></tr></thead><tbody><tr><td>종합소득 4,500만↓</td><td>15%</td></tr><tr><td>종합소득 4,500만↑</td><td>12%</td></tr></tbody></table>`}};
+function showHelp(key){const h=HELPS[key];if(!h)return;document.getElementById('helpTitle').textContent=h.title;document.getElementById('helpBody').innerHTML=h.body;new bootstrap.Modal(document.getElementById('helpModal')).show()}
+renderRateTable(0);onBizTypeChange();calc();
+</script>
+</body>
+</html>

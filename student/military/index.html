@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>군전역일 계산기 + 군적금 만기수령액 계산 | 마이캘크</title>
+<meta name="description" content="입대일만 입력하면 전역일·남은 복무일·현재 계급을 자동 계산. 장병내일준비적금 만기수령액·매칭지원금·이자까지 한번에 확인. 육군·해군·공군·해병대·사회복무요원 지원.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="군전역일 계산기 + 군적금 만기수령액 계산 | 마이캘크">
+<meta property="og:description" content="전역일, D-day, 현재 계급, 군 월급, 장병내일준비적금 만기수령액을 한 번에 계산합니다.">
+<meta property="og:url" content="https://student.mycalc.co.kr/military">
+<meta property="og:site_name" content="mycalc">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "군전역일 계산기 + 군적금 만기수령액 계산",
+  "url": "https://student.mycalc.co.kr/military",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "All",
+  "description": "입대일과 복무 유형으로 전역일, 복무 진행률, 현재 계급, 군적금 만기수령액을 계산하는 웹 계산기입니다.",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "KRW"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "전역일은 어떻게 계산하나요?", "acceptedAnswer": {"@type": "Answer", "text": "입대일에 복무 유형별 복무 개월 수를 더한 뒤 1일을 뺍니다. 입대일이 복무 1일차에 포함되기 때문입니다."}},
+    {"@type": "Question", "name": "군적금 중도해지하면 어떻게 되나요?", "acceptedAnswer": {"@type": "Answer", "text": "중도해지 시 정부 매칭지원금과 비과세 혜택을 받지 못할 수 있습니다. 실제 적용은 가입 은행과 상품 약관을 확인해야 합니다."}},
+    {"@type": "Question", "name": "매칭지원금은 언제 받을 수 있나요?", "acceptedAnswer": {"@type": "Answer", "text": "일반적으로 만기 전역 또는 소집해제 후 적금을 만기 해지할 때 지급 절차가 진행됩니다. 지급 시점은 은행과 기관 처리 일정에 따라 달라질 수 있습니다."}},
+    {"@type": "Question", "name": "사회복무요원도 군적금 가입 가능한가요?", "acceptedAnswer": {"@type": "Answer", "text": "사회복무요원도 장병내일준비적금 가입 대상에 포함됩니다. 잔여 복무기간 등 세부 조건은 가입 시점의 은행 안내를 확인하세요."}}
+  ]
+}
+</script>
+<style>
+*{box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.page-hero{background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 100%);color:#fff;padding:1.8rem 0 1.45rem;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='72' height='72' viewBox='0 0 72 72' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.045'%3E%3Cpath d='M20 14h32v8H20zm-4 18h40v6H16zm8 16h24v6H24z'/%3E%3C/g%3E%3C/svg%3E")}
+.hero-content{position:relative}
+.breadcrumb-mini{display:flex;align-items:center;gap:6px;font-size:.74rem;opacity:.82;margin-bottom:.45rem;flex-wrap:wrap}
+.breadcrumb-mini a{color:#fff;text-decoration:none}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.75rem;margin-bottom:.5rem}
+.page-hero h1{font-size:1.42rem;font-weight:800;margin:0 0 .3rem;letter-spacing:0}
+.page-hero p{font-size:.84rem;opacity:.86;margin:0}
+.tool-tabs-wrap{background:#fff;border-bottom:2px solid #e2e8f0}
+.tool-tabs{list-style:none;display:flex;overflow-x:auto;margin:0;padding:0 12px;-ms-overflow-style:none;scrollbar-width:none}
+.tool-tabs::-webkit-scrollbar{display:none}
+.tool-tabs button{display:inline-flex;align-items:center;gap:6px;padding:10px 13px;font-size:.82rem;font-weight:700;color:#64748b;border:0;background:none;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;margin-bottom:-2px}
+.tool-tabs button:hover{color:#1e3a8a}
+.tool-tabs button.active{color:#1e3a8a;border-bottom-color:#1e3a8a}
+.main-layout{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start;padding:16px 0 32px}
+@media(max-width:991px){.main-layout{grid-template-columns:1fr}}
+.input-card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden;margin-bottom:14px}
+.input-card-header{padding:14px 16px;border-bottom:1px solid #dbeafe;background:#f0f7ff}
+.input-card-title{font-size:.9rem;font-weight:800;color:#0f172a;display:flex;align-items:center;gap:7px}
+.input-card-body{padding:16px}
+.form-label{font-weight:700;font-size:.8rem;color:#374151;margin-bottom:5px;display:block}
+.form-control,.form-select{font-size:.85rem;border-color:#d1d5db;border-radius:7px}
+.form-control:focus,.form-select:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.input-group-text{background:#f8fafc;border-color:#d1d5db;font-size:.8rem;color:#64748b}
+.section-divider{border:none;border-top:1px solid #f1f5f9;margin:14px 0}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.range-row{display:grid;grid-template-columns:1fr 130px;gap:10px;align-items:center}
+.result-panel{background:linear-gradient(160deg,#1e3a8a 0%,#2563eb 100%);border-radius:12px;color:#fff;padding:18px 20px;position:sticky;top:88px;box-shadow:0 4px 20px rgba(30,58,138,.35)}
+.result-title{font-size:.9rem;font-weight:800;opacity:.9;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.score-main{background:rgba(255,255,255,.14);border-radius:12px;padding:14px;margin-bottom:10px}
+.score-label{font-size:.75rem;opacity:.78;margin-bottom:2px}
+.score-value{font-size:1.8rem;font-weight:900;line-height:1.1;color:#bfdbfe}
+.score-sub{font-size:.78rem;opacity:.78;margin-top:4px}
+.result-row{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.13);gap:12px}
+.result-row:last-child{border-bottom:0}
+.result-row span:first-child{opacity:.82}
+.result-row strong{font-size:.88rem;text-align:right}
+.metric-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px}
+.metric-card{background:rgba(255,255,255,.12);border-radius:8px;padding:8px;text-align:center}
+.metric-lbl{font-size:.65rem;opacity:.74;margin-bottom:2px}
+.metric-val{font-size:.9rem;font-weight:900}
+.progress-shell{height:12px;background:rgba(255,255,255,.18);border-radius:999px;overflow:hidden;margin:10px 0 4px}
+.progress-fill{height:100%;background:#bfdbfe;border-radius:999px;width:0%;transition:width .25s}
+.notice-box{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.76rem;color:#713f12;margin-top:14px;display:flex;gap:8px;align-items:flex-start}
+.info-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px;font-size:.84rem;color:#475569;margin-top:14px}
+.info-card h2{font-size:1rem;font-weight:850;color:#0f172a;margin:0 0 10px}
+.info-card p{line-height:1.65;margin:0 0 10px}
+.info-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;background:#fff}
+.info-table th,.info-table td{padding:9px 10px;border-bottom:1px solid #eef2f7;font-size:.8rem}
+.info-table th{background:#f8fafc;color:#334155;font-weight:800}
+.info-table tr:last-child th,.info-table tr:last-child td{border-bottom:0}
+.saving-detail{background:rgba(255,255,255,.1);border-radius:10px;padding:8px 10px;margin-top:8px}
+.chart-box{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px;margin-top:14px}
+.chart-title{font-size:.85rem;font-weight:800;color:#0f172a;margin-bottom:10px}
+.bar-list{display:flex;flex-direction:column;gap:8px}
+.bar-row{display:grid;grid-template-columns:42px 1fr 72px;gap:8px;align-items:center;font-size:.72rem;color:#475569}
+.bar-track{height:18px;background:#eff6ff;border-radius:999px;overflow:hidden;position:relative}
+.bar-principal,.bar-total{height:50%;display:block;border-radius:999px}
+.bar-principal{background:#93c5fd}
+.bar-total{background:#1d4ed8}
+.faq-list{display:grid;gap:10px}
+.faq-item{border-top:1px solid #e2e8f0;padding-top:10px}
+.faq-item:first-child{border-top:0;padding-top:0}
+.faq-q{font-weight:850;color:#0f172a;margin-bottom:4px}
+footer{background:#0f172a;color:rgba(255,255,255,.62);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}
+footer a{color:rgba(255,255,255,.75);text-decoration:none}
+@media(max-width:576px){
+  .main-layout{padding-top:12px}
+  .page-hero h1{font-size:1.22rem}
+  .page-hero p{font-size:.8rem}
+  .score-value{font-size:1.45rem}
+  .input-card-body{padding:14px}
+  .range-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../../tax/index.html">세금</a></li>
+<li><a href="../../work/index.html">급여·노동</a></li>
+<li><a href="../../tools/index.html">도구</a></li>
+<li><a href="../../realestate/index.html">부동산</a></li>
+<li><a href="../../money/index.html">금융·투자</a></li>
+<li><a href="../../student/index.html" class="on">학생</a></li>
+<li><a href="../../parent/index.html">학부모·육아</a></li>
+<li><a href="../../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="../gpa/index.html" class="mc-done">학점계산기</a></li>
+<li><a href="../military/index.html" class="on mc-done">군전역일</a></li>
+<li><span class="wip">내신</span></li>
+<li><span class="wip">수능</span></li>
+<li><span class="wip">출결</span></li>
+<li><span class="wip">학자금</span></li>
+<li><span class="wip">장학금</span></li>
+<li><span class="wip">토익</span></li>
+<li><span class="wip">편입</span></li>
+<li><span class="wip">자격증</span></li>
+<li><span class="wip">생활비</span></li>
+<li><span class="wip">수강신청</span></li>
+</ul></div></div>
+</div>
+
+<div class="page-hero">
+  <div class="container hero-content">
+    <div class="breadcrumb-mini"><a href="../../index.html">mycalc</a><i class="bi bi-chevron-right"></i><a href="../index.html">학생</a><i class="bi bi-chevron-right"></i><span>군전역일+군적금</span></div>
+    <div class="hero-badge">학생</div>
+    <h1><i class="bi bi-shield-check me-2"></i>군전역일 계산기 & 군적금 수령액</h1>
+    <p>입대일 기준 전역일, 복무 진행률, 현재 계급과 장병내일준비적금 만기 수령액을 계산합니다.</p>
+  </div>
+</div>
+
+<div class="tool-tabs-wrap"><div class="container"><ul class="tool-tabs">
+<li><button type="button" class="active" data-tab="discharge"><i class="bi bi-calendar2-check"></i>전역일 계산기</button></li>
+<li><button type="button" data-tab="savings"><i class="bi bi-piggy-bank"></i>군적금 만기수령액</button></li>
+</ul></div></div>
+
+<div class="container">
+<div class="main-layout">
+<div>
+  <section class="tab-panel active" id="tab-discharge">
+    <div class="input-card">
+      <div class="input-card-header"><div class="input-card-title"><i class="bi bi-sliders" style="color:#2563eb"></i> 복무 정보 입력</div></div>
+      <div class="input-card-body">
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <label class="form-label" for="serviceType">복무 유형</label>
+            <select class="form-select form-select-lg" id="serviceType">
+              <option value="army" selected>육군 - 18개월</option>
+              <option value="marines">해병대 - 18개월</option>
+              <option value="navy">해군 - 20개월</option>
+              <option value="airforce">공군 - 21개월</option>
+              <option value="social">사회복무요원 - 21개월</option>
+              <option value="alternative">대체복무요원 - 36개월</option>
+            </select>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="enlistDate">입대일</label>
+            <input type="date" class="form-control form-control-lg" id="enlistDate" value="2026-03-01">
+          </div>
+        </div>
+        <div class="d-flex flex-wrap gap-2 mt-3">
+          <button class="btn btn-primary btn-sm" type="button" id="dischargeBtn"><i class="bi bi-calculator me-1"></i>계산하기</button>
+          <button class="btn btn-outline-secondary btn-sm" type="button" id="resetDischarge"><i class="bi bi-arrow-counterclockwise me-1"></i>초기화</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tab-panel" id="tab-savings">
+    <div class="input-card">
+      <div class="input-card-header"><div class="input-card-title"><i class="bi bi-piggy-bank" style="color:#2563eb"></i> 군적금 설정</div></div>
+      <div class="input-card-body">
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <label class="form-label" for="savingsServiceType">복무 유형</label>
+            <select class="form-select" id="savingsServiceType">
+              <option value="army" selected>육군 - 18개월</option>
+              <option value="marines">해병대 - 18개월</option>
+              <option value="navy">해군 - 20개월</option>
+              <option value="airforce">공군 - 21개월</option>
+              <option value="social">사회복무요원 - 21개월</option>
+              <option value="alternative">대체복무요원 - 36개월</option>
+            </select>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="savingsEnlistDate">입대일</label>
+            <input type="date" class="form-control" id="savingsEnlistDate" value="2026-03-01">
+          </div>
+        </div>
+        <hr class="section-divider">
+        <label class="form-label" for="monthlyDeposit">월 납입액</label>
+        <div class="range-row">
+          <input type="range" class="form-range" id="monthlyDepositRange" min="10000" max="550000" step="10000" value="550000">
+          <div class="input-group">
+            <input type="number" class="form-control" id="monthlyDeposit" min="10000" max="550000" step="10000" value="550000">
+            <span class="input-group-text">원</span>
+          </div>
+        </div>
+        <div class="helper-text">월 1만원~55만원, 1만원 단위. 2026년 기준 총 한도 55만원을 기본값으로 둡니다.</div>
+        <div class="mt-3">
+          <label class="form-label" for="annualRate">적금 금리</label>
+          <div class="input-group" style="max-width:180px">
+            <input type="number" class="form-control" id="annualRate" min="0" step="0.1" value="5.0">
+            <span class="input-group-text">%</span>
+          </div>
+        </div>
+        <div class="d-flex flex-wrap gap-2 mt-3">
+          <button class="btn btn-primary btn-sm" type="button" id="savingsBtn"><i class="bi bi-calculator me-1"></i>계산하기</button>
+        </div>
+      </div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">월별 납입 시뮬레이션</div>
+      <div class="bar-list" id="savingChart"></div>
+      <div class="helper-text mt-2"><span style="color:#93c5fd;font-weight:800">■</span> 원금 누적 <span class="ms-2" style="color:#1d4ed8;font-weight:800">■</span> 매칭지원금 포함 총수령액</div>
+    </div>
+  </section>
+
+  <div class="notice-box">
+    <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1"></i>
+    <span>전역일과 적금 수령액은 입력값 기준 모의계산입니다. 실제 전역일, 봉급, 적금 금리, 매칭지원금 지급 조건은 병무청·국방부·가입 은행 안내와 개인 복무 상황에 따라 달라질 수 있습니다.</span>
+  </div>
+
+  <section class="info-card">
+    <h2>2026년 복무기간 안내</h2>
+    <table class="info-table">
+      <tbody>
+        <tr><th>육군·해병대</th><td>18개월</td></tr>
+        <tr><th>해군</th><td>20개월</td></tr>
+        <tr><th>공군·사회복무요원</th><td>21개월</td></tr>
+        <tr><th>대체복무요원</th><td>36개월</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="info-card">
+    <h2>장병내일준비적금이란?</h2>
+    <p>장병내일준비적금은 병역의무 이행자가 복무 중 목돈을 마련할 수 있도록 만든 정책성 적금입니다. 현역병뿐 아니라 사회복무요원, 대체복무요원 등도 조건을 충족하면 가입할 수 있습니다.</p>
+    <p>2026년 기준 월 납입 한도는 총 55만원으로 알려져 있으며, 은행별 계좌 한도와 가입 가능 계좌 수 제한이 있습니다. 이 계산기는 월 납입액 전체를 하나의 평균 금리로 계산합니다.</p>
+    <p>정부 매칭지원금은 2024년 이후 납입분 기준 100% 구조를 반영했습니다. 즉, 본인이 납입한 원금과 같은 금액을 매칭지원금으로 더해 만기 수령액을 추정합니다.</p>
+    <p>은행 이자는 단리·비과세 방식으로 계산했습니다. 우대금리, 1% 이자지원금, 중도해지, 납입 누락 등은 반영하지 않으므로 실제 수령액과 차이가 날 수 있습니다.</p>
+  </section>
+
+  <section class="info-card">
+    <h2>2026년 군인 월급</h2>
+    <table class="info-table">
+      <thead><tr><th>계급</th><th>월급</th></tr></thead>
+      <tbody>
+        <tr><td>이병</td><td>860,000원</td></tr>
+        <tr><td>일병</td><td>960,000원</td></tr>
+        <tr><td>상병</td><td>1,200,000원</td></tr>
+        <tr><td>병장</td><td>1,500,000원</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="info-card">
+    <h2>자주 묻는 질문</h2>
+    <div class="faq-list">
+      <div class="faq-item"><div class="faq-q">전역일은 어떻게 계산하나요?</div><div>입대일에 복무 유형별 복무 개월 수를 더한 뒤 1일을 뺍니다. 입대일이 복무 1일차에 포함되기 때문입니다.</div></div>
+      <div class="faq-item"><div class="faq-q">군적금 중도해지하면 어떻게 되나요?</div><div>중도해지 시 정부 매칭지원금과 비과세 혜택을 받지 못할 수 있습니다. 실제 적용은 가입 은행과 상품 약관을 확인해야 합니다.</div></div>
+      <div class="faq-item"><div class="faq-q">매칭지원금은 언제 받을 수 있나요?</div><div>일반적으로 만기 전역 또는 소집해제 후 적금을 만기 해지할 때 지급 절차가 진행됩니다. 지급 시점은 은행과 기관 처리 일정에 따라 달라질 수 있습니다.</div></div>
+      <div class="faq-item"><div class="faq-q">사회복무요원도 군적금 가입 가능한가요?</div><div>사회복무요원도 장병내일준비적금 가입 대상에 포함됩니다. 잔여 복무기간 등 세부 조건은 가입 시점의 은행 안내를 확인하세요.</div></div>
+    </div>
+  </section>
+</div>
+
+<aside>
+  <div class="result-panel">
+    <div class="result-title"><i class="bi bi-clipboard-data-fill"></i> 계산 결과</div>
+    <div class="score-main">
+      <div class="score-label" id="mainLabel">전역일</div>
+      <div class="score-value" id="mainScore">-</div>
+      <div class="score-sub" id="mainSub">입대일을 입력하세요</div>
+    </div>
+    <div id="dischargeResultRows">
+      <div class="progress-shell"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="result-row"><span>복무 진행률</span><strong id="progressText">0.0%</strong></div>
+      <div class="result-row"><span>복무 일수</span><strong id="servedText">0일 / 총 0일</strong></div>
+      <div class="result-row"><span>현재 계급</span><strong id="rankText">-</strong></div>
+      <div class="result-row"><span>현재 월급</span><strong id="payText">0원</strong></div>
+      <div class="result-row"><span>복무 중 총 급여</span><strong id="totalPayText">0원</strong></div>
+    </div>
+    <div id="savingsResultRows" style="display:none">
+      <div class="saving-detail">
+        <div class="result-row"><span>본인 납입 원금</span><strong id="totalDepositText">0원</strong></div>
+        <div class="result-row"><span>은행 이자 (비과세)</span><strong id="interestText">0원</strong></div>
+        <div class="result-row"><span>정부 매칭지원금 (100%)</span><strong id="matchingText">0원</strong></div>
+        <div class="result-row"><span>총 수령액</span><strong id="receivedText">0원</strong></div>
+        <div class="result-row"><span>순이익</span><strong id="profitText">0원</strong></div>
+      </div>
+    </div>
+    <div class="metric-row">
+      <div class="metric-card"><div class="metric-lbl" id="metricOneLabel">D-day</div><div class="metric-val" id="metricOne">-</div></div>
+      <div class="metric-card"><div class="metric-lbl" id="metricTwoLabel">복무기간</div><div class="metric-val" id="metricTwo">18개월</div></div>
+    </div>
+  </div>
+</aside>
+</div>
+</div>
+
+<footer><div class="container">© 2026 mycalc · 군 복무 및 적금 계산 결과는 참고용입니다. | <a href="../../index.html">메인으로</a></div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const SERVICE_MONTHS = {army:18, marines:18, navy:20, airforce:21, social:21, alternative:36};
+const SERVICE_LABELS = {army:'육군', marines:'해병대', navy:'해군', airforce:'공군', social:'사회복무요원', alternative:'대체복무요원'};
+const $ = id => document.getElementById(id);
+let activeTab = 'discharge';
+
+function parseLocalDate(value){
+  if(!value) return null;
+  const [y,m,d] = value.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+function formatInputDate(date){
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2,'0');
+  const d = String(date.getDate()).padStart(2,'0');
+  return `${y}-${m}-${d}`;
+}
+function addMonthsLocal(date, months){
+  const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const day = d.getDate();
+  d.setMonth(d.getMonth() + months);
+  if(d.getDate() !== day) d.setDate(0);
+  return d;
+}
+function getDischargeDate(enlistDate, months){
+  const d = addMonthsLocal(enlistDate, months);
+  d.setDate(d.getDate() - 1);
+  return d;
+}
+function dayDiff(a,b){return Math.ceil((a - b) / 86400000)}
+function servedMonths(enlistDate, today){
+  let months = (today.getFullYear() - enlistDate.getFullYear()) * 12 + today.getMonth() - enlistDate.getMonth();
+  if(today.getDate() < enlistDate.getDate()) months -= 1;
+  return Math.max(0, months);
+}
+function getCurrentRank(month, serviceType){
+  if(serviceType === 'army' || serviceType === 'marines'){
+    if(month < 3) return {rank:'이병', pay:860000};
+    if(month < 7) return {rank:'일병', pay:960000};
+    if(month < 13) return {rank:'상병', pay:1200000};
+    return {rank:'병장', pay:1500000};
+  }
+  if(serviceType === 'navy'){
+    if(month < 3) return {rank:'이병', pay:860000};
+    if(month < 8) return {rank:'일병', pay:960000};
+    if(month < 14) return {rank:'상병', pay:1200000};
+    return {rank:'병장', pay:1500000};
+  }
+  if(serviceType === 'airforce'){
+    if(month < 3) return {rank:'이병', pay:860000};
+    if(month < 8) return {rank:'일병', pay:960000};
+    if(month < 15) return {rank:'상병', pay:1200000};
+    return {rank:'병장', pay:1500000};
+  }
+  return {rank:'-', pay:0};
+}
+function getTotalPay(serviceType){
+  const months = SERVICE_MONTHS[serviceType];
+  let total = 0;
+  for(let m = 0; m < months; m++) total += getCurrentRank(m, serviceType).pay;
+  return total;
+}
+function calcMilitarySavings(monthlyDeposit, months, annualRate){
+  const totalDeposit = monthlyDeposit * months;
+  const totalInterest = monthlyDeposit * (annualRate / 100 / 12) * months * (months + 1) / 2;
+  const matchingGrant = totalDeposit;
+  const totalReceived = totalDeposit + totalInterest + matchingGrant;
+  return {totalDeposit, totalInterest, matchingGrant, totalReceived, netProfit: totalInterest + matchingGrant};
+}
+function money(n){return Math.round(n || 0).toLocaleString('ko-KR') + '원'}
+function moneyMan(n){return Math.round((n || 0) / 10000).toLocaleString('ko-KR') + '만원'}
+function dateKo(date){
+  const days = ['일','월','화','수','목','금','토'];
+  return `${date.getFullYear()}년 ${date.getMonth()+1}월 ${date.getDate()}일 (${days[date.getDay()]}요일)`;
+}
+function syncServiceInputs(source){
+  const from = source === 'savings' ? $('savingsServiceType') : $('serviceType');
+  const to = source === 'savings' ? $('serviceType') : $('savingsServiceType');
+  to.value = from.value;
+  const fromDate = source === 'savings' ? $('savingsEnlistDate') : $('enlistDate');
+  const toDate = source === 'savings' ? $('enlistDate') : $('savingsEnlistDate');
+  toDate.value = fromDate.value;
+}
+function setResultMode(mode){
+  $('dischargeResultRows').style.display = mode === 'discharge' ? '' : 'none';
+  $('savingsResultRows').style.display = mode === 'savings' ? '' : 'none';
+}
+function calculateDischarge(){
+  syncServiceInputs('discharge');
+  const serviceType = $('serviceType').value;
+  const enlistDate = parseLocalDate($('enlistDate').value);
+  if(!enlistDate) return;
+  const months = SERVICE_MONTHS[serviceType];
+  const dischargeDate = getDischargeDate(enlistDate, months);
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const totalDays = dayDiff(dischargeDate, enlistDate);
+  const served = Math.min(totalDays, Math.max(0, dayDiff(today, enlistDate)));
+  const remaining = Math.max(0, totalDays - served);
+  const progress = totalDays ? Math.min(100, Math.max(0, served / totalDays * 100)) : 0;
+  const rank = today > dischargeDate ? {rank:'전역', pay:0} : getCurrentRank(servedMonths(enlistDate, today), serviceType);
+  $('mainLabel').textContent = '전역일';
+  $('mainScore').textContent = dateKo(dischargeDate);
+  $('mainSub').textContent = today > dischargeDate ? '전역 완료!' : `전역까지 ${remaining.toLocaleString('ko-KR')}일 남음`;
+  $('progressFill').style.width = `${progress}%`;
+  $('progressText').textContent = `${progress.toFixed(1)}%`;
+  $('servedText').textContent = `${served.toLocaleString('ko-KR')}일 / 총 ${totalDays.toLocaleString('ko-KR')}일`;
+  $('rankText').textContent = rank.rank;
+  $('payText').textContent = rank.pay ? money(rank.pay) : '-';
+  $('totalPayText').textContent = moneyMan(getTotalPay(serviceType));
+  $('metricOneLabel').textContent = 'D-day';
+  $('metricOne').textContent = today > dischargeDate ? '전역 완료' : `D-${remaining}`;
+  $('metricTwoLabel').textContent = SERVICE_LABELS[serviceType];
+  $('metricTwo').textContent = `${months}개월`;
+}
+function renderSavingsChart(monthlyDeposit, months, rate, totalReceived){
+  const chart = $('savingChart');
+  chart.innerHTML = '';
+  const steps = [];
+  for(let i=1; i<=months; i++){
+    if(i === 1 || i === months || i % 3 === 0) steps.push(i);
+  }
+  steps.forEach(i=>{
+    const partial = calcMilitarySavings(monthlyDeposit, i, rate);
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    row.innerHTML = `<div>${i}개월</div><div class="bar-track"><span class="bar-principal" style="width:${partial.totalDeposit/totalReceived*100}%"></span><span class="bar-total" style="width:${partial.totalReceived/totalReceived*100}%"></span></div><div>${moneyMan(partial.totalReceived)}</div>`;
+    chart.appendChild(row);
+  });
+}
+function calculateSavings(){
+  syncServiceInputs('savings');
+  const serviceType = $('savingsServiceType').value;
+  const months = SERVICE_MONTHS[serviceType];
+  const monthlyDeposit = Math.min(550000, Math.max(10000, Number($('monthlyDeposit').value) || 550000));
+  const annualRate = Number($('annualRate').value) || 0;
+  $('monthlyDeposit').value = monthlyDeposit;
+  $('monthlyDepositRange').value = monthlyDeposit;
+  const r = calcMilitarySavings(monthlyDeposit, months, annualRate);
+  const roi = r.totalDeposit ? r.netProfit / r.totalDeposit * 100 : 0;
+  $('mainLabel').textContent = '총 수령액';
+  $('mainScore').textContent = moneyMan(r.totalReceived);
+  $('mainSub').textContent = `${SERVICE_LABELS[serviceType]} ${months}개월 · 월 ${moneyMan(monthlyDeposit)} 납입`;
+  $('totalDepositText').textContent = moneyMan(r.totalDeposit);
+  $('interestText').textContent = `약 ${moneyMan(r.totalInterest)}`;
+  $('matchingText').textContent = moneyMan(r.matchingGrant);
+  $('receivedText').textContent = `약 ${moneyMan(r.totalReceived)}`;
+  $('profitText').textContent = `약 ${moneyMan(r.netProfit)}`;
+  $('metricOneLabel').textContent = '실질 수익률';
+  $('metricOne').textContent = `${roi.toFixed(1)}%`;
+  $('metricTwoLabel').textContent = '납입 개월';
+  $('metricTwo').textContent = `${months}개월`;
+  renderSavingsChart(monthlyDeposit, months, annualRate, r.totalReceived);
+}
+function switchTab(tab){
+  activeTab = tab;
+  document.querySelectorAll('.tool-tabs button').forEach(btn=>btn.classList.toggle('active', btn.dataset.tab === tab));
+  document.querySelectorAll('.tab-panel').forEach(panel=>panel.classList.toggle('active', panel.id === `tab-${tab}`));
+  setResultMode(tab);
+  if(tab === 'discharge') calculateDischarge();
+  if(tab === 'savings') calculateSavings();
+}
+
+document.querySelectorAll('.tool-tabs button').forEach(btn=>btn.addEventListener('click',()=>switchTab(btn.dataset.tab)));
+$('serviceType').addEventListener('change',()=>{calculateDischarge(); if(activeTab === 'savings') calculateSavings();});
+$('enlistDate').addEventListener('input',()=>{calculateDischarge(); if(activeTab === 'savings') calculateSavings();});
+$('savingsServiceType').addEventListener('change',()=>{calculateSavings(); if(activeTab === 'discharge') calculateDischarge();});
+$('savingsEnlistDate').addEventListener('input',()=>{calculateSavings(); if(activeTab === 'discharge') calculateDischarge();});
+$('dischargeBtn').addEventListener('click', calculateDischarge);
+$('resetDischarge').addEventListener('click',()=>{$('serviceType').value='army';$('enlistDate').value='2026-03-01';calculateDischarge();});
+$('monthlyDepositRange').addEventListener('input',()=>{$('monthlyDeposit').value=$('monthlyDepositRange').value;calculateSavings();});
+$('monthlyDeposit').addEventListener('input', calculateSavings);
+$('annualRate').addEventListener('input', calculateSavings);
+$('savingsBtn').addEventListener('click', calculateSavings);
+
+switchTab('discharge');
+</script>
+</body>
+</html>

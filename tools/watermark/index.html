@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>이미지 워터마크 넣기 - 무료 온라인 워터마크 도구 | mycalc</title>
+<meta name="description" content="이미지에 텍스트 또는 로고 워터마크를 무료로 추가하세요. 투명도, 회전, 반복 패턴 설정. 서버 전송 없이 브라우저에서 100% 처리.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.page-hero{background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 100%);color:#fff;padding:1.75rem 0 1.5rem;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='72' height='72' viewBox='0 0 72 72' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.055' stroke-width='2'%3E%3Cpath d='M14 18h44v36H14z'/%3E%3Cpath d='M24 45l9-10 8 7 7-9 10 12'/%3E%3Cpath d='M25 28h10'/%3E%3C/g%3E%3C/svg%3E")}
+.hero-content{position:relative}
+.breadcrumb-mini{display:flex;gap:6px;align-items:center;font-size:.75rem;opacity:.86;margin-bottom:.5rem}
+.breadcrumb-mini a{color:#fff;text-decoration:none}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.75rem;margin-bottom:.5rem}
+.page-hero h1{font-size:1.4rem;font-weight:800;margin:0 0 .3rem;letter-spacing:0}
+.page-hero p{font-size:.83rem;opacity:.88;margin:0}
+.gi-tabs-wrap{background:#fff;border-bottom:2px solid #e2e8f0}
+.gi-tabs{list-style:none;display:flex;overflow-x:auto;margin:0;padding:0 12px;-ms-overflow-style:none;scrollbar-width:none}
+.gi-tabs::-webkit-scrollbar{display:none}
+.gi-tabs li a,.gi-tabs li span{display:inline-block;padding:9px 13px;font-size:.82rem;font-weight:600;color:#64748b;text-decoration:none;border-bottom:2px solid transparent;white-space:nowrap;margin-bottom:-2px}
+.gi-tabs li a.cur{color:#1e3a8a;border-bottom-color:#1e3a8a;font-weight:700}
+.gi-tabs li span{opacity:.45}
+.main-layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start;padding:16px 0 32px}
+.input-card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden}
+.input-card-header{padding:14px 16px;border-bottom:1px solid #dbeafe;background:#f0f7ff}
+.input-card-title{font-size:.88rem;font-weight:700;color:#0f172a;display:flex;align-items:center;gap:7px}
+.input-card-body{padding:16px}
+.upload-zone{border:2px dashed #bfdbfe;background:#f8fbff;border-radius:12px;padding:22px;text-align:center;transition:all .15s;margin-bottom:14px}
+.upload-zone.dragover{border-color:#2563eb;background:#eff6ff}
+.upload-icon{width:44px;height:44px;border-radius:12px;background:#dbeafe;color:#1e40af;display:inline-flex;align-items:center;justify-content:center;font-size:1.25rem;margin-bottom:9px}
+.upload-title{font-weight:800;color:#0f172a;margin-bottom:4px}
+.upload-desc{font-size:.78rem;color:#64748b;margin-bottom:11px}
+.file-meta{display:none;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:9px 10px;font-size:.78rem;color:#475569;margin-bottom:14px;word-break:break-all}
+.wm-tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;background:#f1f5f9;border-radius:8px;padding:4px;margin-bottom:14px}
+.wm-tab{border:0;background:transparent;color:#64748b;border-radius:6px;padding:8px 6px;font-size:.78rem;font-weight:700;white-space:nowrap}
+.wm-tab.active{background:#fff;color:#1e3a8a;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.wm-form{display:none}
+.wm-form.active{display:block}
+.form-label{font-weight:600;font-size:.8rem;color:#374151;margin-bottom:4px;display:block}
+.form-control,.form-select{font-size:.85rem;border-color:#d1d5db;border-radius:7px}
+.form-control:focus,.form-select:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.form-range::-webkit-slider-thumb{background:#2563eb}
+.toolbar-grid{display:grid;grid-template-columns:1fr 136px;gap:12px;align-items:end}
+.color-input{height:38px;padding:4px}
+.section-divider{border:none;border-top:1px solid #f1f5f9;margin:14px 0}
+.radio-pills{display:flex;flex-wrap:wrap;gap:8px}
+.radio-pill input{position:absolute;opacity:0}
+.radio-pill span{display:inline-flex;align-items:center;gap:6px;border:1px solid #cbd5e1;border-radius:8px;padding:8px 11px;font-weight:700;font-size:.82rem;color:#475569;background:#fff}
+.radio-pill input:checked+span{border-color:#2563eb;background:#eff6ff;color:#1e3a8a}
+.position-grid{display:grid;grid-template-columns:repeat(3,42px);grid-template-rows:repeat(3,42px);gap:6px}
+.pos-btn{border:1px solid #cbd5e1;background:#fff;border-radius:8px;color:#64748b;font-weight:800}
+.pos-btn.active{border-color:#2563eb;background:#eff6ff;color:#1e3a8a;box-shadow:0 0 0 2px rgba(37,99,235,.12)}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid #e2e8f0;background:#f8fafc;border-radius:8px;padding:10px 12px}
+.toggle-row label{font-weight:700;font-size:.82rem;color:#334155;margin:0}
+.result-panel{background:linear-gradient(160deg,#1e3a8a 0%,#2563eb 100%);border-radius:12px;color:#fff;padding:18px 20px;position:sticky;top:96px;box-shadow:0 4px 20px rgba(30,58,138,.35)}
+.result-title{font-size:.88rem;font-weight:700;opacity:.9;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.preview-box{background:#fff;border-radius:12px;min-height:260px;display:flex;align-items:center;justify-content:center;padding:12px;margin-bottom:12px;overflow:auto}
+#previewCanvas{display:block;max-width:100%;height:auto;background:#fff}
+.empty-preview{color:#64748b;text-align:center;font-size:.82rem;line-height:1.5;background:#fff;border-radius:8px;padding:14px}
+.status-box{background:rgba(255,255,255,.13);border-radius:8px;padding:9px 10px;margin-bottom:12px}
+.status-label{font-size:.7rem;opacity:.75;margin-bottom:4px}
+.status-text{font-size:.76rem;line-height:1.45;word-break:break-all}
+.result-actions{display:grid;gap:8px}
+.btn-apply,.btn-download{background:#fff;color:#1e3a8a;border:0;font-weight:800;border-radius:8px;padding:10px 12px}
+.btn-apply:disabled,.btn-download:disabled{opacity:.58;cursor:not-allowed}
+.download-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn-reset{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.28);font-weight:700;border-radius:8px;padding:9px 12px}
+.disclaimer{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.75rem;color:#713f12;margin-top:16px;display:flex;gap:8px;align-items:flex-start}
+.content-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px 20px;margin-top:16px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.content-card h2{font-size:1rem;font-weight:800;color:#0f172a;margin:0 0 10px}
+.accordion-button{font-size:.85rem;font-weight:700}
+.accordion-body{font-size:.82rem;color:#475569;line-height:1.6}
+footer{background:#0f172a;color:rgba(255,255,255,.65);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}
+footer a{color:rgba(255,255,255,.7);text-decoration:none}
+@media(max-width:991px){.main-layout{grid-template-columns:1fr}.result-panel{position:static}}
+@media(max-width:576px){
+  .page-hero h1{font-size:1.2rem}
+  .toolbar-grid,.download-row{grid-template-columns:1fr}
+  .wm-tabs{grid-template-columns:1fr}
+  .preview-box{min-height:220px}
+}
+</style>
+</head>
+<body>
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../../tax/index.html">세금</a></li>
+<li><a href="../../work/index.html">급여·노동</a></li>
+<li><a href="../../tools/index.html" class="on">도구</a></li>
+<li><a href="../../realestate/index.html">부동산</a></li>
+<li><a href="../../money/index.html">금융·투자</a></li>
+<li><a href="../../student/index.html">학생</a></li>
+<li><a href="../../parent/index.html">학부모·육아</a></li>
+<li><a href="../../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="../qr-code/index.html" class="mc-done">QR코드</a></li>
+<li><a href="../color-picker/index.html" class="mc-done">컬러피커</a></li>
+<li><a href="../image-resize/index.html" class="mc-done">이미지리사이즈</a></li>
+<li><a href="../pdf-merge/index.html" class="mc-done">PDF합치기</a></li>
+<li><a href="../pdf-split/index.html" class="mc-done">PDF분할</a></li>
+<li><a href="../signature/index.html" class="mc-done">서명생성</a></li>
+<li><a href="../watermark/index.html" class="on mc-done">워터마크</a></li>
+<li><span class="wip">배경제거</span></li>
+<li><span class="wip">HWP변환</span></li>
+<li><span class="wip">증명사진</span></li>
+<li><span class="wip">동영상GIF</span></li>
+<li><span class="wip">오디오추출</span></li>
+<li><span class="wip">PDF압축</span></li>
+<li><span class="wip">목업</span></li>
+<li><span class="wip">엑셀이미지</span></li>
+<li><span class="wip">TTS</span></li>
+</ul></div></div>
+</div>
+
+<div class="page-hero">
+  <div class="container hero-content">
+    <div class="breadcrumb-mini"><a href="../../index.html">mycalc</a><i class="bi bi-chevron-right"></i><a href="../index.html">도구</a><i class="bi bi-chevron-right"></i><span>이미지 워터마크</span></div>
+    <div class="hero-badge"><i class="bi bi-shield-check me-1"></i>브라우저 처리 · 서버 전송 없음</div>
+    <h1>이미지 워터마크 넣기</h1>
+    <p>텍스트 또는 로고 워터마크를 이미지 위에 실시간으로 배치하고 다운로드합니다.</p>
+  </div>
+</div>
+
+<div class="gi-tabs-wrap"><div class="container"><ul class="gi-tabs">
+<li><a href="index.html" class="cur">워터마크 만들기</a></li>
+<li><span>사용 가이드</span></li>
+</ul></div></div>
+
+<div class="container">
+<div class="main-layout">
+<div>
+<div class="input-card">
+  <div class="input-card-header">
+    <div class="input-card-title"><i class="bi bi-image" style="color:#1e3a8a"></i> 이미지 업로드</div>
+  </div>
+  <div class="input-card-body">
+    <div class="upload-zone" id="uploadZone">
+      <div class="upload-icon"><i class="bi bi-cloud-arrow-up"></i></div>
+      <div class="upload-title">이미지를 끌어오거나 붙여넣으세요</div>
+      <div class="upload-desc">JPG, PNG, WEBP 지원 · 파일은 서버로 전송되지 않습니다.</div>
+      <button class="btn btn-primary btn-sm fw-bold" type="button" id="pickImageBtn"><i class="bi bi-folder2-open me-1"></i>파일 선택</button>
+      <input id="imageInput" type="file" accept="image/*" hidden>
+    </div>
+    <div class="file-meta" id="fileMeta"></div>
+
+    <div class="wm-tabs" role="tablist" aria-label="워터마크 유형">
+      <button class="wm-tab active" data-tab="text" type="button"><i class="bi bi-type me-1"></i>텍스트 워터마크</button>
+      <button class="wm-tab" data-tab="image" type="button"><i class="bi bi-image me-1"></i>이미지 워터마크</button>
+    </div>
+
+    <div class="wm-form active" data-form="text">
+      <div class="mb-3">
+        <label class="form-label" for="watermarkText">텍스트</label>
+        <input class="form-control form-control-lg wm-input" id="watermarkText" type="text" value="SAMPLE">
+      </div>
+      <div class="row g-2">
+        <div class="col-sm-6">
+          <label class="form-label" for="fontFamily">글꼴</label>
+          <select class="form-select wm-input" id="fontFamily">
+            <option value="'Pretendard', sans-serif" selected>Pretendard</option>
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="'Nanum Gothic', sans-serif">나눔고딕</option>
+          </select>
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label" for="textColor">글자 색상</label>
+          <input class="form-control form-control-color color-input wm-input" id="textColor" type="color" value="#000000">
+        </div>
+      </div>
+      <div class="toolbar-grid mt-3">
+        <div>
+          <label class="form-label" for="fontSize">글자 크기 <span id="fontSizeValue">48px</span></label>
+          <input class="form-range wm-input" id="fontSize" type="range" min="12" max="120" value="48">
+        </div>
+        <div>
+          <label class="form-label" for="textOpacity">투명도 <span id="textOpacityValue">30%</span></label>
+          <input class="form-range wm-input" id="textOpacity" type="range" min="0" max="100" value="30">
+        </div>
+      </div>
+      <div class="mt-3">
+        <label class="form-label" for="textRotation">회전 각도 <span id="textRotationValue">-30°</span></label>
+        <input class="form-range wm-input" id="textRotation" type="range" min="-90" max="90" value="-30">
+      </div>
+      <div class="mt-3">
+        <label class="form-label">배치 방식</label>
+        <div class="radio-pills">
+          <label class="radio-pill"><input class="wm-input" type="radio" name="textPlacement" value="single"><span><i class="bi bi-bullseye"></i>단일 (중앙)</span></label>
+          <label class="radio-pill"><input class="wm-input" type="radio" name="textPlacement" value="tile" checked><span><i class="bi bi-grid-3x3-gap"></i>반복 (타일)</span></label>
+        </div>
+      </div>
+      <div class="mt-3">
+        <label class="form-label" for="tileGap">반복 간격 <span id="tileGapValue">150px</span></label>
+        <input class="form-range wm-input" id="tileGap" type="range" min="50" max="300" value="150">
+      </div>
+    </div>
+
+    <div class="wm-form" data-form="image">
+      <div class="mb-3">
+        <label class="form-label" for="watermarkImageInput">워터마크 이미지</label>
+        <input class="form-control wm-input" id="watermarkImageInput" type="file" accept="image/*">
+        <div class="form-text" id="watermarkImageMeta">로고나 도장 이미지를 선택하세요.</div>
+      </div>
+      <div class="row g-3">
+        <div class="col-sm-6">
+          <label class="form-label" for="imageScale">크기 조절 <span id="imageScaleValue">30%</span></label>
+          <input class="form-range wm-input" id="imageScale" type="range" min="10" max="100" value="30">
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label" for="imageOpacity">투명도 <span id="imageOpacityValue">30%</span></label>
+          <input class="form-range wm-input" id="imageOpacity" type="range" min="0" max="100" value="30">
+        </div>
+      </div>
+      <div class="row g-3 mt-1">
+        <div class="col-sm-6">
+          <label class="form-label">위치</label>
+          <div class="position-grid" id="positionGrid">
+            <button class="pos-btn" type="button" data-pos="top-left" aria-label="좌상">↖</button>
+            <button class="pos-btn" type="button" data-pos="top-center" aria-label="중상">↑</button>
+            <button class="pos-btn" type="button" data-pos="top-right" aria-label="우상">↗</button>
+            <button class="pos-btn" type="button" data-pos="middle-left" aria-label="좌중">←</button>
+            <button class="pos-btn active" type="button" data-pos="center" aria-label="중앙">•</button>
+            <button class="pos-btn" type="button" data-pos="middle-right" aria-label="우중">→</button>
+            <button class="pos-btn" type="button" data-pos="bottom-left" aria-label="좌하">↙</button>
+            <button class="pos-btn" type="button" data-pos="bottom-center" aria-label="중하">↓</button>
+            <button class="pos-btn" type="button" data-pos="bottom-right" aria-label="우하">↘</button>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label">반복 배치</label>
+          <div class="toggle-row">
+            <label for="imageRepeat">이미지 전체 반복</label>
+            <input class="form-check-input wm-input" id="imageRepeat" type="checkbox">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="disclaimer">
+  <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1"></i>
+  <span>워터마크가 적용된 이미지는 원본으로 되돌릴 수 없습니다. 원본 파일을 따로 보관하고, 저작권이 있는 이미지는 권리 범위를 확인하세요.</span>
+</div>
+
+<div class="content-card">
+  <h2>FAQ</h2>
+  <div class="accordion" id="watermarkFaq">
+    <div class="accordion-item">
+      <h3 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">워터마크를 나중에 제거할 수 있나요?</button></h3>
+      <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#watermarkFaq"><div class="accordion-body">적용 후 저장한 이미지에서는 복구가 어렵습니다. 편집 전 원본 이미지를 별도로 보관하는 것을 권장합니다.</div></div>
+    </div>
+    <div class="accordion-item">
+      <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">반복 워터마크가 안 깨지나요?</button></h3>
+      <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#watermarkFaq"><div class="accordion-body">Canvas에 원본 해상도로 다시 렌더링하므로 다운로드 결과는 원본 크기를 유지합니다.</div></div>
+    </div>
+    <div class="accordion-item">
+      <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">상업용 이미지에도 쓸 수 있나요?</button></h3>
+      <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#watermarkFaq"><div class="accordion-body">도구 사용은 자유롭습니다. 다만 원본 이미지와 로고의 저작권 및 사용 책임은 이미지 소유자에게 있습니다.</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div>
+  <div class="result-panel">
+    <div class="result-title"><i class="bi bi-eye-fill"></i> 워터마크 미리보기</div>
+    <div class="preview-box">
+      <canvas id="previewCanvas" aria-label="워터마크 적용 결과 미리보기"></canvas>
+      <div class="empty-preview" id="emptyPreview"><i class="bi bi-image fs-2 d-block mb-2"></i>이미지를 업로드하세요.</div>
+    </div>
+    <div class="status-box">
+      <div class="status-label">처리 상태</div>
+      <div class="status-text" id="statusText">JPG, PNG, WEBP 이미지를 선택하거나 붙여넣으세요.</div>
+    </div>
+    <div class="result-actions">
+      <button class="btn-apply" id="applyBtn" type="button" disabled><i class="bi bi-check2-circle me-1"></i>워터마크 적용</button>
+      <div class="download-row">
+        <button class="btn-download" id="downloadPngBtn" type="button" disabled><i class="bi bi-download me-1"></i>PNG</button>
+        <button class="btn-download" id="downloadJpgBtn" type="button" disabled><i class="bi bi-download me-1"></i>JPG</button>
+      </div>
+      <button class="btn-reset" type="button" id="resetBtn"><i class="bi bi-arrow-clockwise me-1"></i>초기화</button>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+<footer><div class="container">© 2026 mycalc · 이미지는 브라우저에서만 처리됩니다. | <a href="../../index.html">메인으로</a></div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const state = {
+  tab: 'text',
+  sourceImage: null,
+  sourceFileName: '',
+  watermarkImage: null,
+  watermarkPosition: 'center',
+  hasImage: false
+};
+const $ = id => document.getElementById(id);
+const previewCanvas = $('previewCanvas');
+const ctx = previewCanvas.getContext('2d');
+
+function getRadioValue(name) {
+  const selected = document.querySelector(`input[name="${name}"]:checked`);
+  return selected ? selected.value : '';
+}
+
+function setStatus(message) {
+  $('statusText').textContent = message;
+}
+
+function formatBytes(bytes) {
+  if (!bytes) return '0 KB';
+  const units = ['B','KB','MB','GB'];
+  let value = bytes;
+  let index = 0;
+  while (value >= 1024 && index < units.length - 1) {
+    value /= 1024;
+    index += 1;
+  }
+  return `${value.toFixed(index ? 1 : 0)} ${units[index]}`;
+}
+
+function updateRangeLabels() {
+  $('fontSizeValue').textContent = `${$('fontSize').value}px`;
+  $('textOpacityValue').textContent = `${$('textOpacity').value}%`;
+  $('textRotationValue').textContent = `${$('textRotation').value}°`;
+  $('tileGapValue').textContent = `${$('tileGap').value}px`;
+  $('imageScaleValue').textContent = `${$('imageScale').value}%`;
+  $('imageOpacityValue').textContent = `${$('imageOpacity').value}%`;
+}
+
+function setControlsEnabled(enabled) {
+  $('applyBtn').disabled = !enabled;
+  $('downloadPngBtn').disabled = !enabled;
+  $('downloadJpgBtn').disabled = !enabled;
+}
+
+function updateEmptyState() {
+  $('emptyPreview').style.display = state.hasImage ? 'none' : 'block';
+  previewCanvas.style.display = state.hasImage ? 'block' : 'none';
+  setControlsEnabled(state.hasImage);
+}
+
+function hexToRgb(hex) {
+  const normalized = hex.replace('#', '');
+  const value = parseInt(normalized.length === 3 ? normalized.split('').map(ch => ch + ch).join('') : normalized, 16);
+  return {
+    r: (value >> 16) & 255,
+    g: (value >> 8) & 255,
+    b: value & 255
+  };
+}
+
+function loadImageFromFile(file, callback) {
+  if (!file || !file.type.startsWith('image/')) {
+    setStatus('이미지 파일만 사용할 수 있습니다.');
+    return;
+  }
+  if (!['image/jpeg','image/png','image/webp'].includes(file.type)) {
+    setStatus('JPG, PNG, WEBP 형식만 지원합니다.');
+    return;
+  }
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  img.onload = () => {
+    URL.revokeObjectURL(url);
+    callback(img, file);
+  };
+  img.onerror = () => {
+    URL.revokeObjectURL(url);
+    setStatus('이미지를 불러오지 못했습니다.');
+  };
+  img.src = url;
+}
+
+function setSourceImage(img, file) {
+  state.sourceImage = img;
+  state.sourceFileName = file.name || 'clipboard-image';
+  state.hasImage = true;
+  previewCanvas.width = img.naturalWidth || img.width;
+  previewCanvas.height = img.naturalHeight || img.height;
+  $('fileMeta').style.display = 'block';
+  $('fileMeta').textContent = `${state.sourceFileName} · ${previewCanvas.width}×${previewCanvas.height}px · ${formatBytes(file.size)}`;
+  renderPreview();
+  setStatus('옵션을 조정하면 미리보기가 즉시 갱신됩니다.');
+}
+
+function setWatermarkImage(img, file) {
+  state.watermarkImage = img;
+  $('watermarkImageMeta').textContent = `${file.name || 'watermark-image'} · ${img.naturalWidth || img.width}×${img.naturalHeight || img.height}px`;
+  renderPreview();
+}
+
+function clearPreview() {
+  ctx.clearRect(0, 0, previewCanvas.width || 1, previewCanvas.height || 1);
+  updateEmptyState();
+}
+
+function drawBaseImage() {
+  previewCanvas.width = state.sourceImage.naturalWidth || state.sourceImage.width;
+  previewCanvas.height = state.sourceImage.naturalHeight || state.sourceImage.height;
+  ctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
+  ctx.drawImage(state.sourceImage, 0, 0, previewCanvas.width, previewCanvas.height);
+}
+
+function drawTextWatermark() {
+  const text = $('watermarkText').value.trim();
+  if (!text) return;
+  const rgb = hexToRgb($('textColor').value);
+  const opacity = parseInt($('textOpacity').value, 10) / 100;
+  const size = parseInt($('fontSize').value, 10);
+  const angle = parseInt($('textRotation').value, 10) * Math.PI / 180;
+  const placement = getRadioValue('textPlacement') || 'tile';
+  const gap = parseInt($('tileGap').value, 10);
+  ctx.save();
+  ctx.globalAlpha = opacity;
+  ctx.fillStyle = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
+  ctx.font = `800 ${size}px ${$('fontFamily').value}`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  if (placement === 'single') {
+    ctx.translate(previewCanvas.width / 2, previewCanvas.height / 2);
+    ctx.rotate(angle);
+    ctx.fillText(text, 0, 0);
+  } else {
+    const diagonal = Math.hypot(previewCanvas.width, previewCanvas.height);
+    ctx.translate(previewCanvas.width / 2, previewCanvas.height / 2);
+    ctx.rotate(angle);
+    for (let y = -diagonal; y <= diagonal; y += gap) {
+      for (let x = -diagonal; x <= diagonal; x += gap) {
+        ctx.fillText(text, x, y);
+      }
+    }
+  }
+  ctx.restore();
+}
+
+function getPositionRect(width, height) {
+  const margin = Math.max(16, Math.round(Math.min(previewCanvas.width, previewCanvas.height) * 0.04));
+  const map = {
+    'top-left': [margin, margin],
+    'top-center': [(previewCanvas.width - width) / 2, margin],
+    'top-right': [previewCanvas.width - width - margin, margin],
+    'middle-left': [margin, (previewCanvas.height - height) / 2],
+    center: [(previewCanvas.width - width) / 2, (previewCanvas.height - height) / 2],
+    'middle-right': [previewCanvas.width - width - margin, (previewCanvas.height - height) / 2],
+    'bottom-left': [margin, previewCanvas.height - height - margin],
+    'bottom-center': [(previewCanvas.width - width) / 2, previewCanvas.height - height - margin],
+    'bottom-right': [previewCanvas.width - width - margin, previewCanvas.height - height - margin]
+  };
+  return map[state.watermarkPosition] || map.center;
+}
+
+function drawImageWatermark() {
+  if (!state.watermarkImage) return;
+  const scale = parseInt($('imageScale').value, 10) / 100;
+  const opacity = parseInt($('imageOpacity').value, 10) / 100;
+  const naturalWidth = state.watermarkImage.naturalWidth || state.watermarkImage.width;
+  const naturalHeight = state.watermarkImage.naturalHeight || state.watermarkImage.height;
+  const width = Math.max(1, Math.round(naturalWidth * scale));
+  const height = Math.max(1, Math.round(naturalHeight * scale));
+  ctx.save();
+  ctx.globalAlpha = opacity;
+  if ($('imageRepeat').checked) {
+    const gapX = width + Math.max(24, Math.round(width * 0.45));
+    const gapY = height + Math.max(24, Math.round(height * 0.45));
+    for (let y = 0; y < previewCanvas.height + height; y += gapY) {
+      for (let x = 0; x < previewCanvas.width + width; x += gapX) {
+        ctx.drawImage(state.watermarkImage, x, y, width, height);
+      }
+    }
+  } else {
+    const [x, y] = getPositionRect(width, height);
+    ctx.drawImage(state.watermarkImage, x, y, width, height);
+  }
+  ctx.restore();
+}
+
+function renderPreview() {
+  updateRangeLabels();
+  if (!state.sourceImage) {
+    state.hasImage = false;
+    clearPreview();
+    return;
+  }
+  state.hasImage = true;
+  drawBaseImage();
+  if (state.tab === 'text') drawTextWatermark();
+  if (state.tab === 'image') drawImageWatermark();
+  updateEmptyState();
+}
+
+function setTab(tab) {
+  state.tab = tab;
+  document.querySelectorAll('.wm-tab').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
+  document.querySelectorAll('.wm-form').forEach(form => form.classList.toggle('active', form.dataset.form === tab));
+  renderPreview();
+}
+
+function download(type) {
+  if (!state.hasImage) return;
+  const out = document.createElement('canvas');
+  out.width = previewCanvas.width;
+  out.height = previewCanvas.height;
+  const outCtx = out.getContext('2d');
+  if (type === 'jpg') {
+    outCtx.fillStyle = '#ffffff';
+    outCtx.fillRect(0, 0, out.width, out.height);
+  }
+  outCtx.drawImage(previewCanvas, 0, 0);
+  const mime = type === 'jpg' ? 'image/jpeg' : 'image/png';
+  const url = out.toDataURL(mime, type === 'jpg' ? 0.85 : 0.95);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = type === 'jpg' ? 'mycalc-watermark.jpg' : 'mycalc-watermark.png';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+function resetAll() {
+  state.tab = 'text';
+  state.sourceImage = null;
+  state.sourceFileName = '';
+  state.watermarkImage = null;
+  state.watermarkPosition = 'center';
+  state.hasImage = false;
+  $('imageInput').value = '';
+  $('watermarkImageInput').value = '';
+  $('watermarkText').value = 'SAMPLE';
+  $('fontFamily').selectedIndex = 0;
+  $('fontSize').value = '48';
+  $('textColor').value = '#000000';
+  $('textOpacity').value = '30';
+  $('textRotation').value = '-30';
+  $('tileGap').value = '150';
+  document.querySelector('input[name="textPlacement"][value="tile"]').checked = true;
+  $('imageScale').value = '30';
+  $('imageOpacity').value = '30';
+  $('imageRepeat').checked = false;
+  $('fileMeta').style.display = 'none';
+  $('fileMeta').textContent = '';
+  $('watermarkImageMeta').textContent = '로고나 도장 이미지를 선택하세요.';
+  document.querySelectorAll('.pos-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.pos === 'center'));
+  previewCanvas.width = 0;
+  previewCanvas.height = 0;
+  setTab('text');
+  setStatus('JPG, PNG, WEBP 이미지를 선택하거나 붙여넣으세요.');
+  updateEmptyState();
+}
+
+$('pickImageBtn').addEventListener('click', () => $('imageInput').click());
+$('imageInput').addEventListener('change', event => loadImageFromFile(event.target.files[0], setSourceImage));
+$('watermarkImageInput').addEventListener('change', event => loadImageFromFile(event.target.files[0], setWatermarkImage));
+$('uploadZone').addEventListener('dragover', event => {
+  event.preventDefault();
+  $('uploadZone').classList.add('dragover');
+});
+$('uploadZone').addEventListener('dragleave', () => $('uploadZone').classList.remove('dragover'));
+$('uploadZone').addEventListener('drop', event => {
+  event.preventDefault();
+  $('uploadZone').classList.remove('dragover');
+  loadImageFromFile(event.dataTransfer.files[0], setSourceImage);
+});
+document.addEventListener('paste', event => {
+  const item = Array.from(event.clipboardData?.items || []).find(entry => entry.type.startsWith('image/'));
+  if (!item) return;
+  const file = item.getAsFile();
+  if (file) loadImageFromFile(file, setSourceImage);
+});
+document.querySelectorAll('.wm-tab').forEach(btn => btn.addEventListener('click', () => setTab(btn.dataset.tab)));
+document.querySelectorAll('.wm-input').forEach(input => {
+  input.addEventListener('input', renderPreview);
+  input.addEventListener('change', renderPreview);
+});
+document.querySelectorAll('.pos-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    state.watermarkPosition = btn.dataset.pos;
+    document.querySelectorAll('.pos-btn').forEach(item => item.classList.toggle('active', item === btn));
+    renderPreview();
+  });
+});
+$('applyBtn').addEventListener('click', () => {
+  renderPreview();
+  setStatus('워터마크가 현재 미리보기에 적용되었습니다. PNG 또는 JPG로 다운로드할 수 있습니다.');
+});
+$('downloadPngBtn').addEventListener('click', () => download('png'));
+$('downloadJpgBtn').addEventListener('click', () => download('jpg'));
+$('resetBtn').addEventListener('click', resetAll);
+document.fonts.ready.then(renderPreview);
+resetAll();
+</script>
+</body>
+</html>

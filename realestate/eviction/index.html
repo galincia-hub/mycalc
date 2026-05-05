@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>경매 명도비용 계산기 - 인도명령·명도소송 비용 비교 | mycalc</title>
+<meta name="description" content="경매 낙찰 후 명도비용을 경로별로 비교. 합의·인도명령·명도소송 예상 비용과 기간을 즉시 계산. 강제집행 비용, 공실손해까지 포함.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul{justify-content:flex-end}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.page-hero{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 58%,#047857 100%);color:#fff;padding:1.75rem 0 1.5rem;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.045'%3E%3Cpath d='M8 48h48M16 56V24l16-12 16 12v32M24 56V38h16v18'/%3E%3Cpath d='M12 28h40'/%3E%3C/g%3E%3C/svg%3E")}
+.hero-content{position:relative}
+.breadcrumb-nav{font-size:.75rem;color:rgba(255,255,255,.7);margin-bottom:.5rem}
+.breadcrumb-nav a{color:rgba(255,255,255,.8);text-decoration:none}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:3px 12px;font-size:.75rem;margin-bottom:.5rem}
+.page-hero h1{font-size:1.4rem;font-weight:800;margin:0 0 .3rem}
+.page-hero p{font-size:.83rem;opacity:.85;margin:0}
+.calc-card,.info-card,.table-card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.05);margin-top:16px}
+.card-title{font-size:.95rem;font-weight:800;color:#0f172a;margin-bottom:14px;display:flex;align-items:center;gap:8px;border-bottom:2px solid #e2e8f0;padding-bottom:10px}
+.form-label{font-weight:700;font-size:.82rem;color:#374151;margin-bottom:4px;display:block}
+.form-control{font-size:.9rem;border-color:#d1d5db;border-radius:8px;text-align:right}
+.form-control:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+.input-group-text{background:#f1f5f9;border-color:#d1d5db;font-size:.82rem;color:#64748b;min-width:42px;justify-content:center}
+.mode-group{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.mode-btn{position:relative;flex:1;min-width:126px}
+.mode-btn input{position:absolute;opacity:0;pointer-events:none}
+.mode-btn span{display:flex;align-items:center;justify-content:center;gap:6px;border:1.5px solid #d1d5db;background:#fff;border-radius:8px;padding:9px 10px;font-size:.82rem;font-weight:700;color:#475569;cursor:pointer;transition:all .15s;text-align:center;min-height:40px}
+.mode-btn input:checked+span{border-color:#1e3a8a;background:#eff6ff;color:#1e3a8a}
+.quick-btns{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.quick-btn{font-size:.73rem;font-weight:700;padding:5px 10px;border-radius:6px;border:1px solid #d1d5db;background:#fff;color:#475569;cursor:pointer}
+.quick-btn:hover{border-color:#3b82f6;color:#1e3a8a;background:#eff6ff}
+.route-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:16px}
+@media(max-width:1100px){.route-grid{grid-template-columns:1fr}}
+.route-card{position:relative;background:#fff;border:1.5px solid #e2e8f0;border-radius:12px;padding:18px;box-shadow:0 1px 4px rgba(0,0,0,.04);display:flex;flex-direction:column;gap:12px}
+.route-card.recommended{border-color:#16a34a;background:#f0fdf4}
+.route-card.disabled{opacity:.62;background:#f8fafc}
+.route-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.route-title{font-size:.95rem;font-weight:900;color:#0f172a}
+.route-period{font-size:.72rem;font-weight:800;color:#475569;background:#f1f5f9;border-radius:8px;padding:3px 8px;white-space:nowrap}
+.badge-rec{display:none;position:absolute;top:-10px;right:14px;background:#16a34a;color:#fff;font-size:.68rem;font-weight:900;padding:3px 9px;border-radius:999px}
+.route-card.recommended .badge-rec{display:block}
+.route-total{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);color:#fff;border-radius:12px;padding:14px}
+.route-card.recommended .route-total{background:linear-gradient(135deg,#166534 0%,#15803d 100%)}
+.route-total-label{font-size:.75rem;opacity:.78;margin-bottom:4px}
+.route-total-value{font-size:1.45rem;font-weight:900;line-height:1.15}
+.cost-list{display:flex;flex-direction:column;gap:0}
+.cost-row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #e2e8f0;padding:7px 0;font-size:.79rem}
+.cost-row:last-child{border-bottom:0}
+.cost-label{color:#64748b}
+.cost-val{font-weight:800;text-align:right;color:#0f172a}
+.refund{color:#64748b;font-weight:700;font-size:.72rem}
+.edit-cost{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:9px 10px}
+.notice-box{border-radius:8px;padding:10px 14px;margin-top:10px;font-size:.78rem;line-height:1.55;display:flex;gap:8px;align-items:flex-start}
+.notice-blue{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af}
+.notice-yellow{background:#fef9c3;border:1px solid #fde047;color:#713f12}
+.notice-red{background:#fef2f2;border:1px solid #fecaca;color:#991b1b}
+.info-card h2{font-size:1rem;font-weight:800;color:#0f172a;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.info-card p{font-size:.84rem;color:#475569;line-height:1.75;margin:0 0 8px}
+.flow{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px 14px;font-size:.84rem;font-weight:700;color:#334155;line-height:1.8}
+.info-table{margin-bottom:0}
+.info-table th{background:#f0f4ff;font-size:.78rem;color:#1e3a8a;white-space:nowrap}
+.info-table td{font-size:.8rem;vertical-align:middle}
+.disclaimer{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.75rem;color:#713f12;margin-top:16px;display:flex;gap:8px;align-items:flex-start}
+footer{background:#1e3a8a;color:rgba(255,255,255,.65);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}
+footer a{color:rgba(255,255,255,.7);text-decoration:none}
+@media(max-width:576px){.page-hero h1{font-size:1.2rem}.calc-card,.info-card,.table-card{padding:16px}.route-total-value{font-size:1.25rem}}
+</style>
+</head>
+<body>
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../../tax/index.html">세금</a></li><li><a href="../../work/index.html">급여·노동</a></li><li><a href="../../tools/index.html">도구</a></li><li><a href="../../realestate/index.html" class="on">부동산</a></li><li><a href="../../money/index.html">금융·투자</a></li><li><a href="../../student/index.html">학생</a></li><li><a href="../../parent/index.html">학부모·육아</a></li><li><a href="../../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="../pyeong/index.html" class="mc-done">평수변환</a></li>
+<li><a href="../fee/index.html" class="mc-done">복비</a></li>
+<li><a href="../jeonwolse/index.html" class="mc-done">전월세전환</a></li>
+<li><a href="../maintenance/index.html" class="mc-done">관리비</a></li>
+<li><a href="../eviction/index.html" class="on mc-done">명도비용</a></li>
+<li><span class="wip">LTV/DTI/DSR</span></li>
+<li><span class="wip">임대수익</span></li>
+<li><span class="wip">경매</span></li>
+<li><span class="wip">빌라수익률</span></li>
+<li><span class="wip">학군</span></li>
+</ul></div></div>
+</div>
+
+<div class="page-hero">
+  <div class="container hero-content">
+    <div class="breadcrumb-nav"><a href="../../index.html">홈</a> / <a href="../index.html">부동산</a> / 경매 명도비용 계산기</div>
+    <div class="hero-badge"><i class="bi bi-door-open"></i> REL-10 · 경매 명도 · 비용 시뮬레이터</div>
+    <h1><i class="bi bi-house-exclamation me-2"></i>경매 명도비용 계산기</h1>
+    <p>합의 명도, 인도명령, 명도소송 경로별 예상 비용과 기간을 비교합니다.</p>
+  </div>
+</div>
+
+<div class="container" style="padding-bottom:2rem">
+  <section class="calc-card">
+    <div class="card-title"><i class="bi bi-sliders" style="color:#1e40af"></i> 기본 정보 입력</div>
+    <label class="form-label">물건 유형</label>
+    <div class="mode-group">
+      <label class="mode-btn"><input type="radio" name="propertyType" value="apartment" checked><span>아파트</span></label>
+      <label class="mode-btn"><input type="radio" name="propertyType" value="villa"><span>빌라·다세대</span></label>
+      <label class="mode-btn"><input type="radio" name="propertyType" value="officetel"><span>오피스텔</span></label>
+      <label class="mode-btn"><input type="radio" name="propertyType" value="store"><span>상가</span></label>
+      <label class="mode-btn"><input type="radio" name="propertyType" value="etc"><span>기타</span></label>
+    </div>
+    <div class="row g-3">
+      <div class="col-sm-6 col-lg-3">
+        <label class="form-label" for="area">전용면적</label>
+        <div class="input-group"><input type="number" class="form-control" id="area" value="84" min="1" step="0.1" inputmode="decimal"><span class="input-group-text">㎡</span></div>
+        <div class="quick-btns">
+          <button class="quick-btn" type="button" onclick="setArea(33)">33㎡</button>
+          <button class="quick-btn" type="button" onclick="setArea(59)">59㎡</button>
+          <button class="quick-btn" type="button" onclick="setArea(84)">84㎡</button>
+          <button class="quick-btn" type="button" onclick="setArea(114)">114㎡</button>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <label class="form-label" for="auctionPrice">낙찰가</label>
+        <div class="input-group"><input type="text" class="form-control money-input" id="auctionPrice" value="300,000,000" inputmode="numeric"><span class="input-group-text">원</span></div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <label class="form-label" for="monthlyRent">예상 월 임대료</label>
+        <div class="input-group"><input type="text" class="form-control money-input" id="monthlyRent" value="1,000,000" inputmode="numeric"><span class="input-group-text">원</span></div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <label class="form-label" for="unpaidFee">미납 관리비</label>
+        <div class="input-group"><input type="text" class="form-control money-input" id="unpaidFee" value="2,000,000" inputmode="numeric"><span class="input-group-text">원</span></div>
+      </div>
+    </div>
+    <label class="form-label mt-3">점유자 유형</label>
+    <div class="mode-group">
+      <label class="mode-btn"><input type="radio" name="occupant" value="debtor" checked><span>채무자<br>(전소유자)</span></label>
+      <label class="mode-btn"><input type="radio" name="occupant" value="weakTenant"><span>대항력없는<br>임차인</span></label>
+      <label class="mode-btn"><input type="radio" name="occupant" value="strongTenant"><span>대항력있는<br>임차인</span></label>
+    </div>
+    <div class="notice-box notice-blue" id="routeNotice"><i class="bi bi-info-circle flex-shrink-0 mt-1"></i><span>점유자 유형에 따라 가능한 경로를 안내합니다.</span></div>
+  </section>
+
+  <section class="calc-card">
+    <div class="card-title"><i class="bi bi-columns-gap" style="color:#047857"></i> 경로별 비용 비교</div>
+    <div class="route-grid">
+      <article class="route-card" id="cardA">
+        <span class="badge-rec">추천</span>
+        <div class="route-head"><div class="route-title">경로 A. 합의 명도</div><div class="route-period">2~4주</div></div>
+        <div class="edit-cost">
+          <label class="form-label" for="movingCostA">이사비 추정 직접 수정</label>
+          <div class="input-group"><input type="text" class="form-control money-input" id="movingCostA" value="2,500,000" inputmode="numeric"><span class="input-group-text">원</span></div>
+        </div>
+        <div class="route-total"><div class="route-total-label">총 예상비용</div><div class="route-total-value" id="totalA">0원</div></div>
+        <div class="cost-list" id="listA"></div>
+      </article>
+      <article class="route-card" id="cardB">
+        <span class="badge-rec">추천</span>
+        <div class="route-head"><div class="route-title">경로 B. 인도명령 + 강제집행</div><div class="route-period">4~5개월</div></div>
+        <div class="route-total"><div class="route-total-label">총 예상비용</div><div class="route-total-value" id="totalB">0원</div></div>
+        <div class="cost-list" id="listB"></div>
+        <div class="notice-box notice-red" id="disableB" style="display:none"><i class="bi bi-exclamation-triangle flex-shrink-0 mt-1"></i><span>대항력 있는 임차인에게는 인도명령 불가. 명도소송 필요.</span></div>
+      </article>
+      <article class="route-card" id="cardC">
+        <span class="badge-rec">추천</span>
+        <div class="route-head"><div class="route-title">경로 C. 명도소송 + 강제집행</div><div class="route-period">8~12개월</div></div>
+        <div class="edit-cost">
+          <label class="form-label" for="lawyerFee">변호사 선임비 직접 수정</label>
+          <div class="input-group"><input type="text" class="form-control money-input" id="lawyerFee" value="3,000,000" inputmode="numeric"><span class="input-group-text">원</span></div>
+        </div>
+        <div class="route-total"><div class="route-total-label">총 예상비용</div><div class="route-total-value" id="totalC">0원</div></div>
+        <div class="cost-list" id="listC"></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="info-card">
+    <h2><i class="bi bi-diagram-3" style="color:#1e40af"></i> 명도 절차 흐름도</h2>
+    <div class="flow">낙찰 → 잔금납부 → 소유권이전 → 자진퇴거 요청 → (불응 시) 인도명령 신청(6개월 이내) 또는 명도소송 → 결정/판결 → (불응 시) 강제집행 신청 → 계고 → 본집행</div>
+  </section>
+
+  <section class="info-card">
+    <h2><i class="bi bi-file-earmark-text" style="color:#047857"></i> 핵심 안내</h2>
+    <p>인도명령은 잔금납부 후 6개월 이내 신청이 필요합니다(민사집행법 제136조). 대항력 있는 임차인에게는 인도명령이 제한되어 명도소송으로 진행해야 하며, 공매(캠코)는 인도명령 제도가 적용되지 않아 소송 경로를 검토해야 합니다. 명도 과정에서 소유권 확보를 위해 직접 소요된 소송비용·화해비용 등은 양도소득세 필요경비 인정 가능성이 있습니다(소득세법 시행령 제163조).</p>
+  </section>
+
+  <section class="info-card">
+    <h2><i class="bi bi-chat-dots" style="color:#1e40af"></i> 이사비 협상 실무 팁</h2>
+    <p>실무 합의 범위는 100~300만원이 가장 흔합니다. 강제집행 비용과 장기 공실손해가 이사비보다 크다면 합의가 경제적일 수 있습니다. 이사비 지급 시에는 반드시 계좌이체, 합의서, 퇴거확인서를 함께 보관하는 편이 좋습니다.</p>
+  </section>
+
+  <div class="disclaimer"><i class="bi bi-info-circle flex-shrink-0 mt-1"></i><span>본 계산기는 실무 통계와 일반적 비용 범위를 기반으로 한 예상치입니다. 실제 비용은 물건 상태, 점유자 상황, 법원·집행관 판단에 따라 크게 달라질 수 있습니다. 정확한 비용 산정은 법무법인 또는 전문가에게 상담하시기 바랍니다.</span></div>
+</div>
+
+<footer><div class="container">© 2025 mycalc · 참고용 계산기이며 법적 효력이 없습니다. | <a href="../../index.html">← 메인으로</a></div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const ORDER_FEE=60000;
+const INJUNCTION_FEE=50000;
+const DEPOSIT_RATE=0.10;
+const DELIVERY_FEE=60000;
+const STORAGE_FEE=300000;
+const TRUCK_COST=1200000;
+const LAWYER_DEFAULT=3000000;
+function el(id){return document.getElementById(id)}
+function selected(name){return document.querySelector(`input[name="${name}"]:checked`).value}
+function onlyNum(v){return (v||'').replace(/[^\d]/g,'')}
+function moneyValue(id){return parseFloat(onlyNum(el(id).value))||0}
+function areaValue(){return parseFloat(el('area').value)||0}
+function fmt(n){return Math.round(n||0).toLocaleString('ko-KR')+'원'}
+function setArea(v){el('area').value=v; el('movingCostA').value=fmtMoney(defaultMovingCost(v)); calculate()}
+function fmtMoney(n){return Math.round(n||0).toLocaleString('ko-KR')}
+function formatMoney(input){const clean=onlyNum(input.value);input.value=clean?parseInt(clean,10).toLocaleString('ko-KR'):''}
+function defaultMovingCost(area){
+  if(area<=66) return 1500000;
+  if(area<=99) return 2500000;
+  if(area<=132) return 3500000;
+  return 5000000;
+}
+function enforcementCost(area){
+  if(area<=33) return 1200000;
+  if(area<=66) return 1800000;
+  if(area<=99) return 2500000;
+  return 3000000;
+}
+function movingTruckCost(area){return Math.ceil(Math.max(area,1)/66)*TRUCK_COST}
+function stampFee(claimValue){
+  if(claimValue<=20000000) return claimValue*0.005;
+  if(claimValue<=100000000) return claimValue*0.0045+10000;
+  if(claimValue<=1000000000) return claimValue*0.004+60000;
+  return claimValue*0.0035+560000;
+}
+function row(label,value,extra=''){
+  return `<div class="cost-row"><span class="cost-label">${label}</span><span class="cost-val">${fmt(value)}${extra}</span></div>`;
+}
+function renderList(id,items){
+  el(id).innerHTML=items.map(item=>row(item[0],item[1],item[2]||'')).join('');
+}
+function setRecommended(totals){
+  ['cardA','cardB','cardC'].forEach(id=>el(id).classList.remove('recommended'));
+  const valid=Object.entries(totals).filter(([,v])=>Number.isFinite(v));
+  const min=valid.reduce((a,b)=>a[1]<=b[1]?a:b)[0];
+  el('card'+min).classList.add('recommended');
+}
+function calculate(){
+  const area=areaValue();
+  const auction=moneyValue('auctionPrice');
+  const rent=moneyValue('monthlyRent');
+  const unpaid=moneyValue('unpaidFee');
+  const occupant=selected('occupant');
+  const aMove=moneyValue('movingCostA')||defaultMovingCost(area);
+  const exec=enforcementCost(area);
+  const truck=movingTruckCost(area);
+  const claimValue=auction*0.5;
+  const stamp=stampFee(claimValue);
+  const lawyer=moneyValue('lawyerFee')||LAWYER_DEFAULT;
+  const custodyDeposit=auction*DEPOSIT_RATE;
+  const totalA=aMove+unpaid+rent;
+  const totalB=ORDER_FEE+INJUNCTION_FEE+exec+truck+STORAGE_FEE+unpaid+rent*5;
+  const totalC=stamp+DELIVERY_FEE+lawyer+exec+truck+STORAGE_FEE+unpaid+rent*10;
+  el('totalA').textContent=fmt(totalA);
+  el('totalB').textContent=fmt(totalB);
+  el('totalC').textContent=fmt(totalC);
+  renderList('listA',[
+    ['이사비 추정',aMove],['미납 관리비',unpaid],['공실손해 1개월',rent]
+  ]);
+  renderList('listB',[
+    ['인도명령 신청비',ORDER_FEE],['가처분 신청비',INJUNCTION_FEE],['가처분 보증금',custodyDeposit,' <span class="refund">(환급됨)</span>'],['강제집행 예납금',exec],['이삿짐 운반비',truck],['물건보관비',STORAGE_FEE],['미납 관리비',unpaid],['공실손해 5개월',rent*5]
+  ]);
+  renderList('listC',[
+    ['소송 인지대',stamp],['송달료',DELIVERY_FEE],['변호사 선임비',lawyer],['강제집행비',exec],['이삿짐 운반비',truck],['물건보관비',STORAGE_FEE],['미납 관리비',unpaid],['공실손해 10개월',rent*10]
+  ]);
+  const disabled=occupant==='strongTenant';
+  el('cardB').classList.toggle('disabled',disabled);
+  el('disableB').style.display=disabled?'':'none';
+  const notice=el('routeNotice');
+  if(disabled){
+    notice.className='notice-box notice-red';
+    notice.querySelector('span').textContent='대항력 있는 임차인은 인도명령 대상이 아니므로 명도소송 경로를 우선 검토해야 합니다.';
+    setRecommended({A:totalA,C:totalC});
+  }else{
+    notice.className='notice-box notice-blue';
+    notice.querySelector('span').textContent=occupant==='debtor'?'채무자·전소유자 점유는 인도명령 검토가 가능합니다.':'대항력 없는 임차인은 인도명령 검토가 가능합니다.';
+    setRecommended({A:totalA,B:totalB,C:totalC});
+  }
+}
+document.querySelectorAll('.money-input').forEach(input=>input.addEventListener('input',()=>{formatMoney(input);calculate()}));
+document.querySelectorAll('input').forEach(input=>input.addEventListener('change',calculate));
+el('area').addEventListener('input',()=>{el('movingCostA').value=fmtMoney(defaultMovingCost(areaValue()));calculate()});
+el('movingCostA').value=fmtMoney(defaultMovingCost(areaValue()));
+calculate();
+</script>
+</body>
+</html>

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>전월세 전환 계산기 - 전세↔월세 변환·전환율 계산 | mycalc</title>
+<meta name="description" content="전세를 월세로, 월세를 전세로 전환 시 적정 금액 계산. 법정 전월세전환율(4.5%) 기준. 임대료 인상 5% 상한 검증까지 한번에.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul{justify-content:flex-end}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.page-hero{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 58%,#047857 100%);color:#fff;padding:1.75rem 0 1.5rem;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.045'%3E%3Cpath d='M8 48h48M16 56V24l16-12 16 12v32M24 56V38h16v18'/%3E%3Cpath d='M12 28h40'/%3E%3C/g%3E%3C/svg%3E")}
+.hero-content{position:relative}
+.breadcrumb-nav{font-size:.75rem;color:rgba(255,255,255,.7);margin-bottom:.5rem}
+.breadcrumb-nav a{color:rgba(255,255,255,.8);text-decoration:none}
+.breadcrumb-nav a:hover{color:#fff}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:3px 12px;font-size:.75rem;margin-bottom:.5rem}
+.page-hero h1{font-size:1.4rem;font-weight:800;margin:0 0 .3rem}
+.page-hero p{font-size:.83rem;opacity:.85;margin:0}
+.tab-card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;margin-top:20px;box-shadow:0 1px 4px rgba(0,0,0,.05);overflow:hidden}
+.tab-nav{display:flex;gap:0;overflow-x:auto;border-bottom:1px solid #e2e8f0;background:#f8fafc}
+.tab-btn{border:0;background:transparent;padding:13px 18px;font-size:.82rem;font-weight:800;color:#64748b;white-space:nowrap;border-bottom:3px solid transparent}
+.tab-btn.active{color:#1e3a8a;background:#fff;border-bottom-color:#1e3a8a}
+.tab-panel{display:none;padding:20px}
+.tab-panel.active{display:block}
+.calc-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+@media(max-width:992px){.calc-grid{grid-template-columns:1fr}}
+.calc-card,.info-card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.tab-panel .calc-card{box-shadow:none}
+.card-title{font-size:.95rem;font-weight:800;color:#0f172a;margin-bottom:14px;display:flex;align-items:center;gap:8px;border-bottom:2px solid #e2e8f0;padding-bottom:10px}
+.form-label{font-weight:700;font-size:.82rem;color:#374151;margin-bottom:4px;display:block}
+.form-control,.form-select{font-size:.9rem;border-color:#d1d5db;border-radius:8px;text-align:right}
+.form-control:focus,.form-select:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+.input-group-text{background:#f1f5f9;border-color:#d1d5db;font-size:.82rem;color:#64748b;min-width:42px;justify-content:center}
+.mode-group{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.mode-btn{position:relative;flex:1;min-width:120px}
+.mode-btn input{position:absolute;opacity:0;pointer-events:none}
+.mode-btn span{display:flex;align-items:center;justify-content:center;gap:6px;border:1.5px solid #d1d5db;background:#fff;border-radius:8px;padding:9px 10px;font-size:.82rem;font-weight:700;color:#475569;cursor:pointer;transition:all .15s;text-align:center}
+.mode-btn input:checked+span{border-color:#1e3a8a;background:#eff6ff;color:#1e3a8a}
+.result-main{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:14px;padding:22px 24px;color:#fff}
+.result-main.warn{background:linear-gradient(135deg,#991b1b 0%,#dc2626 100%)}
+.result-main.ok{background:linear-gradient(135deg,#166534 0%,#15803d 100%)}
+.result-main-title{font-size:.78rem;opacity:.78;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.result-value{font-size:2rem;font-weight:900;letter-spacing:-.4px;line-height:1.15}
+.result-unit{font-size:.95rem;font-weight:700;opacity:.8;margin-left:4px}
+.result-sub{font-size:.76rem;opacity:.78;margin-top:8px;line-height:1.55}
+.result-rows{display:flex;flex-direction:column;margin-top:16px}
+.result-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.12);font-size:.85rem}
+.result-row:last-child{border:none}
+.result-row-label{opacity:.82}
+.result-row-val{font-weight:800;text-align:right}
+.result-row.total{background:rgba(255,255,255,.12);border-radius:8px;padding:10px 12px;margin-top:6px}
+.result-row.total .result-row-label{opacity:1;font-weight:700}
+.result-row.total .result-row-val{font-size:1.1rem;color:#fde047}
+.notice-box{border-radius:8px;padding:10px 14px;margin-top:10px;font-size:.78rem;line-height:1.55;display:flex;gap:8px;align-items:flex-start}
+.notice-blue{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af}
+.notice-yellow{background:#fef9c3;border:1px solid #fde047;color:#713f12}
+.notice-red{background:#fef2f2;border:1px solid #fecaca;color:#991b1b}
+.muted-formula{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;margin-top:10px;font-size:.78rem;color:#64748b}
+.muted-formula strong{color:#1e3a8a}
+.table-card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.05);margin-top:16px}
+.info-table{margin-bottom:0}
+.info-table th{background:#f0f4ff;font-size:.78rem;color:#1e3a8a;white-space:nowrap}
+.info-table td{font-size:.8rem;vertical-align:middle}
+.info-card{margin-top:16px}
+.info-card h2{font-size:1rem;font-weight:800;color:#0f172a;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.info-card p{font-size:.84rem;color:#475569;line-height:1.75;margin:0 0 8px}
+.disclaimer{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.75rem;color:#713f12;margin-top:16px;display:flex;gap:8px;align-items:flex-start}
+footer{background:#1e3a8a;color:rgba(255,255,255,.65);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}
+footer a{color:rgba(255,255,255,.7);text-decoration:none}
+@media(max-width:576px){
+  .page-hero h1{font-size:1.2rem}
+  .tab-panel{padding:14px}
+  .calc-card,.table-card,.info-card{padding:16px}
+  .result-value{font-size:1.55rem}
+}
+</style>
+</head>
+<body>
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../../tax/index.html">세금</a></li>
+<li><a href="../../work/index.html">급여·노동</a></li>
+<li><a href="../../tools/index.html">도구</a></li>
+<li><a href="../../realestate/index.html" class="on">부동산</a></li>
+<li><a href="../../money/index.html">금융·투자</a></li>
+<li><a href="../../student/index.html">학생</a></li>
+<li><a href="../../parent/index.html">학부모·육아</a></li>
+<li><a href="../../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="../pyeong/index.html" class="mc-done">평수변환</a></li>
+<li><a href="../fee/index.html" class="mc-done">복비</a></li>
+<li><a href="../jeonwolse/index.html" class="on mc-done">전월세전환</a></li>
+<li><a href="../maintenance/index.html" class="mc-done">관리비</a></li>
+<li><a href="../eviction/index.html" class="mc-done">명도비용</a></li>
+<li><span class="wip">LTV/DTI/DSR</span></li>
+<li><span class="wip">임대수익</span></li>
+<li><span class="wip">경매</span></li>
+<li><span class="wip">빌라수익률</span></li>
+<li><span class="wip">학군</span></li>
+</ul></div></div>
+</div>
+
+<div class="page-hero">
+  <div class="container hero-content">
+    <div class="breadcrumb-nav"><a href="../../index.html">홈</a> / <a href="../index.html">부동산</a> / 전월세 전환 계산기</div>
+    <div class="hero-badge"><i class="bi bi-arrow-left-right"></i> REL-06 · 전세↔월세 · 인상률 검증</div>
+    <h1><i class="bi bi-house-up me-2"></i>전월세 전환 계산기</h1>
+    <p>전세와 월세를 서로 전환하고, 실제 전환율과 계약 갱신 시 5% 인상 상한을 함께 확인합니다.</p>
+  </div>
+</div>
+
+<div class="container" style="padding-bottom:2rem">
+  <div class="tab-card">
+    <div class="tab-nav" role="tablist">
+      <button class="tab-btn active" data-tab="convert" type="button">전세↔월세 전환</button>
+      <button class="tab-btn" data-tab="reverse" type="button">전환율 역산</button>
+      <button class="tab-btn" data-tab="increase" type="button">임대료 인상 검증</button>
+    </div>
+
+    <section class="tab-panel active" id="tab-convert">
+      <div class="calc-grid">
+        <div class="calc-card">
+          <div class="card-title"><i class="bi bi-sliders" style="color:#1e40af"></i> 전환 조건 입력</div>
+          <label class="form-label">전환 방향</label>
+          <div class="mode-group">
+            <label class="mode-btn"><input type="radio" name="convertDirection" value="toMonthly" checked onchange="syncConvertForm()"><span>전세→월세</span></label>
+            <label class="mode-btn"><input type="radio" name="convertDirection" value="toJeonse" onchange="syncConvertForm()"><span>월세→전세</span></label>
+          </div>
+          <label class="form-label">대상</label>
+          <div class="mode-group">
+            <label class="mode-btn"><input type="radio" name="convertTarget" value="housing" checked onchange="syncTargetRates()"><span>주택</span></label>
+            <label class="mode-btn"><input type="radio" name="convertTarget" value="commercial" onchange="syncTargetRates()"><span>상가</span></label>
+          </div>
+          <div class="row g-3">
+            <div class="col-sm-6">
+              <label class="form-label" for="cJeonse">전세보증금</label>
+              <div class="input-group"><input type="text" class="form-control money-input" id="cJeonse" value="300,000,000" inputmode="numeric"><span class="input-group-text">원</span></div>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label" for="cDeposit">월세보증금</label>
+              <div class="input-group"><input type="text" class="form-control money-input" id="cDeposit" value="100,000,000" inputmode="numeric"><span class="input-group-text">원</span></div>
+            </div>
+            <div class="col-sm-6" id="cMonthlyBlock" style="display:none">
+              <label class="form-label" for="cMonthly">월세</label>
+              <div class="input-group"><input type="text" class="form-control money-input" id="cMonthly" value="600,000" inputmode="numeric"><span class="input-group-text">원</span></div>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label" for="cRate">전월세 전환율</label>
+              <div class="input-group"><input type="number" class="form-control" id="cRate" value="4.5" min="0.1" step="0.01" inputmode="decimal"><span class="input-group-text">%</span></div>
+            </div>
+          </div>
+          <div class="muted-formula"><strong>공식:</strong> 월세 = (전세보증금 - 월세보증금) × 전환율 ÷ 12, 전세보증금 = (월세 × 12 ÷ 전환율) + 월세보증금</div>
+        </div>
+        <div class="calc-card">
+          <div class="result-main" id="cResultBox">
+            <div class="result-main-title"><i class="bi bi-calculator"></i> 전환 계산 결과</div>
+            <div><span class="result-value" id="cMainResult">0</span><span class="result-unit" id="cMainUnit">원</span></div>
+            <div class="result-sub" id="cSummary">법정 상한 이내인지 확인합니다.</div>
+            <div class="result-rows">
+              <div class="result-row"><span class="result-row-label">적용 전환율</span><span class="result-row-val" id="cAppliedRate">0%</span></div>
+              <div class="result-row"><span class="result-row-label">법정 상한</span><span class="result-row-val" id="cLegalLimit">0%</span></div>
+              <div class="result-row total"><span class="result-row-label">연간 월세 합계</span><span class="result-row-val" id="cAnnualRent">0원</span></div>
+            </div>
+          </div>
+          <div class="notice-box notice-blue" id="cNotice"><i class="bi bi-info-circle flex-shrink-0 mt-1"></i><span>주택은 기준금리 + 2.0%가 법정 상한입니다.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-reverse">
+      <div class="calc-grid">
+        <div class="calc-card">
+          <div class="card-title"><i class="bi bi-percent" style="color:#1e40af"></i> 현재 계약 조건 입력</div>
+          <label class="form-label">대상</label>
+          <div class="mode-group">
+            <label class="mode-btn"><input type="radio" name="reverseTarget" value="housing" checked onchange="calcReverse()"><span>주택</span></label>
+            <label class="mode-btn"><input type="radio" name="reverseTarget" value="commercial" onchange="calcReverse()"><span>상가</span></label>
+          </div>
+          <div class="row g-3">
+            <div class="col-sm-6">
+              <label class="form-label" for="rJeonse">전세보증금</label>
+              <div class="input-group"><input type="text" class="form-control money-input" id="rJeonse" value="300,000,000" inputmode="numeric"><span class="input-group-text">원</span></div>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label" for="rDeposit">월세보증금</label>
+              <div class="input-group"><input type="text" class="form-control money-input" id="rDeposit" value="100,000,000" inputmode="numeric"><span class="input-group-text">원</span></div>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label" for="rMonthly">월세</label>
+              <div class="input-group"><input type="text" class="form-control money-input" id="rMonthly" value="800,000" inputmode="numeric"><span class="input-group-text">원</span></div>
+            </div>
+          </div>
+          <div class="muted-formula"><strong>공식:</strong> 전환율(%) = 월세 × 12 ÷ (전세보증금 - 월세보증금) × 100</div>
+        </div>
+        <div class="calc-card">
+          <div class="result-main" id="rResultBox">
+            <div class="result-main-title"><i class="bi bi-speedometer2"></i> 산출 전환율</div>
+            <div><span class="result-value" id="rRate">0.00</span><span class="result-unit">%</span></div>
+            <div class="result-sub" id="rSummary">법정 상한과 비교합니다.</div>
+            <div class="result-rows">
+              <div class="result-row"><span class="result-row-label">법정 상한</span><span class="result-row-val" id="rLegalLimit">0%</span></div>
+              <div class="result-row"><span class="result-row-label">적정 월세</span><span class="result-row-val" id="rFairMonthly">0원</span></div>
+              <div class="result-row total"><span class="result-row-label">연간 환산 금액</span><span class="result-row-val" id="rAnnual">0원</span></div>
+            </div>
+          </div>
+          <div class="notice-box notice-red" id="rNotice"><i class="bi bi-exclamation-triangle flex-shrink-0 mt-1"></i><span>계산 결과가 표시됩니다.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-increase">
+      <div class="calc-grid">
+        <div class="calc-card">
+          <div class="card-title"><i class="bi bi-graph-up-arrow" style="color:#1e40af"></i> 갱신 전후 임대료 입력</div>
+          <div class="row g-3">
+            <div class="col-sm-6">
+              <label class="form-label" for="iOldDeposit">기존 보증금</label>
+              <div class="input-group"><input type="text" class="form-control money-input" id="iOldDeposit" value="200,000,000" inputmode="numeric"><span class="input-group-text">원</span></div>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label" for="iOldMonthly">기존 월세</label>
+              <div class="input-group"><input type="text" class="form-control money-input" id="iOldMonthly" value="500,000" inputmode="numeric"><span class="input-group-text">원</span></div>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label" for="iNewDeposit">인상 후 보증금</label>
+              <div class="input-group"><input type="text" class="form-control money-input" id="iNewDeposit" value="200,000,000" inputmode="numeric"><span class="input-group-text">원</span></div>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label" for="iNewMonthly">인상 후 월세</label>
+              <div class="input-group"><input type="text" class="form-control money-input" id="iNewMonthly" value="550,000" inputmode="numeric"><span class="input-group-text">원</span></div>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label" for="iRate">전월세 전환율</label>
+              <div class="input-group"><input type="number" class="form-control" id="iRate" value="4.5" min="0.1" step="0.01" inputmode="decimal"><span class="input-group-text">%</span></div>
+            </div>
+          </div>
+          <div class="muted-formula"><strong>공식:</strong> 환산보증금 = 보증금 + 월세 × 12 ÷ 전환율, 인상률 = 증가액 ÷ 기존 환산보증금 × 100</div>
+        </div>
+        <div class="calc-card">
+          <div class="result-main" id="iResultBox">
+            <div class="result-main-title"><i class="bi bi-shield-check"></i> 5% 상한 검증</div>
+            <div><span class="result-value" id="iRateResult">0.00</span><span class="result-unit">%</span></div>
+            <div class="result-sub" id="iSummary">임대료 인상 상한 이내인지 확인합니다.</div>
+            <div class="result-rows">
+              <div class="result-row"><span class="result-row-label">기존 환산보증금</span><span class="result-row-val" id="iOldConv">0원</span></div>
+              <div class="result-row"><span class="result-row-label">인상 후 환산보증금</span><span class="result-row-val" id="iNewConv">0원</span></div>
+              <div class="result-row total"><span class="result-row-label">5% 이내 최대 환산보증금</span><span class="result-row-val" id="iMaxConv">0원</span></div>
+            </div>
+          </div>
+          <div class="notice-box notice-blue" id="iNotice"><i class="bi bi-info-circle flex-shrink-0 mt-1"></i><span>계산 결과가 표시됩니다.</span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="info-card">
+    <h2><i class="bi bi-info-circle-fill" style="color:#1e40af"></i> 전월세 전환율이란?</h2>
+    <p>전월세 전환율은 전세보증금 일부를 월세로 바꾸거나 월세를 전세보증금으로 환산할 때 적용하는 연 이율입니다. 예를 들어 전세 3억원을 보증금 1억원 월세로 바꾸면 차액 2억원에 전환율을 곱해 12개월로 나눈 금액이 월세가 됩니다. 같은 집이라도 시장 금리, 지역 수요, 계약 조건에 따라 실제 협의 전환율은 달라질 수 있습니다.</p>
+    <p>2026년 5월 기준 주택의 법정 전월세 전환율 상한은 한국은행 기준금리 2.50%에 대통령령 2.0%를 더한 4.5%입니다. 상가는 기준금리의 4.5배인 11.25%를 상한으로 둡니다. 시장 전환율은 실제 협의 수준이지만, 법정 상한을 넘는 부분은 효력이 제한될 수 있습니다.</p>
+  </section>
+
+  <section class="info-card">
+    <h2><i class="bi bi-shield-exclamation" style="color:#047857"></i> 임대료 인상 5% 상한제</h2>
+    <p>주택임대차보호법상 계약 갱신 시 차임이나 보증금 증액은 약정한 차임 등의 5% 범위 안에서만 청구할 수 있습니다. 보증금과 월세가 동시에 바뀌면 단순 월세 인상률만 보지 말고, 전월세 전환율로 환산한 보증금 기준에서 전체 인상률을 비교하는 방식이 실무적으로 이해하기 쉽습니다.</p>
+  </section>
+
+  <section class="table-card">
+    <div class="card-title"><i class="bi bi-clock-history" style="color:#1e40af"></i> 기준금리 변동 이력</div>
+    <div class="table-responsive">
+      <table class="table table-bordered info-table">
+        <thead><tr><th>일자</th><th>한국은행 기준금리</th><th>주택 법정 전환율 상한</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr><td>2026.04.10</td><td>2.50%</td><td>4.50%</td><td>동결</td></tr>
+          <tr><td>2026.01.11</td><td>2.50%</td><td>4.50%</td><td>동결</td></tr>
+          <tr><td>2025.10.11</td><td>2.50%</td><td>4.50%</td><td>동결</td></tr>
+          <tr><td>2025.07.11</td><td>2.50%</td><td>4.50%</td><td>동결</td></tr>
+          <tr><td>2025.05.29</td><td>2.50%</td><td>4.50%</td><td>인하 반영</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="disclaimer"><i class="bi bi-info-circle flex-shrink-0 mt-1"></i><span>본 계산기는 참고용이며 실제 계약·분쟁·상가 환산보증금 판단에는 계약서, 관계 법령, 관할 기관의 최신 기준을 확인하시기 바랍니다.</span></div>
+</div>
+
+<footer><div class="container">© 2025 mycalc · 참고용 계산기이며 법적 효력이 없습니다. | <a href="../../index.html">← 메인으로</a></div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const BASE_RATE=2.50;
+const HOUSING_PREMIUM_RATE=2.00;
+const HOUSING_LEGAL_RATE=BASE_RATE+HOUSING_PREMIUM_RATE;
+const COMMERCIAL_LEGAL_RATE=BASE_RATE*4.5;
+const RENT_INCREASE_LIMIT=5;
+function el(id){return document.getElementById(id)}
+function selected(name){return document.querySelector(`input[name="${name}"]:checked`).value}
+function onlyNum(v){return (v||'').replace(/[^\d]/g,'')}
+function moneyValue(id){return parseFloat(onlyNum(el(id).value))||0}
+function fmt(n){return Math.round(n||0).toLocaleString('ko-KR')+'원'}
+function fmtRate(n){return (n||0).toFixed(2).replace(/\.?0+$/,'')+'%'}
+function legalRate(target){return target==='commercial'?COMMERCIAL_LEGAL_RATE:HOUSING_LEGAL_RATE}
+function targetLabel(target){return target==='commercial'?'상가':'주택'}
+function setNotice(node,cls,msg){
+  node.className='notice-box '+cls;
+  node.querySelector('span').textContent=msg;
+}
+function formatMoney(input){
+  const clean=onlyNum(input.value);
+  input.value=clean?parseInt(clean,10).toLocaleString('ko-KR'):'';
+}
+function syncConvertForm(){
+  const toJeonse=selected('convertDirection')==='toJeonse';
+  el('cMonthlyBlock').style.display=toJeonse?'':'none';
+  calcConvertRent();
+}
+function syncTargetRates(){
+  const cTarget=selected('convertTarget');
+  el('cRate').value=legalRate(cTarget).toFixed(2).replace(/\.?0+$/,'');
+  calcConvertRent();
+  calcReverse();
+}
+function calcConvertRent(){
+  const direction=selected('convertDirection');
+  const target=selected('convertTarget');
+  const limit=legalRate(target);
+  const rate=parseFloat(el('cRate').value)||0;
+  const jeonse=moneyValue('cJeonse');
+  const deposit=moneyValue('cDeposit');
+  const monthly=moneyValue('cMonthly');
+  const diff=Math.max(jeonse-deposit,0);
+  const over=rate>limit;
+  let result=0, annual=0, summary='';
+  if(direction==='toMonthly'){
+    result=diff*(rate/100)/12;
+    annual=result*12;
+    summary=`${fmt(jeonse)} - ${fmt(deposit)} = ${fmt(diff)}에 연 ${fmtRate(rate)}를 적용`;
+    el('cMainUnit').textContent='원/월';
+  }else{
+    result=(monthly*12)/(rate/100)+deposit;
+    annual=monthly*12;
+    summary=`월세 ${fmt(monthly)}를 연 ${fmtRate(rate)}로 전세보증금 환산`;
+    el('cMainUnit').textContent='원';
+  }
+  el('cMainResult').textContent=Math.round(result).toLocaleString('ko-KR');
+  el('cSummary').textContent=summary;
+  el('cAppliedRate').textContent=fmtRate(rate);
+  el('cLegalLimit').textContent=`${targetLabel(target)} ${fmtRate(limit)}`;
+  el('cAnnualRent').textContent=fmt(annual);
+  el('cResultBox').className='result-main '+(over?'warn':'');
+  setNotice(el('cNotice'),over?'notice-red':'notice-blue',over?`입력 전환율이 ${targetLabel(target)} 법정 상한 ${fmtRate(limit)}를 초과합니다.`:`${targetLabel(target)} 법정 상한 ${fmtRate(limit)} 이내의 전환율입니다.`);
+}
+function calcReverse(){
+  const target=selected('reverseTarget');
+  const limit=legalRate(target);
+  const jeonse=moneyValue('rJeonse');
+  const deposit=moneyValue('rDeposit');
+  const monthly=moneyValue('rMonthly');
+  const diff=Math.max(jeonse-deposit,0);
+  const rate=diff>0?(monthly*12/diff*100):0;
+  const fairMonthly=diff*(limit/100)/12;
+  const over=rate>limit;
+  el('rRate').textContent=rate.toFixed(2);
+  el('rLegalLimit').textContent=`${targetLabel(target)} ${fmtRate(limit)}`;
+  el('rFairMonthly').textContent=fmt(fairMonthly);
+  el('rAnnual').textContent=fmt(monthly*12);
+  el('rSummary').textContent=over?`법정 상한보다 ${(rate-limit).toFixed(2)}%p 높습니다.`:`법정 상한 대비 ${(limit-rate).toFixed(2)}%p 여유가 있습니다.`;
+  el('rResultBox').className='result-main '+(over?'warn':'ok');
+  const legalRef=target==='commercial'?'상가건물임대차보호법 제12조':'주택임대차보호법 제7조의2';
+  setNotice(el('rNotice'),over?'notice-red':'notice-blue',over?`초과분은 무효가 될 수 있습니다(${legalRef}). 적정 월세는 ${fmt(fairMonthly)}입니다.`:`현재 월세는 ${targetLabel(target)} 법정 상한 ${fmtRate(limit)} 이내입니다.`);
+}
+function calcIncrease(){
+  const rate=parseFloat(el('iRate').value)||HOUSING_LEGAL_RATE;
+  const oldDeposit=moneyValue('iOldDeposit');
+  const oldMonthly=moneyValue('iOldMonthly');
+  const newDeposit=moneyValue('iNewDeposit');
+  const newMonthly=moneyValue('iNewMonthly');
+  const oldConv=oldDeposit+(oldMonthly*12)/(rate/100);
+  const newConv=newDeposit+(newMonthly*12)/(rate/100);
+  const inc=oldConv>0?(newConv-oldConv)/oldConv*100:0;
+  const maxConv=oldConv*(1+RENT_INCREASE_LIMIT/100);
+  const over=inc>RENT_INCREASE_LIMIT;
+  const maxExtra=Math.max(maxConv-oldConv,0);
+  el('iRateResult').textContent=inc.toFixed(2);
+  el('iOldConv').textContent=fmt(oldConv);
+  el('iNewConv').textContent=fmt(newConv);
+  el('iMaxConv').textContent=fmt(maxConv);
+  el('iSummary').textContent=over?`5% 상한을 ${(inc-RENT_INCREASE_LIMIT).toFixed(2)}%p 초과합니다.`:`5% 상한 이내입니다.`;
+  el('iResultBox').className='result-main '+(over?'warn':'ok');
+  setNotice(el('iNotice'),over?'notice-red':'notice-blue',over?`적정 상한 환산보증금은 ${fmt(maxConv)}입니다. 보증금이 같다면 월세 상한은 ${fmt((maxConv-newDeposit)*(rate/100)/12)}입니다.`:`5% 이내 최대 인상 가능 환산액은 ${fmt(maxExtra)}입니다.`);
+}
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    el('tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
+document.querySelectorAll('.money-input').forEach(input=>{
+  input.addEventListener('input',()=>{formatMoney(input);calcConvertRent();calcReverse();calcIncrease()});
+});
+['cRate','iRate'].forEach(id=>el(id).addEventListener('input',()=>{calcConvertRent();calcIncrease()}));
+document.querySelectorAll('input[name="convertTarget"],input[name="convertDirection"],input[name="reverseTarget"]').forEach(input=>input.addEventListener('change',()=>{calcConvertRent();calcReverse()}));
+syncConvertForm();
+syncTargetRates();
+calcReverse();
+calcIncrease();
+</script>
+</body>
+</html>

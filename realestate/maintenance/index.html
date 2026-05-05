@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>아파트 관리비 계산기 - 예상 관리비 조회·전국 평균 비교 | mycalc</title>
+<meta name="description" content="전용면적·지역·난방방식으로 아파트 예상 관리비를 즉시 계산. K-apt 통계 기반. 전국 17개 시도별 평균 관리비 비교표 제공.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul{justify-content:flex-end}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.page-hero{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 58%,#047857 100%);color:#fff;padding:1.75rem 0 1.5rem;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.045'%3E%3Cpath d='M8 48h48M16 56V24l16-12 16 12v32M24 56V38h16v18'/%3E%3Cpath d='M12 28h40'/%3E%3C/g%3E%3C/svg%3E")}
+.hero-content{position:relative}
+.breadcrumb-nav{font-size:.75rem;color:rgba(255,255,255,.7);margin-bottom:.5rem}
+.breadcrumb-nav a{color:rgba(255,255,255,.8);text-decoration:none}
+.breadcrumb-nav a:hover{color:#fff}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:3px 12px;font-size:.75rem;margin-bottom:.5rem}
+.page-hero h1{font-size:1.4rem;font-weight:800;margin:0 0 .3rem}
+.page-hero p{font-size:.83rem;opacity:.85;margin:0}
+.calc-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;margin-top:20px}
+@media(max-width:992px){.calc-grid{grid-template-columns:1fr}}
+.calc-card,.info-card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.card-title{font-size:.95rem;font-weight:800;color:#0f172a;margin-bottom:14px;display:flex;align-items:center;gap:8px;border-bottom:2px solid #e2e8f0;padding-bottom:10px}
+.form-label{font-weight:700;font-size:.82rem;color:#374151;margin-bottom:4px;display:block}
+.form-control,.form-select{font-size:.9rem;border-color:#d1d5db;border-radius:8px}
+.form-control:focus,.form-select:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+.input-group-text{background:#f1f5f9;border-color:#d1d5db;font-size:.82rem;color:#64748b;min-width:42px;justify-content:center}
+.big-input{font-size:1.6rem;font-weight:900;border:none;border-bottom:2px solid #3b82f6;border-radius:0;padding:6px 2px;background:transparent;color:#0f172a;width:100%;text-align:right;outline:none}
+.big-input:focus{border-bottom-color:#1e3a8a}
+.unit-label{font-size:.85rem;color:#64748b;font-weight:700;margin-left:8px;min-width:24px}
+.mode-group{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.mode-btn{position:relative;flex:1;min-width:120px}
+.mode-btn input{position:absolute;opacity:0;pointer-events:none}
+.mode-btn span{display:flex;align-items:center;justify-content:center;gap:6px;border:1.5px solid #d1d5db;background:#fff;border-radius:8px;padding:9px 10px;font-size:.82rem;font-weight:700;color:#475569;cursor:pointer;transition:all .15s}
+.mode-btn input:checked+span{border-color:#1e3a8a;background:#eff6ff;color:#1e3a8a}
+.quick-btns{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.quick-btn{font-size:.73rem;font-weight:700;padding:5px 10px;border-radius:6px;border:1px solid #d1d5db;background:#fff;color:#475569;cursor:pointer;transition:all .15s}
+.quick-btn:hover{border-color:#3b82f6;color:#1e3a8a;background:#eff6ff}
+.result-main{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:14px;padding:22px 24px;color:#fff}
+.result-main-title{font-size:.78rem;opacity:.75;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.result-value{font-size:2rem;font-weight:900;letter-spacing:-.4px;line-height:1.15}
+.result-unit{font-size:.95rem;font-weight:700;opacity:.8;margin-left:4px}
+.result-sub{font-size:.76rem;opacity:.72;margin-top:8px}
+.result-rows{display:flex;flex-direction:column;margin-top:16px}
+.result-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.12);font-size:.85rem}
+.result-row:last-child{border:none}
+.result-row-label{opacity:.8}
+.result-row-val{font-weight:800;text-align:right}
+.result-row.total{background:rgba(255,255,255,.12);border-radius:8px;padding:10px 12px;margin-top:6px}
+.result-row.total .result-row-label{opacity:1;font-weight:700}
+.result-row.total .result-row-val{font-size:1.1rem;color:#fde047}
+.notice-box{border-radius:8px;padding:10px 14px;margin-top:10px;font-size:.78rem;line-height:1.55;display:flex;gap:8px;align-items:flex-start}
+.notice-blue{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af}
+.table-card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.05);margin-top:16px}
+.info-table{margin-bottom:0}
+.info-table th{background:#f0f4ff;font-size:.78rem;color:#1e3a8a;white-space:nowrap}
+.info-table td{font-size:.8rem;vertical-align:middle}
+.table-note{font-size:.75rem;color:#64748b;margin:10px 0 0}
+.info-card{margin-top:16px}
+.info-card h2{font-size:1rem;font-weight:800;color:#0f172a;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.info-card p,.tip-list{font-size:.84rem;color:#475569;line-height:1.75;margin:0}
+.tip-list{padding-left:1.1rem}
+.disclaimer{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.75rem;color:#713f12;margin-top:16px;display:flex;gap:8px;align-items:flex-start}
+footer{background:#1e3a8a;color:rgba(255,255,255,.65);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}
+footer a{color:rgba(255,255,255,.7);text-decoration:none}
+@media(max-width:576px){
+  .page-hero h1{font-size:1.2rem}
+  .big-input{font-size:1.32rem}
+  .result-value{font-size:1.65rem}
+  .calc-card,.table-card,.info-card{padding:16px}
+}
+</style>
+</head>
+<body>
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../../tax/index.html">세금</a></li>
+<li><a href="../../work/index.html">급여·노동</a></li>
+<li><a href="../../tools/index.html">도구</a></li>
+<li><a href="../../realestate/index.html" class="on">부동산</a></li>
+<li><a href="../../money/index.html">금융·투자</a></li>
+<li><a href="../../student/index.html">학생</a></li>
+<li><a href="../../parent/index.html">학부모·육아</a></li>
+<li><a href="../../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="../pyeong/index.html" class="mc-done">평수변환</a></li>
+<li><a href="../fee/index.html" class="mc-done">복비</a></li>
+<li><a href="../jeonwolse/index.html" class="mc-done">전월세전환</a></li>
+<li><a href="../maintenance/index.html" class="on mc-done">관리비</a></li>
+<li><a href="../eviction/index.html" class="mc-done">명도비용</a></li>
+<li><span class="wip">LTV/DTI/DSR</span></li>
+<li><span class="wip">임대수익</span></li>
+<li><span class="wip">경매</span></li>
+<li><span class="wip">빌라수익률</span></li>
+<li><span class="wip">학군</span></li>
+</ul></div></div>
+</div>
+
+<div class="page-hero">
+  <div class="container hero-content">
+    <div class="breadcrumb-nav"><a href="../../index.html">홈</a> / <a href="../index.html">부동산</a> / 관리비 계산기</div>
+    <div class="hero-badge"><i class="bi bi-bar-chart"></i> REL-08 · K-apt 통계 평균 기반</div>
+    <h1><i class="bi bi-building-gear me-2"></i>아파트 관리비 예상 계산기</h1>
+    <p>전용면적, 지역, 난방방식, 세대수, 연식 조건으로 월 관리비를 추정하고 전국 평균과 비교합니다.</p>
+  </div>
+</div>
+
+<div class="container" style="padding-bottom:2rem">
+  <div class="calc-grid">
+    <section class="calc-card">
+      <div class="card-title"><i class="bi bi-sliders" style="color:#1e40af"></i> 조건 입력</div>
+      <label class="form-label" for="areaInput">전용면적</label>
+      <div class="d-flex align-items-baseline">
+        <input type="number" class="big-input" id="areaInput" value="84" min="0" step="0.1" inputmode="decimal" oninput="calcMaintenance()">
+        <span class="unit-label">㎡</span>
+      </div>
+      <div class="quick-btns">
+        <button class="quick-btn" onclick="setArea(59)">59㎡</button>
+        <button class="quick-btn" onclick="setArea(74)">74㎡</button>
+        <button class="quick-btn" onclick="setArea(84)">84㎡</button>
+        <button class="quick-btn" onclick="setArea(101)">101㎡</button>
+        <button class="quick-btn" onclick="setArea(114)">114㎡</button>
+      </div>
+      <div class="row g-3 mt-1">
+        <div class="col-sm-6">
+          <label class="form-label" for="regionSelect">지역</label>
+          <select class="form-select" id="regionSelect" onchange="calcMaintenance()"></select>
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label" for="householdSelect">단지 세대수</label>
+          <select class="form-select" id="householdSelect" onchange="calcMaintenance()"></select>
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label" for="ageSelect">건물 연식</label>
+          <select class="form-select" id="ageSelect" onchange="calcMaintenance()"></select>
+        </div>
+      </div>
+      <label class="form-label mt-3">난방방식</label>
+      <div class="mode-group">
+        <label class="mode-btn"><input type="radio" name="heatingType" value="개별난방" onchange="calcMaintenance()"><span>개별난방</span></label>
+        <label class="mode-btn"><input type="radio" name="heatingType" value="중앙난방" onchange="calcMaintenance()"><span>중앙난방</span></label>
+        <label class="mode-btn"><input type="radio" name="heatingType" value="지역난방" checked onchange="calcMaintenance()"><span>지역난방</span></label>
+      </div>
+    </section>
+
+    <section class="calc-card">
+      <div class="result-main">
+        <div class="result-main-title"><i class="bi bi-calculator"></i> 예상 관리비</div>
+        <div><span class="result-value" id="monthlyFee">0</span><span class="result-unit">원</span></div>
+        <div class="result-sub" id="summaryText">K-apt ㎡당 평균 단가 기반 추정</div>
+        <div class="result-rows">
+          <div class="result-row"><span class="result-row-label">예상 연간 관리비</span><span class="result-row-val" id="yearlyFee">0원</span></div>
+          <div class="result-row"><span class="result-row-label">㎡당 관리비</span><span class="result-row-val" id="sqmFee">0원</span></div>
+          <div class="result-row"><span class="result-row-label">평당 관리비</span><span class="result-row-val" id="pyeongFee">0원</span></div>
+          <div class="result-row total"><span class="result-row-label">전국 평균 대비</span><span class="result-row-val" id="compareText">-</span></div>
+        </div>
+      </div>
+      <div class="notice-box notice-blue"><i class="bi bi-pie-chart flex-shrink-0 mt-1"></i><span id="breakdownText">항목별 추정 내역</span></div>
+    </section>
+  </div>
+
+  <section class="table-card">
+    <div class="card-title"><i class="bi bi-table" style="color:#1e40af"></i> 전국 시도별 평균 관리비</div>
+    <div class="table-responsive">
+      <table class="table table-bordered info-table">
+        <thead><tr><th>지역</th><th>㎡당 단가</th><th>84㎡ 환산 월 관리비</th></tr></thead>
+        <tbody id="regionTableBody"></tbody>
+      </table>
+    </div>
+    <p class="table-note">데이터 출처: K-apt 공동주택관리정보시스템 관리비등 세부항목 지역별 평균. 제공값은 K-apt 2026년 1월 기준 근사값이며 추후 교체 가능하도록 JSON 구조로 선언했습니다.</p>
+  </section>
+
+  <section class="info-card">
+    <h2><i class="bi bi-info-circle-fill" style="color:#1e40af"></i> 관리비 항목 해설</h2>
+    <p>공용관리비에는 일반관리비(인건비), 경비비, 청소비, 소독비, 승강기유지비, 수선유지비, 위탁관리수수료 등이 포함됩니다. 개별사용료는 난방비, 급탕비, 전기료, 수도료, 가스사용료처럼 세대 사용량에 따라 달라지는 항목입니다. 장기수선충당금은 건물 노후화에 대비해 적립하는 금액이며 매각 시 정산할 수 있습니다. TV수신료, 입주자대표회의 운영비 등은 기타 항목으로 분류됩니다.</p>
+  </section>
+
+  <section class="info-card">
+    <h2><i class="bi bi-lightbulb" style="color:#047857"></i> 관리비 절약 팁</h2>
+    <ul class="tip-list">
+      <li>난방·급탕비는 계절 변동이 크므로 월별 사용량과 단가를 함께 확인하세요.</li>
+      <li>전기·수도 사용량은 세대 평균과 비교하면 낭비 구간을 찾기 쉽습니다.</li>
+      <li>장기수선충당금은 임차인이 낸 경우 퇴거 또는 매각 정산 대상인지 확인하세요.</li>
+      <li>단지 부대시설이 많거나 경비·청소 인력이 많은 단지는 공용관리비가 높아질 수 있습니다.</li>
+    </ul>
+  </section>
+
+  <div class="disclaimer"><i class="bi bi-info-circle flex-shrink-0 mt-1"></i><span>본 계산기는 K-apt 공개 통계를 기반으로 한 예상치이며, 실제 관리비는 단지별 관리 방식, 부대시설, 사용량 등에 따라 크게 달라질 수 있습니다. 정확한 관리비는 해당 단지 관리사무소 또는 K-apt(www.k-apt.go.kr)에서 확인하시기 바랍니다.</span></div>
+</div>
+
+<footer><div class="container">© 2025 mycalc · 참고용이며 법적 효력이 없습니다. | <a href="../../index.html">← 메인으로</a></div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const MAINTENANCE_DATA={
+  기준월:'2026-01',
+  출처:'K-apt 공개 통계 기반 근사값',
+  지역별㎡당평균:{
+    '전국':3343,'서울':3650,'경기':3400,'인천':3200,'부산':3100,'대구':3050,'대전':3150,'광주':2900,'울산':3000,'세종':2800,'강원':3500,'충북':3100,'충남':3050,'전북':2950,'전남':3000,'경북':3050,'경남':2950,'제주':3200
+  },
+  난방방식별보정:{'개별난방':0.85,'중앙난방':1.15,'지역난방':1.00},
+  세대수별보정:{'100세대미만':1.25,'100~300세대':1.10,'300~500세대':1.00,'500~1000세대':0.95,'1000세대이상':0.90},
+  건물연식별보정:{'5년이내':0.90,'5~10년':0.95,'10~20년':1.00,'20~30년':1.10,'30년이상':1.20}
+};
+const PYEONG_SQM=3.3058;
+function el(id){return document.getElementById(id)}
+function fmt(n){return Math.round(n||0).toLocaleString('ko-KR')+'원'}
+function selectedHeating(){return document.querySelector('input[name="heatingType"]:checked').value}
+function fillSelect(id,obj,defaultValue){
+  el(id).innerHTML=Object.keys(obj).map(k=>`<option value="${k}"${k===defaultValue?' selected':''}>${k}</option>`).join('');
+}
+function renderRegionTable(){
+  el('regionTableBody').innerHTML=Object.entries(MAINTENANCE_DATA.지역별㎡당평균).map(([region,unit])=>`<tr><td>${region}</td><td>${unit.toLocaleString('ko-KR')}원/㎡</td><td>${fmt(unit*84)}</td></tr>`).join('');
+}
+function setArea(area){el('areaInput').value=area;calcMaintenance()}
+function calcMaintenance(){
+  const area=parseFloat(el('areaInput').value)||0;
+  const region=el('regionSelect').value;
+  const household=el('householdSelect').value;
+  const age=el('ageSelect').value;
+  const heating=selectedHeating();
+  const baseUnit=MAINTENANCE_DATA.지역별㎡당평균[region];
+  const heatFactor=MAINTENANCE_DATA.난방방식별보정[heating];
+  const houseFactor=MAINTENANCE_DATA.세대수별보정[household];
+  const ageFactor=MAINTENANCE_DATA.건물연식별보정[age];
+  const monthly=area*baseUnit*heatFactor*houseFactor*ageFactor;
+  const perSqm=area>0?monthly/area:0;
+  const national84=MAINTENANCE_DATA.지역별㎡당평균['전국']*84;
+  const diff=national84>0?(monthly-national84)/national84*100:0;
+  const direction=Math.abs(diff)<0.5?'비슷함':diff>0?`${Math.abs(diff).toFixed(1)}% 높음`:`${Math.abs(diff).toFixed(1)}% 낮음`;
+  el('monthlyFee').textContent=Math.round(monthly).toLocaleString('ko-KR');
+  el('yearlyFee').textContent=fmt(monthly*12);
+  el('sqmFee').textContent=fmt(perSqm);
+  el('pyeongFee').textContent=fmt(perSqm*PYEONG_SQM);
+  el('compareText').textContent=`전국 84㎡ 평균(${fmt(national84)}) 대비 ${direction}`;
+  el('summaryText').textContent=`${region} ${baseUnit.toLocaleString('ko-KR')}원/㎡ × ${area}㎡ × ${heating} × ${household} × ${age}`;
+  const common=monthly*0.37, usage=monthly*0.42, reserve=monthly*0.08, etc=monthly*0.13;
+  el('breakdownText').textContent=`공용관리비 약 ${fmt(common)}(37%) · 개별사용료 약 ${fmt(usage)}(42%) · 장기수선충당금 약 ${fmt(reserve)}(8%) · 기타 약 ${fmt(etc)}(13%)`;
+}
+fillSelect('regionSelect',MAINTENANCE_DATA.지역별㎡당평균,'서울');
+fillSelect('householdSelect',MAINTENANCE_DATA.세대수별보정,'500~1000세대');
+fillSelect('ageSelect',MAINTENANCE_DATA.건물연식별보정,'10~20년');
+renderRegionTable();
+calcMaintenance();
+</script>
+</body>
+</html>

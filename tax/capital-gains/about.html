@@ -1,0 +1,220 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>양도소득세란? | mycalc</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:#f8f9fa;font-size:14px;color:#1a1a2e;margin:0}
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t1-ul{justify-content:flex-end}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.gi-tabs-wrap{background:#fff;border-bottom:2px solid #e2e8f0}
+.gi-tabs{list-style:none;display:flex;overflow-x:auto;margin:0;padding:0 12px;-ms-overflow-style:none;scrollbar-width:none}
+.gi-tabs::-webkit-scrollbar{display:none}
+.gi-tabs li a{display:inline-block;padding:9px 13px;font-size:.82rem;font-weight:600;color:#64748b;text-decoration:none;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;margin-bottom:-2px}
+.gi-tabs li a:hover{color:#1e3a8a}
+.gi-tabs li a.cur{color:#1e3a8a;border-bottom-color:#1e3a8a;font-weight:700}
+.page-hero{background:linear-gradient(135deg,#1e3a8a 0%,#065f46 60%,#047857 100%);color:#fff;padding:2rem 0 1.5rem}
+.page-hero h1{font-size:1.4rem;font-weight:700;margin:0 0 .25rem}
+.page-hero p{font-size:.85rem;opacity:.85;margin:0}
+.card-section{background:#fff;border-radius:10px;border:1px solid #e2e8f0;padding:1.5rem;margin-bottom:1rem;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.section-title{font-size:1rem;font-weight:700;color:#1e3a8a;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:2px solid #dbeafe;display:flex;align-items:center;gap:8px}
+.section-num{display:inline-flex;align-items:center;justify-content:center;background:#065f46;color:#fff;border-radius:6px;width:22px;height:22px;font-size:.72rem;font-weight:700;flex-shrink:0}
+.table th{background:#f0f4ff;font-size:.8rem;white-space:nowrap}
+.table td{font-size:.8rem;vertical-align:middle}
+.callout{border-radius:8px;padding:10px 14px;margin-bottom:10px;font-size:.82rem;display:flex;gap:10px;align-items:flex-start}
+.callout-blue{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af}
+.callout-green{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}
+.callout-yellow{background:#fef9c3;border:1px solid #fde047;color:#713f12}
+.callout-red{background:#fff1f2;border:1px solid #fecdd3;color:#991b1b}
+.callout i{flex-shrink:0;margin-top:2px}
+.law-badge{display:inline-flex;align-items:center;gap:4px;background:#1e3a8a;color:#fff;border-radius:6px;padding:3px 8px;font-size:.72rem;font-weight:600;margin-right:4px}
+.disclaimer{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:.75rem 1rem;font-size:.78rem;color:#713f12;margin-top:1.5rem}
+footer{background:#1e3a8a;color:rgba(255,255,255,.7);text-align:center;padding:1rem;font-size:.78rem;margin-top:2rem}
+footer a{color:rgba(255,255,255,.7);text-decoration:none}
+footer a:hover{color:#fff}
+</style>
+</head>
+<body>
+
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../../tax/index.html" class="on">세금</a></li>
+<li><a href="../../work/index.html">급여·노동</a></li>
+<li><a href="../../tools/index.html">도구</a></li>
+<li><a href="../../realestate/index.html">부동산</a></li>
+<li><a href="../../money/index.html">금융·투자</a></li>
+<li><a href="../../student/index.html">학생</a></li>
+<li><a href="../../parent/index.html">학부모·육아</a></li>
+<li><a href="../../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="../general-income/index.html" class="mc-done">종합소득세</a></li>
+<li><a href="../freelancer/index.html" class="mc-done">프리랜서 3.3%</a></li>
+<li><a href="../vat/index.html" class="mc-done">부가세</a></li>
+<li><a href="../day-laborer/index.html" class="mc-done">일용직</a></li>
+<li><a href="../earned-income/index.html" class="mc-done">근로소득세</a></li>
+<li><a href="../retirement-income/index.html" class="mc-done">퇴직소득세</a></li>
+<li><a href="index.html" class="on mc-done">양도소득세</a></li>
+<li><span class="wip">연말정산</span></li>
+<li><a href="../property/index.html" class="mc-done">부동산세금</a></li>
+<li><a href="../inheritance/index.html" class="mc-done">상속증여</a></li>
+<li><span class="wip">가상자산</span></li>
+<li><span class="wip">상금</span></li>
+</ul></div></div>
+</div>
+
+<div class="page-hero">
+  <div class="container">
+    <h1><i class="bi bi-book-fill me-2"></i>양도소득세란?</h1>
+    <p>과세 대상, 1세대1주택 비과세 요건, 장기보유특별공제, 다주택 중과, 신고 기한을 알아보세요.</p>
+  </div>
+</div>
+
+<div class="gi-tabs-wrap"><div class="container"><ul class="gi-tabs">
+<li><a href="index.html">부동산 양도세</a></li>
+<li><a href="stock.html">주식 양도세</a></li>
+<li><a href="about.html" class="cur">양도소득세란?</a></li>
+</ul></div></div>
+
+<div class="container pb-4">
+
+  <div class="card-section">
+    <div class="section-title"><span class="section-num">01</span> 양도소득세 정의 및 과세 대상</div>
+    <div class="callout callout-blue"><i class="bi bi-info-circle"></i>
+      <div><strong>양도소득세</strong>란 토지·건물·주식 등의 자산을 양도(팔거나 교환)할 때 발생하는 <strong>양도차익(시세차익)</strong>에 부과되는 세금입니다. 종합소득에 합산하지 않고 <strong>분류과세</strong>됩니다.</div>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle">
+        <thead><tr><th>자산 유형</th><th>과세 여부</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr><td>토지·건물</td><td><strong>과세</strong></td><td>주택·상업용·토지 등</td></tr>
+          <tr><td>주택 분양권</td><td><strong>과세</strong></td><td>1년 미만 70%, 1년 이상 60%</td></tr>
+          <tr><td>상장주식 (소액주주)</td><td><strong>비과세</strong></td><td>2025년 금투세 폐지 → 비과세 유지</td></tr>
+          <tr><td>상장주식 (대주주)</td><td><strong>과세</strong></td><td>3억 이하 20%, 초과 25%</td></tr>
+          <tr><td>비상장주식</td><td><strong>과세</strong></td><td>중소기업 10%, 일반 20%</td></tr>
+          <tr style="background:#f0fdf4"><td>1세대1주택 (요건 충족)</td><td><strong>비과세</strong></td><td>12억 초과분은 과세</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card-section">
+    <div class="section-title"><span class="section-num">02</span> 1세대 1주택 비과세 요건</div>
+    <div class="callout callout-green"><i class="bi bi-house-check-fill"></i>
+      <div>아래 요건을 모두 충족하면 양도소득세가 비과세됩니다. 양도가액 <strong>12억원 초과분</strong>은 과세됩니다.</div>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle">
+        <thead><tr><th>요건</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td><strong>보유기간</strong></td><td>양도일 기준 <strong>2년 이상</strong> 보유</td></tr>
+          <tr><td><strong>거주기간</strong> (조정지역)</td><td>취득일 당시 <strong>조정대상지역</strong>이면 <strong>2년 이상 거주</strong> 필요</td></tr>
+          <tr><td><strong>1세대 요건</strong></td><td>양도일 현재 해당 주택 외 다른 주택 없을 것 (일시적 2주택 예외 있음)</td></tr>
+          <tr><td><strong>금액 기준</strong></td><td>양도가 12억 이하 → 전액 비과세<br>양도가 12억 초과 → 초과분 비율만큼 과세</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 14px;margin-top:8px;font-size:.8rem;color:#1e40af">
+      <strong>12억 초과 과세 계산식:</strong><br>
+      과세 양도차익 = 전체 양도차익 × (양도가액 − 12억) ÷ 양도가액
+    </div>
+  </div>
+
+  <div class="card-section">
+    <div class="section-title"><span class="section-num">03</span> 장기보유특별공제율</div>
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle">
+        <thead>
+          <tr>
+            <th>보유연수</th>
+            <th>일반 공제율</th>
+            <th>1세대1주택 보유</th>
+            <th>1세대1주택 거주</th>
+            <th>합계 (최대)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>2년</td><td>—</td><td>—</td><td>8%</td><td>8%</td></tr>
+          <tr><td>3년</td><td>6%</td><td>12%</td><td>12%</td><td>24%</td></tr>
+          <tr><td>4년</td><td>8%</td><td>16%</td><td>16%</td><td>32%</td></tr>
+          <tr><td>5년</td><td>10%</td><td>20%</td><td>20%</td><td>40%</td></tr>
+          <tr><td>6년</td><td>12%</td><td>24%</td><td>24%</td><td>48%</td></tr>
+          <tr><td>7년</td><td>14%</td><td>28%</td><td>28%</td><td>56%</td></tr>
+          <tr><td>8년</td><td>16%</td><td>32%</td><td>32%</td><td>64%</td></tr>
+          <tr><td>9년</td><td>18%</td><td>36%</td><td>36%</td><td>72%</td></tr>
+          <tr style="background:#dcfce7"><td><strong>10년 이상</strong></td><td>20%</td><td><strong>40%</strong></td><td><strong>40%</strong></td><td><strong>80%</strong></td></tr>
+          <tr><td>15년 이상</td><td><strong>30%</strong></td><td>40%</td><td>40%</td><td>80%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout callout-yellow mt-2"><i class="bi bi-exclamation-triangle"></i>
+      <div>다주택자 중과 시: 조정대상지역 내 다주택 양도의 경우 <strong>장기보유특별공제 배제</strong>. 단, 2024.1.1~2026.5.9 한시 중과 배제 중.</div>
+    </div>
+  </div>
+
+  <div class="card-section">
+    <div class="section-title"><span class="section-num">04</span> 세율 구조</div>
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle">
+        <thead><tr><th>구분</th><th>보유기간</th><th>세율</th></tr></thead>
+        <tbody>
+          <tr><td>일반 부동산</td><td>2년 이상</td><td>기본세율 6~45%</td></tr>
+          <tr style="background:#fff1f2"><td>단기 양도</td><td>1년 미만</td><td><strong>70%</strong></td></tr>
+          <tr style="background:#fff7ed"><td>단기 양도</td><td>1년 이상~2년 미만</td><td><strong>60%</strong></td></tr>
+          <tr><td>분양권 단기</td><td>1년 미만</td><td><strong>70%</strong></td></tr>
+          <tr><td>분양권 단기</td><td>1년 이상</td><td><strong>60%</strong></td></tr>
+          <tr style="background:#fef9c3"><td>조정지역 2주택 중과</td><td>—</td><td>기본세율 + <strong>20%p</strong></td></tr>
+          <tr style="background:#fee2e2"><td>조정지역 3주택 이상 중과</td><td>—</td><td>기본세율 + <strong>30%p</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card-section">
+    <div class="section-title"><span class="section-num">05</span> 양도소득세 신고 기한</div>
+    <div class="callout callout-yellow"><i class="bi bi-calendar-check"></i>
+      <div>
+        <strong>예정신고:</strong> 양도일이 속하는 달의 말일부터 <strong>2개월 이내</strong><br>
+        (예: 3월 15일 양도 → 5월 31일까지 신고·납부)<br><br>
+        <strong>확정신고:</strong> 다음 해 5월 1일 ~ 5월 31일 (여러 건 있을 경우)
+      </div>
+    </div>
+    <div class="callout callout-red mt-0"><i class="bi bi-exclamation-circle"></i>
+      <div><strong>무신고·무납부 시:</strong> 무신고가산세(20%) + 납부지연가산세(0.022%/일) 부과. 1세대1주택 비과세 물건도 신고 의무 있음 (비과세 신고).</div>
+    </div>
+    <div class="d-flex flex-wrap gap-2 mt-2">
+      <span class="law-badge"><i class="bi bi-journal-text me-1"></i>소득세법 제94조</span>
+      <span class="law-badge"><i class="bi bi-journal-text me-1"></i>소득세법 제105조</span>
+    </div>
+  </div>
+
+  <div class="disclaimer"><i class="bi bi-info-circle-fill me-1"></i>본 페이지의 내용은 일반적인 정보 제공 목적으로 작성되었으며, 세법은 수시로 개정될 수 있습니다. 실제 세무 신고 시에는 반드시 세무사 또는 관할 세무서에 문의하시기 바랍니다.</div>
+</div>
+
+<footer><div class="container"><p class="mb-0">© 2025 mycalc · 참고용이며 법적 효력이 없습니다. | <a href="../../index.html">← 메인으로</a></p></div></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

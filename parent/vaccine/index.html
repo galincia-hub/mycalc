@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>예방접종 일정 계산기 - 우리 아기 접종 시기 자동 계산 | mycalc</title>
+<meta name="description" content="아기 생년월일만 입력하면 BCG, B형간염, DTaP, MMR 등 국가예방접종 전체 일정을 자동 계산합니다. 질병관리청 표준예방접종 일정표 기준.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{font-family:'Pretendard',-apple-system,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}.mc-t1{background:#0f172a;min-height:46px}.mc-t2{background:#be123c;min-height:36px;border-top:1px solid rgba(255,255,255,.14)}.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}.mc-brand span{color:#38bdf8}.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}.mc-t1-ul{justify-content:flex-end}.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.22);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}.mc-t2-ul li .wip{opacity:.48;cursor:default;font-size:.75rem}.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.page-hero{background:linear-gradient(135deg,#0f172a 0%,#be123c 58%,#e11d48 100%);color:#fff;padding:1.75rem 0 1.5rem}.breadcrumb-nav{font-size:.75rem;color:rgba(255,255,255,.72);margin-bottom:.5rem}.breadcrumb-nav a{color:rgba(255,255,255,.86);text-decoration:none}.hero-badge{display:inline-block;background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.75rem;margin-bottom:.5rem}.page-hero h1{font-size:1.45rem;font-weight:800;margin:0 0 .35rem}.page-hero p{font-size:.84rem;opacity:.86;margin:0}.main-layout{display:grid;grid-template-columns:1fr;gap:16px;align-items:start;padding:16px 0 32px}.calc-card{background:#fff;border-radius:10px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden}.card-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;background:#fff1f2;border-bottom:1px solid #ffe4e6}.card-hd-left{display:flex;align-items:center;gap:10px}.card-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;background:#ffe4e6;color:#be123c}.card-title{font-weight:700;font-size:.9rem;color:#be123c}.card-body{padding:16px}.form-label{font-weight:600;font-size:.8rem;color:#374151;margin-bottom:4px;display:block}.form-control{font-size:.85rem;border-color:#d1d5db;border-radius:7px}.segmented{display:flex;flex-wrap:wrap;gap:6px}.segmented input{position:absolute;opacity:0}.segmented label{border:1px solid #fecdd3;background:#fff;color:#be123c;border-radius:8px;padding:7px 10px;font-size:.78rem;font-weight:800;cursor:pointer}.segmented input:checked+label{background:#be123c;color:#fff}.print-btn{border:1px solid #be123c;background:#be123c;color:#fff;border-radius:8px;padding:7px 12px;font-size:.8rem;font-weight:700}.print-btn:hover{background:#9f1239}.result-panel{background:linear-gradient(160deg,#be123c 0%,#e11d48 100%);border-radius:12px;color:#fff;padding:18px 20px;box-shadow:0 4px 20px rgba(190,18,60,.28)}.result-title{font-size:.88rem;font-weight:700;opacity:.88;margin-bottom:12px;display:flex;align-items:center;gap:6px}.result-final{display:grid;gap:5px;padding-top:6px}.result-final-label{font-size:.82rem;opacity:.82}.result-final-val{font-size:1.18rem;font-weight:850;line-height:1.28}.side-row{border-top:1px solid rgba(255,255,255,.18);margin-top:10px;padding-top:9px;display:grid;gap:3px;font-size:.78rem}.side-val{font-weight:800;color:#ffe4e6}.timeline{display:grid;gap:12px}.month-group{border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;background:#fff}.month-title{background:#f8fafc;color:#0f172a;font-weight:800;font-size:.84rem;padding:10px 12px;border-bottom:1px solid #e2e8f0}.schedule-table{width:100%;border-collapse:collapse;font-size:.8rem}.schedule-table th{background:#fff;color:#475569;font-weight:800;border-bottom:1px solid #e2e8f0;padding:9px}.schedule-table td{border-bottom:1px solid #f1f5f9;padding:9px;color:#334155;vertical-align:middle}.schedule-table tr:last-child td{border-bottom:none}.status{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:3px 8px;font-size:.7rem;font-weight:800;white-space:nowrap}.past{background:#f1f5f9;color:#64748b}.current{background:#dcfce7;color:#166534}.soon{background:#fef3c7;color:#92400e}.future{background:#eff6ff;color:#1d4ed8}.row-past{opacity:.62}.row-current{background:#f0fdf4}.notice{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.75rem;color:#713f12;margin-top:16px;display:flex;gap:8px}.source-note{font-size:.75rem;color:#64748b;line-height:1.55;margin-top:10px}.calendar-note{background:#f8fafc;border:1px dashed #cbd5e1;border-radius:9px;padding:11px 13px;font-size:.78rem;color:#475569;margin-top:14px}footer{background:#be123c;color:rgba(255,255,255,.72);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}footer a{color:rgba(255,255,255,.85);text-decoration:none}@media(min-width:992px){.main-layout{grid-template-columns:1fr 360px}.result-panel{position:sticky;top:96px}}@media(max-width:720px){.schedule-table thead{display:none}.schedule-table tr{display:grid;gap:4px;padding:10px;border-bottom:1px solid #f1f5f9}.schedule-table td{display:flex;justify-content:space-between;gap:12px;border-bottom:none;padding:2px 0;text-align:right}.schedule-table td::before{content:attr(data-label);font-weight:800;color:#64748b;text-align:left}.card-hd{align-items:flex-start}.result-final-val{font-size:1.05rem}}@media print{.mc-nav-wrap,.page-hero,.print-btn,.notice,.calendar-note,footer{display:none!important}body{background:#fff}.main-layout{display:block;padding:0}.calc-card,.month-group{box-shadow:none;border-color:#cbd5e1}.result-panel{background:#fff!important;color:#111;border:1px solid #cbd5e1;box-shadow:none;margin-bottom:12px}.side-val{color:#111}.container{max-width:none;width:100%}}
+</style>
+</head>
+<body>
+<div class="mc-nav-wrap"><div class="mc-t1"><div class="container"><div class="mc-row"><a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a><ul class="mc-t1-ul"><li><a href="../../tax/index.html">세금</a></li><li><a href="../../work/index.html">급여·노동</a></li><li><a href="../../tools/index.html">도구</a></li><li><a href="../../realestate/index.html">부동산</a></li><li><a href="../../money/index.html">금융·투자</a></li><li><a href="../../student/index.html">학생</a></li><li><a href="../index.html" class="on">학부모·육아</a></li><li><a href="../../life/index.html">생활</a></li></ul></div></div></div><div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="index.html" class="on mc-done">예방접종</a></li>
+<li><span class="wip">출산</span></li>
+<li><span class="wip">성장발달</span></li>
+<li><span class="wip">어린이집</span></li>
+<li><span class="wip">교육급여</span></li>
+<li><span class="wip">대입전형</span></li>
+<li><span class="wip">학원비</span></li>
+<li><span class="wip">자녀보험</span></li>
+<li><span class="wip">돌봄</span></li>
+<li><span class="wip">용돈</span></li>
+</ul></div></div></div>
+<div class="page-hero"><div class="container"><div class="breadcrumb-nav"><a href="../../index.html">홈</a> / <a href="../index.html">학부모·육아</a> / 예방접종 일정</div><div class="hero-badge">질병관리청 표준예방접종 일정표 기준</div><h1><i class="bi bi-calendar2-check me-2"></i>예방접종 일정 계산기</h1><p>아기 생년월일을 입력하면 국가예방접종 권장 시작일과 마감일을 자동 계산합니다.</p></div></div>
+<div class="container"><div class="main-layout"><main>
+<section class="calc-card"><div class="card-hd"><div class="card-hd-left"><span class="card-icon"><i class="bi bi-pencil-square"></i></span><span class="card-title">기준 정보 입력</span></div><button type="button" class="print-btn" id="printBtn"><i class="bi bi-printer me-1"></i>인쇄/저장</button></div><div class="card-body"><div class="row g-3"><div class="col-sm-6"><label class="form-label" for="birthDate">아기 생년월일</label><input type="date" class="form-control" id="birthDate"></div><div class="col-sm-6"><label class="form-label">로타바이러스 백신</label><div class="segmented"><input type="radio" name="rotaType" id="rotarix" value="rotarix" checked><label for="rotarix">로타릭스 2회</label><input type="radio" name="rotaType" id="rotateq" value="rotateq"><label for="rotateq">로타텍 3회</label></div></div><div class="col-12"><label class="form-label">일본뇌염 백신</label><div class="segmented"><input type="radio" name="jeType" id="ijev" value="ijev" checked><label for="ijev">불활성화백신</label><input type="radio" name="jeType" id="ljev" value="ljev"><label for="ljev">약독화 생백신</label></div></div></div><div class="source-note">로타바이러스와 일본뇌염은 접종 백신 종류에 따라 차수가 달라져 선택값에 맞는 일정만 표시합니다.</div></div></section>
+<section class="calc-card mt-3"><div class="card-hd"><div class="card-hd-left"><span class="card-icon"><i class="bi bi-list-check"></i></span><span class="card-title">전체 접종 일정표</span></div></div><div class="card-body"><div id="timeline" class="timeline"></div><div class="calendar-note"><i class="bi bi-calendar-plus me-1"></i>캘린더 내보내기 기능은 추후 제공 예정입니다. 현재는 인쇄/저장 버튼으로 PDF 저장을 사용할 수 있습니다.</div></div></section>
+<div class="notice"><i class="bi bi-info-circle"></i><div>본 계산기는 질병관리청 표준예방접종 일정표를 참고하여 제작되었으며, 참고용입니다. 실제 접종 일정은 아이의 건강 상태, 이전 접종 이력 등에 따라 달라질 수 있으므로, 반드시 담당 의료기관과 상의하시기 바랍니다.</div></div>
+</main><aside><div class="result-panel"><div class="result-title"><i class="bi bi-check2-circle"></i>접종 일정 요약</div><div class="result-final"><span class="result-final-label">아기 현재 나이</span><span class="result-final-val" id="babyAge">-</span></div><div class="side-row"><span>다음 접종 예정 백신</span><span class="side-val" id="nextVaccine">-</span></div><div class="side-row"><span>접종 완료 예상 시기</span><span class="side-val" id="completeDate">-</span></div><div class="side-row"><span>오늘 기준</span><span class="side-val" id="todayText">-</span></div></div></aside></div></div>
+<footer><div class="container">© 2026 mycalc · 참고용 계산기입니다. | <a href="../../index.html">메인으로</a></div></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const VACCINES=[
+{g:'출생 시',d:'B형간염',v:'HepB',dose:'1차',s:{m:0},e:{m:0},label:'출생 시'},
+{g:'생후 4주 이내',d:'결핵',v:'BCG(피내용)',dose:'1회',s:{d:0},e:{d:28},label:'생후 4주 이내'},
+{g:'1개월',d:'B형간염',v:'HepB',dose:'2차',s:{m:1},e:{m:1},label:'생후 1개월'},
+{g:'2개월',d:'디프테리아/파상풍/백일해',v:'DTaP',dose:'1차',s:{m:2},e:{m:2},label:'생후 2개월'},
+{g:'2개월',d:'폴리오',v:'IPV',dose:'1차',s:{m:2},e:{m:2},label:'생후 2개월'},
+{g:'2개월',d:'b형헤모필루스인플루엔자',v:'Hib',dose:'1차',s:{m:2},e:{m:2},label:'생후 2개월'},
+{g:'2개월',d:'폐렴구균',v:'PCV',dose:'1차',s:{m:2},e:{m:2},label:'생후 2개월'},
+{g:'2개월',d:'로타바이러스',v:'RV(로타릭스)',dose:'1차',s:{m:2},e:{m:2},label:'생후 2개월',type:'rotarix'},
+{g:'2개월',d:'로타바이러스',v:'RV(로타텍)',dose:'1차',s:{m:2},e:{m:2},label:'생후 2개월',type:'rotateq'},
+{g:'4개월',d:'디프테리아/파상풍/백일해',v:'DTaP',dose:'2차',s:{m:4},e:{m:4},label:'생후 4개월'},
+{g:'4개월',d:'폴리오',v:'IPV',dose:'2차',s:{m:4},e:{m:4},label:'생후 4개월'},
+{g:'4개월',d:'b형헤모필루스인플루엔자',v:'Hib',dose:'2차',s:{m:4},e:{m:4},label:'생후 4개월'},
+{g:'4개월',d:'폐렴구균',v:'PCV',dose:'2차',s:{m:4},e:{m:4},label:'생후 4개월'},
+{g:'4개월',d:'로타바이러스',v:'RV(로타릭스)',dose:'2차',s:{m:4},e:{m:4},label:'생후 4개월',type:'rotarix'},
+{g:'4개월',d:'로타바이러스',v:'RV(로타텍)',dose:'2차',s:{m:4},e:{m:4},label:'생후 4개월',type:'rotateq'},
+{g:'6개월',d:'B형간염',v:'HepB',dose:'3차',s:{m:6},e:{m:6},label:'생후 6개월'},
+{g:'6개월',d:'디프테리아/파상풍/백일해',v:'DTaP',dose:'3차',s:{m:6},e:{m:6},label:'생후 6개월'},
+{g:'6~18개월',d:'폴리오',v:'IPV',dose:'3차',s:{m:6},e:{m:18},label:'생후 6~18개월'},
+{g:'6개월',d:'b형헤모필루스인플루엔자',v:'Hib',dose:'3차',s:{m:6},e:{m:6},label:'생후 6개월'},
+{g:'6개월',d:'폐렴구균',v:'PCV',dose:'3차',s:{m:6},e:{m:6},label:'생후 6개월'},
+{g:'6개월',d:'로타바이러스',v:'RV(로타텍)',dose:'3차',s:{m:6},e:{m:6},label:'생후 6개월',type:'rotateq'},
+{g:'12~15개월',d:'b형헤모필루스인플루엔자',v:'Hib',dose:'4차',s:{m:12},e:{m:15},label:'생후 12~15개월'},
+{g:'12~15개월',d:'폐렴구균',v:'PCV',dose:'4차',s:{m:12},e:{m:15},label:'생후 12~15개월'},
+{g:'12~15개월',d:'홍역/유행성이하선염/풍진',v:'MMR',dose:'1차',s:{m:12},e:{m:15},label:'생후 12~15개월'},
+{g:'12~15개월',d:'수두',v:'VAR',dose:'1회',s:{m:12},e:{m:15},label:'생후 12~15개월'},
+{g:'12~23개월',d:'A형간염',v:'HepA',dose:'1차',s:{m:12},e:{m:23},label:'생후 12~23개월'},
+{g:'18~41개월',d:'A형간염',v:'HepA',dose:'2차',s:{m:18},e:{m:41},label:'1차 접종 후 6~18개월'},
+{g:'12~23개월',d:'일본뇌염(불활성화)',v:'IJEV',dose:'1차',s:{m:12},e:{m:23},label:'생후 12~23개월',type:'ijev'},
+{g:'12~23개월',d:'일본뇌염(불활성화)',v:'IJEV',dose:'2차',s:{m:12,d:7},e:{m:12,d:30},label:'1차 후 7~30일',type:'ijev'},
+{g:'24~35개월',d:'일본뇌염(불활성화)',v:'IJEV',dose:'3차',s:{m:24},e:{m:35},label:'생후 24~35개월',type:'ijev'},
+{g:'만 6세',d:'일본뇌염(불활성화)',v:'IJEV',dose:'4차',s:{y:6},e:{y:6},label:'만 6세',type:'ijev'},
+{g:'만 12세',d:'일본뇌염(불활성화)',v:'IJEV',dose:'5차',s:{y:12},e:{y:12},label:'만 12세',type:'ijev'},
+{g:'12~23개월',d:'일본뇌염(약독화 생백신)',v:'LJEV',dose:'1차',s:{m:12},e:{m:23},label:'생후 12~23개월',type:'ljev'},
+{g:'24~35개월',d:'일본뇌염(약독화 생백신)',v:'LJEV',dose:'2차',s:{m:24},e:{m:35},label:'생후 24~35개월',type:'ljev'},
+{g:'15~18개월',d:'디프테리아/파상풍/백일해',v:'DTaP',dose:'4차',s:{m:15},e:{m:18},label:'생후 15~18개월'},
+{g:'만 4~6세',d:'디프테리아/파상풍/백일해',v:'DTaP',dose:'5차',s:{y:4},e:{y:6},label:'만 4~6세'},
+{g:'만 4~6세',d:'폴리오',v:'IPV',dose:'4차',s:{y:4},e:{y:6},label:'만 4~6세'},
+{g:'만 4~6세',d:'홍역/유행성이하선염/풍진',v:'MMR',dose:'2차',s:{y:4},e:{y:6},label:'만 4~6세'},
+{g:'만 11~12세',d:'디프테리아/파상풍/백일해',v:'Tdap/Td',dose:'6차',s:{y:11},e:{y:12},label:'만 11~12세'},
+{g:'만 11~12세',d:'인유두종바이러스',v:'HPV',dose:'1차',s:{y:11},e:{y:12},label:'만 11~12세'},
+{g:'만 11세 6개월~13세',d:'인유두종바이러스',v:'HPV',dose:'2차',s:{y:11,m:6},e:{y:13},label:'1차 후 6~12개월'}
+];
+const GROUP_ORDER=['출생 시','생후 4주 이내','1개월','2개월','4개월','6개월','6~18개월','12~15개월','12~23개월','15~18개월','18~41개월','24~35개월','만 4~6세','만 6세','만 11~12세','만 11세 6개월~13세','만 12세','인플루엔자 매년'];
+function el(id){return document.getElementById(id)}
+function pad(n){return String(n).padStart(2,'0')}
+function ymd(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}
+function koDate(d){return `${d.getFullYear()}.${pad(d.getMonth()+1)}.${pad(d.getDate())}`}
+function addDate(base,o){let y=base.getFullYear()+(o.y||0),m=base.getMonth()+(o.m||0),day=base.getDate();y+=Math.floor(m/12);m=((m%12)+12)%12;const last=new Date(y,m+1,0).getDate();const d=new Date(y,m,Math.min(day,last));if(o.d)d.setDate(d.getDate()+o.d);return d}
+function startOfDay(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate())}
+function selected(name){return document.querySelector(`input[name="${name}"]:checked`).value}
+function ageText(birth,today){let y=today.getFullYear()-birth.getFullYear(),m=today.getMonth()-birth.getMonth(),d=today.getDate()-birth.getDate();if(d<0){m--;d+=new Date(today.getFullYear(),today.getMonth(),0).getDate()}if(m<0){y--;m+=12}if(y<0)return '생년월일을 확인하세요';if(y>=1)return `만 ${y}세 ${m}개월`;return `${m}개월 ${d}일`}
+function makeInfluenza(birth){const rows=[{g:'인플루엔자 매년',d:'인플루엔자',v:'IIV',dose:'첫 접종 가능',s:{m:6},e:{m:6},label:'생후 6개월부터'}];for(let y=1;y<=13;y++){rows.push({g:'인플루엔자 매년',d:'인플루엔자',v:'IIV',dose:`만 ${y}세`,s:{y},e:{y},label:'매년 접종'})}return rows}
+function scheduleRows(birth){const rota=selected('rotaType'),je=selected('jeType');return [...VACCINES,...makeInfluenza(birth)].filter(x=>!x.type||x.type===rota||x.type===je).map(x=>{const start=addDate(birth,x.s),end=addDate(birth,x.e);return {...x,start,end}}).sort((a,b)=>a.start-b.start||a.end-b.end)}
+function statusOf(row,today){const t=startOfDay(today),s=startOfDay(row.start),e=startOfDay(row.end);if(t>e)return ['past','이미 지남'];if(t>=s&&t<=e)return ['current','지금 접종 시기입니다'];const diff=(s-t)/86400000;if(diff<=30)return ['soon','다가옴'];return ['future','예정']}
+function dateRange(row){return ymd(row.start)===ymd(row.end)?koDate(row.start):`${koDate(row.start)} ~ ${koDate(row.end)}`}
+function nextRow(rows,today){const current=rows.filter(r=>statusOf(r,today)[0]==='current').sort((a,b)=>a.end-b.end)[0];if(current)return current;return rows.filter(r=>startOfDay(r.end)>=startOfDay(today)).sort((a,b)=>a.start-b.start)[0]}
+function render(){const birth=new Date(el('birthDate').value+'T00:00:00');if(isNaN(birth)){return}const today=startOfDay(new Date());const rows=scheduleRows(birth);el('babyAge').textContent=ageText(birth,today);el('todayText').textContent=koDate(today);const next=nextRow(rows,today);el('nextVaccine').textContent=next?`${next.v} ${next.dose} (${dateRange(next)})`:'표시할 예정 접종 없음';const last=rows.reduce((a,b)=>a.end>b.end?a:b,rows[0]);el('completeDate').textContent=last?`${dateRange(last)} · ${last.v}`:'-';const grouped=new Map();for(const r of rows){if(!grouped.has(r.g))grouped.set(r.g,[]);grouped.get(r.g).push(r)}el('timeline').innerHTML=GROUP_ORDER.filter(g=>grouped.has(g)).map(g=>`<section class="month-group"><div class="month-title">${g}</div><div class="table-responsive"><table class="schedule-table"><thead><tr><th>백신명</th><th>차수</th><th>권장 접종 시기</th><th>상태</th></tr></thead><tbody>${grouped.get(g).map(r=>{const [cls,label]=statusOf(r,today);return `<tr class="row-${cls}"><td data-label="백신명"><strong>${r.v}</strong><br><span class="text-muted">${r.d}</span></td><td data-label="차수">${r.dose}</td><td data-label="권장 접종 시기">${r.label}<br><strong>${dateRange(r)}</strong></td><td data-label="상태"><span class="status ${cls}">${label}</span></td></tr>`}).join('')}</tbody></table></div></section>`).join('')}
+document.querySelectorAll('input').forEach(x=>x.addEventListener('input',render));
+document.querySelectorAll('input[type="radio"]').forEach(x=>x.addEventListener('change',render));
+el('printBtn').addEventListener('click',()=>window.print());
+el('birthDate').value=ymd(new Date());
+render();
+</script>
+</body>
+</html>

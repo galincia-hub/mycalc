@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>평수 계산기 - 평↔㎡ 변환 + 평당가 계산 | mycalc</title>
+<meta name="description" content="평수를 제곱미터로, 제곱미터를 평으로 즉시 변환. 아파트 평당 분양가·매매가 계산까지 한번에. 국민평형 변환표 제공.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul{justify-content:flex-end}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.page-hero{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 58%,#047857 100%);color:#fff;padding:1.75rem 0 1.5rem;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.045'%3E%3Cpath d='M8 48h48M16 56V24l16-12 16 12v32M24 56V38h16v18'/%3E%3Cpath d='M12 28h40'/%3E%3C/g%3E%3C/svg%3E")}
+.hero-content{position:relative}
+.breadcrumb-nav{font-size:.75rem;color:rgba(255,255,255,.7);margin-bottom:.5rem}
+.breadcrumb-nav a{color:rgba(255,255,255,.8);text-decoration:none}
+.breadcrumb-nav a:hover{color:#fff}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:3px 12px;font-size:.75rem;margin-bottom:.5rem}
+.page-hero h1{font-size:1.4rem;font-weight:800;margin:0 0 .3rem}
+.page-hero p{font-size:.83rem;opacity:.85;margin:0}
+.calc-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;margin-top:20px}
+@media(max-width:992px){.calc-grid{grid-template-columns:1fr}}
+.calc-card,.info-card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.card-title{font-size:.95rem;font-weight:800;color:#0f172a;margin-bottom:14px;display:flex;align-items:center;gap:8px;border-bottom:2px solid #e2e8f0;padding-bottom:10px}
+.form-label{font-weight:700;font-size:.82rem;color:#374151;margin-bottom:4px;display:block}
+.form-control,.form-select{font-size:.9rem;border-color:#d1d5db;border-radius:8px}
+.form-control:focus,.form-select:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+.input-group-text{background:#f1f5f9;border-color:#d1d5db;font-size:.82rem;color:#64748b;min-width:42px;justify-content:center}
+.big-input{font-size:1.6rem;font-weight:900;border:none;border-bottom:2px solid #3b82f6;border-radius:0;padding:6px 2px;background:transparent;color:#0f172a;width:100%;text-align:right;outline:none}
+.big-input:focus{border-bottom-color:#1e3a8a}
+.unit-label{font-size:.85rem;color:#64748b;font-weight:700;margin-left:8px;min-width:24px}
+.mode-group{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.mode-btn{position:relative;flex:1;min-width:120px}
+.mode-btn input{position:absolute;opacity:0;pointer-events:none}
+.mode-btn span{display:flex;align-items:center;justify-content:center;gap:6px;border:1.5px solid #d1d5db;background:#fff;border-radius:8px;padding:9px 10px;font-size:.82rem;font-weight:700;color:#475569;cursor:pointer;transition:all .15s}
+.mode-btn input:checked+span{border-color:#1e3a8a;background:#eff6ff;color:#1e3a8a}
+.quick-btns{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.quick-btn{font-size:.73rem;font-weight:700;padding:5px 10px;border-radius:6px;border:1px solid #d1d5db;background:#fff;color:#475569;cursor:pointer;transition:all .15s}
+.quick-btn:hover{border-color:#3b82f6;color:#1e3a8a;background:#eff6ff}
+.result-main{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:14px;padding:22px 24px;color:#fff;margin-top:16px}
+.result-main-title{font-size:.78rem;opacity:.75;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.result-value{font-size:2rem;font-weight:900;letter-spacing:-.4px;line-height:1.15}
+.result-unit{font-size:.95rem;font-weight:700;opacity:.8;margin-left:4px}
+.result-sub{font-size:.76rem;opacity:.72;margin-top:8px}
+.result-rows{display:flex;flex-direction:column;margin-top:16px}
+.result-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.12);font-size:.85rem}
+.result-row:last-child{border:none}
+.result-row-label{opacity:.8}
+.result-row-val{font-weight:800;text-align:right}
+.result-row.total{background:rgba(255,255,255,.12);border-radius:8px;padding:10px 12px;margin-top:6px}
+.result-row.total .result-row-label{opacity:1;font-weight:700}
+.result-row.total .result-row-val{font-size:1.1rem;color:#fde047}
+.muted-formula{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;margin-top:10px;font-size:.78rem;color:#64748b}
+.muted-formula strong{color:#1e3a8a}
+.area-type{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.table-card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.05);margin-top:16px}
+.info-table{margin-bottom:0}
+.info-table th{background:#f0f4ff;font-size:.78rem;color:#1e3a8a;white-space:nowrap}
+.info-table td{font-size:.8rem;vertical-align:middle}
+.table-note{font-size:.75rem;color:#64748b;margin:10px 0 0}
+.info-card{margin-top:16px}
+.info-card h2{font-size:1rem;font-weight:800;color:#0f172a;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.info-card p{font-size:.84rem;color:#475569;line-height:1.75;margin:0}
+.disclaimer{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.75rem;color:#713f12;margin-top:16px;display:flex;gap:8px;align-items:flex-start}
+footer{background:#1e3a8a;color:rgba(255,255,255,.65);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}
+footer a{color:rgba(255,255,255,.7);text-decoration:none}
+@media(max-width:576px){
+  .page-hero h1{font-size:1.2rem}
+  .big-input{font-size:1.32rem}
+  .result-value{font-size:1.65rem}
+  .calc-card,.table-card,.info-card{padding:16px}
+  .area-type{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../../tax/index.html">세금</a></li>
+<li><a href="../../work/index.html">급여·노동</a></li>
+<li><a href="../../tools/index.html">도구</a></li>
+<li><a href="../../realestate/index.html" class="on">부동산</a></li>
+<li><a href="../../money/index.html">금융·투자</a></li>
+<li><a href="../../student/index.html">학생</a></li>
+<li><a href="../../parent/index.html">학부모·육아</a></li>
+<li><a href="../../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="../pyeong/index.html" class="on mc-done">평수변환</a></li>
+<li><a href="../fee/index.html" class="mc-done">복비</a></li>
+<li><a href="../jeonwolse/index.html" class="mc-done">전월세전환</a></li>
+<li><a href="../maintenance/index.html" class="mc-done">관리비</a></li>
+<li><a href="../eviction/index.html" class="mc-done">명도비용</a></li>
+<li><span class="wip">LTV/DTI/DSR</span></li>
+<li><span class="wip">임대수익</span></li>
+<li><span class="wip">경매</span></li>
+<li><span class="wip">빌라수익률</span></li>
+<li><span class="wip">학군</span></li>
+</ul></div></div>
+</div>
+
+<div class="page-hero">
+  <div class="container hero-content">
+    <div class="breadcrumb-nav"><a href="../../index.html">홈</a> / <a href="../index.html">부동산</a> / 평수 계산기</div>
+    <div class="hero-badge"><i class="bi bi-rulers"></i> REL-09 · 평↔㎡ · 평당가</div>
+    <h1><i class="bi bi-house-gear me-2"></i>평수 계산기</h1>
+    <p>제곱미터와 평을 즉시 변환하고, 매매가·분양가 기준 평당 가격까지 계산합니다.</p>
+  </div>
+</div>
+
+<div class="container" style="padding-bottom:2rem">
+  <div class="calc-grid">
+    <section class="calc-card">
+      <div class="card-title"><i class="bi bi-arrow-left-right" style="color:#1e40af"></i> 평↔㎡ 변환기</div>
+      <label class="form-label" for="areaInput">면적 값</label>
+      <div class="d-flex align-items-baseline">
+        <input type="number" class="big-input" id="areaInput" value="84" min="0" step="0.01" inputmode="decimal" oninput="calcConvert()">
+        <span class="unit-label" id="inputUnit">㎡</span>
+      </div>
+      <div class="mode-group" aria-label="변환 방향">
+        <label class="mode-btn">
+          <input type="radio" name="convertMode" value="sqmToPyeong" checked onchange="calcConvert()">
+          <span><i class="bi bi-arrow-right"></i> ㎡→평</span>
+        </label>
+        <label class="mode-btn">
+          <input type="radio" name="convertMode" value="pyeongToSqm" onchange="calcConvert()">
+          <span><i class="bi bi-arrow-left"></i> 평→㎡</span>
+        </label>
+      </div>
+      <div class="quick-btns" aria-label="국민평형 퀵버튼">
+        <button class="quick-btn" onclick="setArea(59)">59㎡</button>
+        <button class="quick-btn" onclick="setArea(74)">74㎡</button>
+        <button class="quick-btn" onclick="setArea(84)">84㎡</button>
+        <button class="quick-btn" onclick="setArea(101)">101㎡</button>
+        <button class="quick-btn" onclick="setArea(114)">114㎡</button>
+        <button class="quick-btn" onclick="setArea(135)">135㎡</button>
+      </div>
+      <div class="result-main">
+        <div class="result-main-title"><i class="bi bi-check-circle"></i> 변환 결과</div>
+        <div><span class="result-value" id="convertedValue">25.41</span><span class="result-unit" id="convertedUnit">평</span></div>
+        <div class="result-sub" id="convertDesc">84㎡ × 0.3025 = 25.41평</div>
+      </div>
+      <div class="muted-formula"><strong>기준 상수:</strong> 1평 = 3.3058㎡ (400/121), 1㎡ = 0.3025평 (121/400)</div>
+    </section>
+
+    <section class="calc-card">
+      <div class="card-title"><i class="bi bi-cash-coin" style="color:#047857"></i> 평당가 계산기</div>
+      <div class="row g-3">
+        <div class="col-12">
+          <label class="form-label" for="priceInput">매매가/분양가</label>
+          <div class="input-group">
+            <input type="text" class="form-control" id="priceInput" value="1,000,000,000" inputmode="numeric" oninput="formatPriceInput();calcUnitPrice()">
+            <span class="input-group-text">원</span>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label" for="priceAreaInput">면적</label>
+          <div class="input-group">
+            <input type="number" class="form-control" id="priceAreaInput" value="84" min="0" step="0.01" inputmode="decimal" oninput="calcUnitPrice()">
+            <span class="input-group-text">㎡</span>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label">면적 기준</label>
+          <div class="area-type">
+            <label class="mode-btn">
+              <input type="radio" name="areaType" value="exclusive" checked onchange="calcUnitPrice()">
+              <span>전용면적</span>
+            </label>
+            <label class="mode-btn">
+              <input type="radio" name="areaType" value="supply" onchange="calcUnitPrice()">
+              <span>공급면적</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="result-main">
+        <div class="result-main-title"><i class="bi bi-graph-up"></i> 단가 계산 결과 <span id="areaBasisLabel">(전용면적 기준)</span></div>
+        <div class="result-rows">
+          <div class="result-row total"><span class="result-row-label">평당 가격</span><span class="result-row-val" id="pricePerPyeong">0원</span></div>
+          <div class="result-row"><span class="result-row-label">㎡당 가격</span><span class="result-row-val" id="pricePerSqm">0원</span></div>
+          <div class="result-row"><span class="result-row-label">환산 평수</span><span class="result-row-val" id="pricePyeong">0.00평</span></div>
+        </div>
+      </div>
+      <div class="muted-formula"><strong>공식:</strong> 평수 = 면적㎡ × 121/400, 평당가 = 매매가 ÷ 평수, ㎡당가 = 매매가 ÷ 면적㎡</div>
+    </section>
+  </div>
+
+  <section class="table-card">
+    <div class="card-title"><i class="bi bi-table" style="color:#1e40af"></i> 주요 아파트 면적 변환표</div>
+    <div class="table-responsive">
+      <table class="table table-bordered info-table">
+        <thead><tr><th>전용면적(㎡)</th><th>전용면적(평)</th><th>공급면적(㎡)</th><th>공급면적(평)</th><th>통칭</th></tr></thead>
+        <tbody>
+          <tr><td>49㎡</td><td>14.8평</td><td>59㎡</td><td>17.9평</td><td>15평형</td></tr>
+          <tr><td>59㎡</td><td>17.9평</td><td>74㎡</td><td>22.4평</td><td>18평형(국민평형 소형)</td></tr>
+          <tr><td>74㎡</td><td>22.4평</td><td>95㎡</td><td>28.7평</td><td>25평형</td></tr>
+          <tr><td>84㎡</td><td>25.4평</td><td>109㎡</td><td>33.0평</td><td>34평형(국민평형)</td></tr>
+          <tr><td>101㎡</td><td>30.6평</td><td>132㎡</td><td>39.9평</td><td>40평형</td></tr>
+          <tr><td>114㎡</td><td>34.5평</td><td>149㎡</td><td>45.1평</td><td>45평형</td></tr>
+          <tr><td>135㎡</td><td>40.9평</td><td>176㎡</td><td>53.3평</td><td>53평형</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="table-note">전용률 약 76~80% 기준이며, 단지·평면·공용면적 구성에 따라 실제 공급면적은 달라질 수 있습니다.</p>
+  </section>
+
+  <section class="info-card">
+    <h2><i class="bi bi-info-circle-fill" style="color:#1e40af"></i> 아파트 면적의 이해</h2>
+    <p>전용면적은 현관 안쪽에서 실제 거주하는 방, 거실, 주방, 욕실 등의 면적입니다. 공급면적은 전용면적에 계단·복도 등 주거 공용면적을 더한 면적으로 분양가나 평형 통칭에 자주 쓰입니다. 계약면적은 공급면적에 기타 공용면적까지 더한 전체 계약 기준이며, 서비스면적은 발코니처럼 전용면적에 포함되지 않는 추가 공간입니다.</p>
+  </section>
+
+  <div class="disclaimer"><i class="bi bi-info-circle flex-shrink-0 mt-1"></i><span>본 계산기는 참고용이며 실제 거래 시 계약서의 면적 표기를 확인하시기 바랍니다.</span></div>
+</div>
+
+<footer><div class="container">© 2025 mycalc · 참고용이며 법적 효력이 없습니다. | <a href="../../index.html">← 메인으로</a></div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const PYEONG_PER_SQM=121/400;
+const SQM_PER_PYEONG=400/121;
+function el(id){return document.getElementById(id)}
+function num(id){return parseFloat(el(id).value)||0}
+function fmtWon(n){return Math.round(n||0).toLocaleString('ko-KR')+'원'}
+function fmtMan(n){return Math.round((n||0)/10000).toLocaleString('ko-KR')+'만원'}
+function selected(name){return document.querySelector(`input[name="${name}"]:checked`).value}
+function priceValue(){return parseFloat(el('priceInput').value.replace(/[^\d]/g,''))||0}
+function calcConvert(){
+  const mode=selected('convertMode');
+  const value=num('areaInput');
+  let result,unit,desc,inputUnit;
+  if(mode==='sqmToPyeong'){
+    result=value*PYEONG_PER_SQM;
+    unit='평';
+    inputUnit='㎡';
+    desc=`${value.toLocaleString('ko-KR')}㎡ × 0.3025 = ${result.toFixed(2)}평`;
+  }else{
+    result=value*SQM_PER_PYEONG;
+    unit='㎡';
+    inputUnit='평';
+    desc=`${value.toLocaleString('ko-KR')}평 × 3.3058 = ${result.toFixed(2)}㎡`;
+  }
+  el('inputUnit').textContent=inputUnit;
+  el('convertedValue').textContent=result.toFixed(2);
+  el('convertedUnit').textContent=unit;
+  el('convertDesc').textContent=desc;
+}
+function setArea(value){
+  if(selected('convertMode')==='sqmToPyeong'){
+    el('areaInput').value=value;
+  }else{
+    el('areaInput').value=(value*PYEONG_PER_SQM).toFixed(2);
+  }
+  calcConvert();
+}
+function formatPriceInput(){
+  const clean=el('priceInput').value.replace(/[^\d]/g,'');
+  el('priceInput').value=clean?parseInt(clean,10).toLocaleString('ko-KR'):'';
+}
+function calcUnitPrice(){
+  const price=priceValue();
+  const area=num('priceAreaInput');
+  const basis=selected('areaType')==='exclusive'?'전용면적':'공급면적';
+  const pyeong=area*PYEONG_PER_SQM;
+  const perPyeong=pyeong>0?price/pyeong:0;
+  const perSqm=area>0?price/area:0;
+  el('pricePerPyeong').textContent=perPyeong>=10000000?fmtMan(perPyeong):fmtWon(perPyeong);
+  el('pricePerSqm').textContent=perSqm>=10000000?fmtMan(perSqm):fmtWon(perSqm);
+  el('pricePyeong').textContent=pyeong.toFixed(2)+'평';
+  el('areaBasisLabel').textContent=`(${basis} 기준)`;
+}
+document.querySelectorAll('input[name="convertMode"]').forEach(input=>input.addEventListener('change',calcConvert));
+calcConvert();
+calcUnitPrice();
+</script>
+</body>
+</html>

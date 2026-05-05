@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2025 4대보험 계산기 - 국민연금·건강보험·고용보험·산재보험</title>
+<meta name="description" content="월급여 또는 연봉을 입력하면 2025년 기준 국민연금, 건강보험, 장기요양보험, 고용보험, 산재보험료와 근로자·사업주 부담액을 자동 계산합니다.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul{justify-content:flex-end}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.page-hero{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 60%,#2563eb 100%);color:#fff;padding:1.75rem 0 1.5rem;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4z'/%3E%3C/g%3E%3C/svg%3E")}
+.hero-content{position:relative}
+.breadcrumb-nav{font-size:.75rem;color:rgba(255,255,255,.7);margin-bottom:.5rem}
+.breadcrumb-nav a{color:rgba(255,255,255,.8);text-decoration:none}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.75rem;margin-bottom:.5rem}
+.page-hero h1{font-size:1.4rem;font-weight:800;margin:0 0 .3rem}
+.page-hero p{font-size:.83rem;opacity:.85;margin:0}
+.gi-tabs-wrap{background:#fff;border-bottom:2px solid #e2e8f0}
+.gi-tabs{list-style:none;display:flex;overflow-x:auto;margin:0;padding:0 12px;-ms-overflow-style:none;scrollbar-width:none}
+.gi-tabs::-webkit-scrollbar{display:none}
+.gi-tabs li a{display:inline-block;padding:9px 13px;font-size:.82rem;font-weight:600;color:#64748b;text-decoration:none;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;margin-bottom:-2px}
+.gi-tabs li a:hover{color:#1e3a8a}
+.gi-tabs li a.cur{color:#1e3a8a;border-bottom-color:#1e3a8a;font-weight:700}
+.main-layout{display:grid;grid-template-columns:1fr;gap:16px;align-items:start;padding:16px 0 32px}
+.calc-card{background:#fff;border-radius:10px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden}
+.card-hd{display:flex;align-items:center;gap:10px;padding:14px 16px;background:#f0f7ff;border-bottom:1px solid #dbeafe}
+.card-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;background:#dbeafe;color:#1d4ed8}
+.card-title{font-weight:700;font-size:.9rem;color:#1e3a8a}
+.card-body{padding:16px}
+.form-label{font-weight:600;font-size:.8rem;color:#374151;margin-bottom:4px;display:block}
+.form-control,.form-select{font-size:.85rem;border-color:#d1d5db;border-radius:7px}
+.form-control:focus,.form-select:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+.input-group-text{background:#f1f5f9;border-color:#d1d5db;font-size:.8rem;color:#64748b;min-width:42px;justify-content:center}
+.form-text{font-size:.72rem;color:#64748b;margin-top:3px}
+.mode-options{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.mode-option{border:1px solid #dbeafe;border-radius:8px;padding:10px;background:#f8fafc}
+.mode-option .form-check-label{font-size:.8rem;font-weight:700;color:#334155}
+.result-panel{background:linear-gradient(160deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;color:#fff;padding:18px 20px;box-shadow:0 4px 20px rgba(30,58,138,.3)}
+.result-title{font-size:.88rem;font-weight:700;opacity:.85;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.result-final{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;padding-top:6px}
+.result-final-label{font-size:.82rem;opacity:.8}
+.result-final-val{font-size:1.45rem;font-weight:800;line-height:1.1}
+.side-row{border-top:1px solid rgba(255,255,255,.16);margin-top:10px;padding-top:9px;display:flex;justify-content:space-between;gap:12px;font-size:.78rem}
+.side-val{font-weight:800;text-align:right;color:#bfdbfe}
+.chart-wrap{position:relative;width:170px;height:170px;margin:14px auto 2px}
+.chart-center-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+.chart-center-title{font-size:.62rem;opacity:.75;margin-bottom:1px}
+.chart-center-val{font-size:.95rem;font-weight:800;line-height:1.1}
+.result-table,.compare-table{width:100%;border-collapse:collapse;font-size:.82rem}
+.result-table th,.compare-table th{background:#f8fafc;color:#475569;font-weight:700;border-bottom:1px solid #e2e8f0;padding:9px}
+.result-table td,.compare-table td{border-bottom:1px solid #f1f5f9;padding:9px;color:#334155}
+.result-table tr:last-child td,.compare-table tr:last-child td{border-bottom:none}
+.result-table .money,.compare-table .money{text-align:right;font-weight:800;color:#1e3a8a;white-space:nowrap}
+.worker-col{color:#1d4ed8!important}
+.employer-col{color:#047857!important}
+.summary-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:14px}
+.summary-card{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:10px;text-align:center}
+.summary-label{font-size:.68rem;color:#64748b;margin-bottom:3px}
+.summary-val{font-size:.9rem;font-weight:800;color:#1e3a8a}
+.notice{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.75rem;color:#713f12;margin-top:16px;display:flex;gap:8px;align-items:flex-start}
+footer{background:#1e3a8a;color:rgba(255,255,255,.65);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}
+footer a{color:rgba(255,255,255,.7);text-decoration:none}
+@media(min-width:992px){
+  .main-layout{grid-template-columns:1fr 340px}
+  .result-panel{position:sticky;top:96px}
+}
+@media(max-width:576px){
+  .page-hero h1{font-size:1.2rem}
+  .mode-options{grid-template-columns:1fr}
+  .summary-grid{grid-template-columns:1fr}
+  .chart-wrap{width:140px;height:140px}
+}
+</style>
+</head>
+<body>
+
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../../tax/index.html">세금</a></li>
+<li><a href="../index.html" class="on">급여·노동</a></li>
+<li><a href="../../tools/index.html">도구</a></li>
+<li><a href="../../realestate/index.html">부동산</a></li>
+<li><a href="../../money/index.html">금융·투자</a></li>
+<li><a href="../../student/index.html">학생</a></li>
+<li><a href="../../parent/index.html">학부모·육아</a></li>
+<li><a href="../../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="../annual-salary/index.html" class="mc-done">연봉계산기</a></li>
+<li><a href="../annual-salary-table/index.html" class="mc-done">실수령액표</a></li>
+<li><a href="../hourly-wage/index.html" class="mc-done">시급계산기</a></li>
+<li><a href="../minimum-wage/index.html" class="mc-done">최저임금</a></li>
+<li><a href="../insurance/index.html" class="on mc-done">4대보험</a></li>
+<li><a href="../severance/index.html" class="mc-done">퇴직금</a></li>
+<li><a href="../unemployment-benefit/index.html" class="mc-done">실업급여</a></li>
+<li><a href="../weekly-holiday-pay/index.html" class="mc-done">주휴수당</a></li>
+</ul></div></div>
+</div>
+
+<div class="page-hero">
+  <div class="container hero-content">
+    <div class="breadcrumb-nav"><a href="../../index.html">홈</a> / <a href="../index.html">급여·노동</a> / 4대보험 계산기</div>
+    <div class="hero-badge">2025년 하반기 기준 · 근로자/사업주 부담 분리</div>
+    <h1><i class="bi bi-shield-check me-2"></i>4대보험 계산기</h1>
+    <p>국민연금·건강보험·장기요양·고용보험·산재보험 부담액과 예상 실수령액을 계산합니다</p>
+  </div>
+</div>
+<div class="gi-tabs-wrap"><div class="container"><ul class="gi-tabs">
+<li><a href="index.html" class="cur">계산기</a></li>
+<li><a href="about.html">4대보험이란?</a></li>
+</ul></div></div>
+
+<div class="container">
+<div class="main-layout">
+<main>
+  <section class="calc-card">
+    <div class="card-hd"><span class="card-icon"><i class="bi bi-pencil-square"></i></span><span class="card-title">급여 정보 입력</span></div>
+    <div class="card-body">
+      <div class="mode-options mb-3">
+        <div class="mode-option">
+          <div class="form-check"><input class="form-check-input" type="radio" name="payMode" id="modeMonthly" value="monthly" checked><label class="form-check-label" for="modeMonthly">월급여 입력</label></div>
+          <div class="form-text">비과세 제외 보수월액 기준</div>
+        </div>
+        <div class="mode-option">
+          <div class="form-check"><input class="form-check-input" type="radio" name="payMode" id="modeAnnual" value="annual"><label class="form-check-label" for="modeAnnual">연봉 입력</label></div>
+          <div class="form-text">연봉 ÷ 12로 월급여 환산</div>
+        </div>
+      </div>
+      <div class="row g-3">
+        <div class="col-sm-6">
+          <label class="form-label" for="payInput">급여 금액</label>
+          <div class="input-group">
+            <input type="number" class="form-control" id="payInput" min="0" step="10000" placeholder="예) 3000000" inputmode="numeric">
+            <span class="input-group-text">원</span>
+          </div>
+          <div class="form-text" id="payModeHelp">월급여는 비과세 항목을 제외한 금액입니다.</div>
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label" for="workerType">근로자 구분</label>
+          <select class="form-select" id="workerType">
+            <option value="regular">정규직</option>
+            <option value="daily">일용직</option>
+            <option value="self">자영업자</option>
+          </select>
+          <div class="form-text">일용직·자영업자는 실제 가입 요건이 달라질 수 있습니다.</div>
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label" for="employerRate">사업주 고용보험 추가요율</label>
+          <select class="form-select" id="employerRate">
+            <option value="0.0025">150인 미만: 0.25%</option>
+            <option value="0.0045">150인 이상 우선지원: 0.45%</option>
+            <option value="0.0065">150~1,000인 미만: 0.65%</option>
+            <option value="0.0085">1,000인 이상 등: 0.85%</option>
+          </select>
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label" for="incomeTax">소득세·지방소득세</label>
+          <div class="input-group">
+            <input type="number" class="form-control" id="incomeTax" min="0" step="1000" placeholder="선택 입력" inputmode="numeric">
+            <span class="input-group-text">원</span>
+          </div>
+          <div class="form-text">간이세액표 계산은 별도입니다. 미입력 시 0원으로 계산합니다.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="calc-card mt-3">
+    <div class="card-hd"><span class="card-icon"><i class="bi bi-table"></i></span><span class="card-title">계산 결과</span></div>
+    <div class="table-responsive">
+      <table class="result-table">
+        <thead><tr><th>항목</th><th class="text-end worker-col">근로자 부담</th><th class="text-end employer-col">사업주 부담</th></tr></thead>
+        <tbody id="resultBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="calc-card mt-3">
+    <div class="card-hd"><span class="card-icon"><i class="bi bi-bar-chart-line"></i></span><span class="card-title">급여 구간별 비교</span></div>
+    <div class="table-responsive">
+      <table class="compare-table">
+        <thead><tr><th>월급여</th><th class="text-end">근로자 4대보험</th><th class="text-end">사업주 부담</th><th class="text-end">예상 실수령액</th></tr></thead>
+        <tbody id="compareBody"></tbody>
+      </table>
+    </div>
+  </section>
+  <div class="notice"><i class="bi bi-info-circle"></i><div>본 계산기는 2025년 하반기 일반 근로자 기준의 모의계산입니다. 실제 보험료는 가입 요건, 신고 보수월액, 사업장 규모, 업종별 산재보험료율, 소득세 간이세액표에 따라 달라질 수 있습니다.</div></div>
+</main>
+
+<aside>
+  <div class="result-panel">
+    <div class="result-title"><i class="bi bi-pie-chart-fill"></i>실수령액 계산 결과</div>
+    <div class="result-final"><span class="result-final-label">월 실수령액</span><span class="result-final-val" id="netPay">₩0</span></div>
+    <div class="side-row"><span>근로자 부담분</span><span class="side-val" id="workerTotal">₩0</span></div>
+    <div class="side-row"><span>사업주 부담분</span><span class="side-val" id="employerTotal">₩0</span></div>
+    <div class="chart-wrap">
+      <canvas id="insuranceChart"></canvas>
+      <div class="chart-center-label"><div class="chart-center-title">근로자 부담률</div><div class="chart-center-val" id="workerRate">0.0%</div></div>
+    </div>
+  </div>
+  <div class="summary-grid">
+    <div class="summary-card"><div class="summary-label">월급여 환산</div><div class="summary-val" id="monthlyPay">₩0</div></div>
+    <div class="summary-card"><div class="summary-label">연간 총 보험료</div><div class="summary-val" id="annualInsurance">₩0</div></div>
+    <div class="summary-card"><div class="summary-label">국민연금 기준소득</div><div class="summary-val" id="pensionBase">₩0</div></div>
+    <div class="summary-card"><div class="summary-label">요율 기준</div><div class="summary-val">2025 하반기</div></div>
+  </div>
+</aside>
+</div>
+</div>
+
+<footer><div class="container">© 2026 mycalc · 본 사이트는 참고용이며 법적 효력이 없습니다. | <a href="../../index.html">메인으로</a></div></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script>
+const RATES = {
+  pensionWorker: 0.045,
+  pensionEmployer: 0.045,
+  pensionMin: 400000,
+  pensionMax: 6370000,
+  healthWorker: 0.03545,
+  healthEmployer: 0.03545,
+  longCare: 0.1295,
+  employmentWorker: 0.009,
+  employmentEmployer: 0.009,
+  industrialAverage: 0.0147
+};
+let chart;
+function el(id){ return document.getElementById(id); }
+function readNumber(id){ return parseFloat(el(id).value) || 0; }
+function fmt(value){ return '₩' + Math.round(value || 0).toLocaleString('ko-KR'); }
+function selectedPayMode(){ return document.querySelector('input[name="payMode"]:checked').value; }
+function getMonthlyPay(){
+  const value = readNumber('payInput');
+  return selectedPayMode() === 'annual' ? value / 12 : value;
+}
+function calcIncomeTaxSimple(monthly){
+  return readNumber('incomeTax');
+}
+function calcInsurance(monthly){
+  const employerExtra = parseFloat(el('employerRate').value) || 0.0025;
+  const workerType = el('workerType').value;
+  const pensionBase = Math.min(Math.max(monthly, RATES.pensionMin), RATES.pensionMax);
+  const pensionWorker = workerType === 'daily' ? 0 : pensionBase * RATES.pensionWorker;
+  const pensionEmployer = workerType === 'daily' ? 0 : pensionBase * RATES.pensionEmployer;
+  const healthWorker = monthly * RATES.healthWorker;
+  const healthEmployer = monthly * RATES.healthEmployer;
+  const careWorker = healthWorker * RATES.longCare;
+  const careEmployer = healthEmployer * RATES.longCare;
+  const employmentWorker = workerType === 'self' ? 0 : monthly * RATES.employmentWorker;
+  const employmentEmployer = workerType === 'self' ? 0 : monthly * (RATES.employmentEmployer + employerExtra);
+  const industrialEmployer = workerType === 'self' ? 0 : monthly * RATES.industrialAverage;
+  const incomeTax = calcIncomeTaxSimple(monthly);
+  const workerItems = [
+    ['국민연금', pensionWorker, pensionEmployer],
+    ['건강보험', healthWorker, healthEmployer],
+    ['장기요양보험', careWorker, careEmployer],
+    ['고용보험', employmentWorker, employmentEmployer],
+    ['산재보험', 0, industrialEmployer]
+  ];
+  const workerTotal = workerItems.reduce((sum, row) => sum + row[1], 0);
+  const employerTotal = workerItems.reduce((sum, row) => sum + row[2], 0);
+  const net = Math.max(monthly - workerTotal - incomeTax, 0);
+  return {monthly, pensionBase, workerItems, workerTotal, employerTotal, incomeTax, net};
+}
+function renderResult(r){
+  el('resultBody').innerHTML = r.workerItems.map(row => `<tr><td>${row[0]}</td><td class="money worker-col">${fmt(row[1])}</td><td class="money employer-col">${fmt(row[2])}</td></tr>`).join('') +
+    `<tr><td>소득세·지방소득세</td><td class="money worker-col">${fmt(r.incomeTax)}</td><td class="money employer-col">₩0</td></tr>` +
+    `<tr><td><strong>합계</strong></td><td class="money worker-col">${fmt(r.workerTotal)}</td><td class="money employer-col">${fmt(r.employerTotal)}</td></tr>`;
+  el('netPay').textContent = fmt(r.net);
+  el('workerTotal').textContent = fmt(r.workerTotal);
+  el('employerTotal').textContent = fmt(r.employerTotal);
+  el('monthlyPay').textContent = fmt(r.monthly);
+  el('annualInsurance').textContent = fmt((r.workerTotal + r.employerTotal) * 12);
+  el('pensionBase').textContent = fmt(r.pensionBase);
+  const rate = r.monthly > 0 ? r.workerTotal / r.monthly * 100 : 0;
+  el('workerRate').textContent = rate.toFixed(1) + '%';
+  if(chart){
+    chart.data.datasets[0].data = r.workerItems.map(row => Math.round(row[1]));
+    chart.update();
+  }
+}
+function renderCompare(){
+  const rows = [2000000,3000000,4000000,5000000,6000000].map(pay => {
+    const r = calcInsurance(pay);
+    return `<tr><td>${fmt(pay)}</td><td class="money worker-col">${fmt(r.workerTotal)}</td><td class="money employer-col">${fmt(r.employerTotal)}</td><td class="money">${fmt(r.net)}</td></tr>`;
+  });
+  el('compareBody').innerHTML = rows.join('');
+}
+function calc(){
+  const r = calcInsurance(getMonthlyPay());
+  el('payModeHelp').textContent = selectedPayMode() === 'annual' ? '연봉을 12개월로 나눈 월급여 기준으로 계산합니다.' : '월급여는 비과세 항목을 제외한 금액입니다.';
+  renderResult(r);
+  renderCompare();
+}
+function initChart(){
+  chart = new Chart(el('insuranceChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['국민연금','건강보험','장기요양','고용보험','산재보험'],
+      datasets: [{data: [1,1,1,1,0], backgroundColor: ['#3b82f6','#22c55e','#14b8a6','#f59e0b','#ef4444'], borderWidth: 0, hoverOffset: 4}]
+    },
+    options: {cutout: '66%', plugins: {legend: {display: false}}, responsive: true, maintainAspectRatio: false}
+  });
+}
+document.querySelectorAll('input,select').forEach(node => node.addEventListener('input', calc));
+document.querySelectorAll('input,select').forEach(node => node.addEventListener('change', calc));
+initChart();
+calc();
+</script>
+</body>
+</html>

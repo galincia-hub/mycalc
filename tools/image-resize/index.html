@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>이미지 크기 변환 - 리사이즈 & 포맷 변환 무료 | mycalc</title>
+<meta name="description" content="이미지 크기를 무료로 변환하세요. 픽셀 직접 입력, 비율 조정, SNS 프리셋(인스타·유튜브·카카오) 지원. JPG/PNG/WEBP 포맷 변환. 서버 전송 없는 안전한 온라인 도구.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.page-hero{background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 100%);color:#fff;padding:1.75rem 0 1.5rem;position:relative;overflow:hidden}.page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='.045'%3E%3Cpath d='M10 10h18v18H10zM36 10h18v18H36zM10 36h18v18H10zM36 42h18v8H36zM42 36h6v20h-6z'/%3E%3C/g%3E%3C/svg%3E")}.hero-content{position:relative}.breadcrumb-mini{display:flex;gap:6px;align-items:center;font-size:.75rem;opacity:.86;margin-bottom:.5rem}.breadcrumb-mini a{color:#fff;text-decoration:none}.hero-badge{display:inline-block;background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.75rem;margin-bottom:.5rem}.page-hero h1{font-size:1.4rem;font-weight:800;margin:0 0 .3rem}.page-hero p{font-size:.83rem;opacity:.88;margin:0}
+.gi-tabs-wrap{background:#fff;border-bottom:2px solid #e2e8f0}.gi-tabs{list-style:none;display:flex;overflow-x:auto;margin:0;padding:0 12px;-ms-overflow-style:none;scrollbar-width:none}.gi-tabs::-webkit-scrollbar{display:none}.gi-tabs li a,.gi-tabs li span{display:inline-block;padding:9px 13px;font-size:.82rem;font-weight:600;color:#64748b;text-decoration:none;border-bottom:2px solid transparent;white-space:nowrap;margin-bottom:-2px}.gi-tabs li a.cur{color:#1e3a8a;border-bottom-color:#1e3a8a;font-weight:700}.gi-tabs li span{opacity:.45}
+.main-layout{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start;padding:16px 0 32px}@media(max-width:991px){.main-layout{grid-template-columns:1fr}}
+.input-card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden}.input-card-header{padding:14px 16px;border-bottom:1px solid #dbeafe;background:#f0f7ff}.input-card-title{font-size:.88rem;font-weight:700;color:#0f172a;display:flex;align-items:center;gap:7px}.input-card-body{padding:16px}
+.drop-zone{border:2px dashed #93c5fd;background:#f8fbff;border-radius:12px;padding:26px 18px;text-align:center;transition:all .15s}.drop-zone.dragover{border-color:#2563eb;background:#eff6ff}.drop-icon{width:58px;height:58px;border-radius:18px;background:#dbeafe;color:#1e40af;display:flex;align-items:center;justify-content:center;font-size:1.7rem;margin:0 auto 12px}.drop-title{font-size:.95rem;font-weight:800;color:#0f172a;margin-bottom:5px}.drop-desc{font-size:.8rem;color:#64748b;line-height:1.55;margin-bottom:14px}.file-btn{display:inline-flex;align-items:center;gap:6px;background:#1e3a8a;color:#fff;border:0;border-radius:8px;padding:9px 18px;font-size:.85rem;font-weight:800}.support-text{font-size:.73rem;color:#64748b;margin-top:10px}
+.preview-wrap{margin-top:16px;background:#0f172a;border-radius:12px;min-height:230px;display:flex;align-items:center;justify-content:center;overflow:hidden}.preview-wrap img{max-width:100%;max-height:420px;display:none}.preview-empty{color:rgba(255,255,255,.68);font-size:.82rem;text-align:center;line-height:1.5;padding:30px}.image-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.meta-pill{background:#f8fafc;border:1px solid #e2e8f0;border-radius:20px;padding:5px 10px;font-size:.75rem;color:#475569}
+.section-divider{border:none;border-top:1px solid #f1f5f9;margin:16px 0}.form-label{font-weight:600;font-size:.8rem;color:#374151;margin-bottom:4px;display:block}.form-control,.form-select{font-size:.85rem;border-color:#d1d5db;border-radius:7px}.form-control:focus,.form-select:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.mode-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:#f1f5f9;border-radius:8px;padding:4px;margin-bottom:14px}.mode-tab{border:0;background:transparent;color:#64748b;border-radius:6px;padding:8px 6px;font-size:.78rem;font-weight:700}.mode-tab.active{background:#fff;color:#1e3a8a;box-shadow:0 1px 4px rgba(0,0,0,.12)}.mode-panel{display:none}.mode-panel.active{display:block}
+.lock-row{display:flex;align-items:center;justify-content:space-between;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 12px;margin-bottom:12px}.form-switch .form-check-input{width:42px;height:22px}.range-row{display:grid;grid-template-columns:1fr 86px;gap:10px;align-items:center}.estimate-box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 12px;color:#1e3a8a;font-size:.8rem;font-weight:700;margin-top:12px}
+.format-options{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.format-options input{display:none}.format-options label{border:1.5px solid #d1d5db;border-radius:8px;padding:9px;text-align:center;font-size:.82rem;font-weight:800;color:#475569;cursor:pointer}.format-options input:checked+label{border-color:#2563eb;background:#eff6ff;color:#1e3a8a}.quality-wrap{margin-top:12px}
+.result-panel{background:linear-gradient(160deg,#1e3a8a 0%,#2563eb 100%);border-radius:12px;color:#fff;padding:18px 20px;position:sticky;top:96px;box-shadow:0 4px 20px rgba(30,58,138,.35)}.result-title{font-size:.88rem;font-weight:700;opacity:.9;margin-bottom:12px;display:flex;align-items:center;gap:6px}.result-preview{background:#fff;border-radius:12px;min-height:220px;display:flex;align-items:center;justify-content:center;padding:12px;margin-bottom:12px;overflow:hidden}.result-preview img{max-width:100%;max-height:320px}.empty-note{font-size:.76rem;color:#64748b;text-align:center;line-height:1.45}.info-card{background:rgba(255,255,255,.13);border-radius:8px;padding:9px 10px;margin-bottom:10px}.info-row{display:flex;justify-content:space-between;gap:10px;font-size:.76rem;padding:3px 0}.info-row span:first-child{opacity:.76}.info-row span:last-child{font-weight:800;text-align:right}.result-actions{display:grid;gap:8px}.btn-download{background:#fff;color:#1e3a8a;border:0;font-weight:800;border-radius:8px;padding:10px 12px}.btn-download:disabled{opacity:.6;cursor:not-allowed}.btn-reset{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.28);font-weight:700;border-radius:8px;padding:9px 12px}
+.disclaimer{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.75rem;color:#713f12;margin-top:16px;display:flex;gap:8px;align-items:flex-start}.content-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px 20px;margin-top:16px;box-shadow:0 1px 4px rgba(0,0,0,.04)}.content-card h2{font-size:1rem;font-weight:800;color:#0f172a;margin:0 0 10px}.size-table{width:100%;border-collapse:collapse;font-size:.8rem}.size-table th{background:#f0f7ff;color:#1e3a8a}.size-table th,.size-table td{border:1px solid #e2e8f0;padding:8px}.accordion-button{font-size:.85rem;font-weight:700}.accordion-body{font-size:.82rem;color:#475569;line-height:1.6}
+footer{background:#0f172a;color:rgba(255,255,255,.65);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}footer a{color:rgba(255,255,255,.7);text-decoration:none}
+@media(max-width:576px){.page-hero h1{font-size:1.2rem}.mode-tabs,.format-options{grid-template-columns:1fr}.range-row{grid-template-columns:1fr}.preview-wrap{min-height:190px}}
+</style>
+</head>
+<body>
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../../tax/index.html">세금</a></li><li><a href="../../work/index.html">급여·노동</a></li><li><a href="../../tools/index.html" class="on">도구</a></li><li><a href="../../realestate/index.html">부동산</a></li><li><a href="../../money/index.html">금융·투자</a></li><li><a href="../../student/index.html">학생</a></li><li><a href="../../parent/index.html">학부모·육아</a></li><li><a href="../../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="../qr-code/index.html" class="mc-done">QR코드</a></li>
+<li><a href="../color-picker/index.html" class="mc-done">컬러피커</a></li>
+<li><a href="../image-resize/index.html" class="on mc-done">이미지리사이즈</a></li>
+<li><a href="../pdf-merge/index.html" class="mc-done">PDF합치기</a></li>
+<li><a href="../pdf-split/index.html" class="mc-done">PDF분할</a></li>
+<li><a href="../signature/index.html" class="mc-done">서명생성</a></li>
+<li><a href="../watermark/index.html" class="mc-done">워터마크</a></li>
+<li><span class="wip">배경제거</span></li>
+<li><span class="wip">HWP변환</span></li>
+<li><span class="wip">증명사진</span></li>
+<li><span class="wip">동영상GIF</span></li>
+<li><span class="wip">오디오추출</span></li>
+<li><span class="wip">PDF압축</span></li>
+<li><span class="wip">목업</span></li>
+<li><span class="wip">엑셀이미지</span></li>
+<li><span class="wip">TTS</span></li>
+</ul></div></div>
+</div>
+
+<div class="page-hero"><div class="container hero-content">
+  <div class="breadcrumb-mini"><a href="../../index.html">mycalc</a><i class="bi bi-chevron-right"></i><a href="../index.html">도구</a><i class="bi bi-chevron-right"></i><span>이미지 크기 & 포맷 변환기</span></div>
+  <div class="hero-badge"><i class="bi bi-shield-check me-1"></i>서버 전송 없음 · Canvas 변환</div>
+  <h1>이미지 크기 & 포맷 변환기</h1>
+  <p>이미지를 원하는 해상도로 리사이즈하고 JPG, PNG, WEBP로 변환합니다.</p>
+</div></div>
+
+<div class="gi-tabs-wrap"><div class="container"><ul class="gi-tabs"><li><a href="index.html" class="cur">이미지 변환</a></li><li><span>사용 가이드</span></li></ul></div></div>
+
+<div class="container"><div class="main-layout">
+<div>
+<div class="input-card"><div class="input-card-header"><div class="input-card-title"><i class="bi bi-aspect-ratio" style="color:#1e3a8a"></i> 이미지 업로드 및 변환 설정</div></div>
+<div class="input-card-body">
+  <div class="drop-zone" id="dropZone">
+    <div class="drop-icon"><i class="bi bi-cloud-arrow-up"></i></div>
+    <div class="drop-title">이미지를 드래그하거나 붙여넣으세요</div>
+    <div class="drop-desc">JPG, PNG, WEBP, GIF, BMP 파일을 선택하거나 Ctrl+V / Cmd+V로 이미지를 붙여넣을 수 있습니다.</div>
+    <button class="file-btn" type="button" id="fileBtn"><i class="bi bi-folder2-open"></i> 파일 선택</button>
+    <input id="fileInput" type="file" accept="image/*" hidden>
+    <div class="support-text">이미지는 브라우저에서만 처리되며 서버로 전송되지 않습니다.</div>
+  </div>
+  <div class="preview-wrap"><div class="preview-empty" id="previewEmpty"><i class="bi bi-image d-block fs-2 mb-2"></i>업로드한 이미지가 여기에 표시됩니다.</div><img id="sourcePreview" alt="원본 이미지 미리보기"></div>
+  <div class="image-meta"><span class="meta-pill" id="fileName">파일: 없음</span><span class="meta-pill" id="fileSize">크기: -</span><span class="meta-pill" id="imageInfo">해상도/포맷: -</span></div>
+
+  <hr class="section-divider">
+  <div class="mode-tabs">
+    <button class="mode-tab active" data-mode="pixel" type="button">픽셀 직접 입력</button>
+    <button class="mode-tab" data-mode="percent" type="button">비율(%)</button>
+    <button class="mode-tab" data-mode="preset" type="button">SNS 프리셋</button>
+  </div>
+
+  <div class="lock-row">
+    <div><strong>비율 잠금</strong><div class="text-muted" style="font-size:.74rem">가로/세로 비율을 유지합니다.</div></div>
+    <div class="form-check form-switch m-0"><input class="form-check-input" type="checkbox" role="switch" id="lockRatio" checked></div>
+  </div>
+
+  <div class="mode-panel active" id="pixelPanel">
+    <div class="row g-2">
+      <div class="col-sm-6"><label class="form-label" for="targetWidth">너비(px)</label><input class="form-control resize-input" id="targetWidth" type="number" min="1" step="1" placeholder="1080"></div>
+      <div class="col-sm-6"><label class="form-label" for="targetHeight">높이(px)</label><input class="form-control resize-input" id="targetHeight" type="number" min="1" step="1" placeholder="1080"></div>
+    </div>
+  </div>
+  <div class="mode-panel" id="percentPanel">
+    <label class="form-label" for="percentRange">비율(%)</label>
+    <div class="range-row"><input class="form-range resize-input" id="percentRange" type="range" min="10" max="200" value="100"><input class="form-control resize-input" id="percentInput" type="number" min="10" max="200" value="100"></div>
+  </div>
+  <div class="mode-panel" id="presetPanel">
+    <label class="form-label" for="presetSelect">SNS 프리셋</label>
+    <select class="form-select resize-input" id="presetSelect">
+      <option value="1080x1080">인스타그램 피드: 1080x1080</option>
+      <option value="1080x1920">인스타그램 스토리/릴스: 1080x1920</option>
+      <option value="1280x720">유튜브 썸네일: 1280x720</option>
+      <option value="820x312">페이스북 커버: 820x312</option>
+      <option value="640x640">카카오톡 프로필: 640x640</option>
+      <option value="1200x630">네이버 블로그 대표: 1200x630</option>
+      <option value="1500x500">트위터(X) 헤더: 1500x500</option>
+      <option value="413x531">여권사진: 413x531</option>
+    </select>
+  </div>
+  <div class="estimate-box" id="targetInfo">리사이즈 후 예상 해상도: 이미지를 업로드하세요.</div>
+
+  <hr class="section-divider">
+  <label class="form-label">출력 포맷</label>
+  <div class="format-options">
+    <div><input id="fmtJpg" name="format" type="radio" value="image/jpeg" checked><label for="fmtJpg">JPG</label></div>
+    <div><input id="fmtPng" name="format" type="radio" value="image/png"><label for="fmtPng">PNG</label></div>
+    <div><input id="fmtWebp" name="format" type="radio" value="image/webp"><label for="fmtWebp">WEBP</label></div>
+  </div>
+  <div class="quality-wrap" id="qualityWrap">
+    <label class="form-label" for="qualityRange">품질: <span id="qualityText">85</span>%</label>
+    <div class="range-row"><input class="form-range resize-input" id="qualityRange" type="range" min="10" max="100" value="85"><input class="form-control resize-input" id="qualityInput" type="number" min="10" max="100" value="85"></div>
+  </div>
+</div></div>
+
+<div class="disclaimer"><i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1"></i><span>대용량 이미지는 기기 성능에 따라 변환 시간이 걸릴 수 있습니다. 확대 리사이즈는 원본보다 선명도가 떨어질 수 있습니다.</span></div>
+
+<div class="content-card"><h2>이미지 크기 변환이 필요한 이유</h2><p class="mb-0">웹 업로드, SNS 게시, 이메일 첨부에는 권장 해상도와 용량이 있습니다. 이미지 리사이즈와 포맷 변환으로 품질과 파일 크기를 맞출 수 있습니다.</p></div>
+<div class="content-card"><h2>SNS별 권장 이미지 크기</h2><div class="table-responsive"><table class="size-table"><thead><tr><th>용도</th><th>권장 크기</th></tr></thead><tbody><tr><td>인스타그램 피드</td><td>1080x1080</td></tr><tr><td>인스타그램 스토리/릴스</td><td>1080x1920</td></tr><tr><td>유튜브 썸네일</td><td>1280x720</td></tr><tr><td>페이스북 커버</td><td>820x312</td></tr><tr><td>카카오톡 프로필</td><td>640x640</td></tr><tr><td>네이버 블로그 대표</td><td>1200x630</td></tr><tr><td>트위터(X) 헤더</td><td>1500x500</td></tr><tr><td>여권사진</td><td>413x531</td></tr></tbody></table></div></div>
+<div class="content-card"><h2>FAQ</h2><div class="accordion" id="resizeFaq">
+  <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">이미지 품질이 떨어지나요?</button></h3><div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#resizeFaq"><div class="accordion-body">축소는 대체로 품질을 유지하지만, 원본보다 크게 확대하면 화질 저하가 생길 수 있습니다.</div></div></div>
+  <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">업로드한 이미지가 서버에 저장되나요?</button></h3><div id="faq2" class="accordion-collapse collapse" data-bs-parent="#resizeFaq"><div class="accordion-body">아니오. 이미지는 브라우저 Canvas에서만 처리되며 서버로 전송되지 않습니다.</div></div></div>
+  <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">JPG vs PNG vs WEBP 어떤 걸 써야 하나요?</button></h3><div id="faq3" class="accordion-collapse collapse" data-bs-parent="#resizeFaq"><div class="accordion-body">사진은 JPG, 투명 배경은 PNG, 웹 최적화와 용량 절감은 WEBP가 적합합니다.</div></div></div>
+</div></div>
+</div>
+
+<div><div class="result-panel">
+  <div class="result-title"><i class="bi bi-file-earmark-image-fill"></i> 변환 결과</div>
+  <div class="result-preview" id="resultPreview"><div class="empty-note">이미지를 업로드하면 변환 미리보기가 표시됩니다.</div></div>
+  <div class="info-card">
+    <div class="info-row"><span>원본</span><span id="originalInfo">-</span></div>
+    <div class="info-row"><span>변환</span><span id="convertedInfo">-</span></div>
+    <div class="info-row"><span>예상 용량</span><span id="convertedSize">-</span></div>
+  </div>
+  <div class="result-actions"><button class="btn-download" id="downloadBtn" type="button" disabled><i class="bi bi-download me-1"></i> 다운로드</button><button class="btn-reset" id="resetBtn" type="button"><i class="bi bi-arrow-counterclockwise me-1"></i> 다시 변환</button></div>
+</div></div>
+</div></div>
+
+<footer><div class="container">© 2026 mycalc · 이미지는 서버로 전송되지 않습니다. | <a href="../../index.html">메인으로</a></div></footer>
+<canvas id="workCanvas" hidden></canvas>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const state = { img:null, file:null, objectUrl:'', resultUrl:'', mode:'pixel', ratio:1, lastBlob:null };
+const mimeExt = { 'image/jpeg':'jpg', 'image/png':'png', 'image/webp':'webp' };
+function fmtBytes(n){ if(!n) return '-'; if(n>=1048576) return (n/1048576).toFixed(1)+'MB'; if(n>=1024) return Math.round(n/1024)+'KB'; return n+'B'; }
+function formatName(m){ if(m==='image/jpeg') return 'JPG'; if(m==='image/png') return 'PNG'; if(m==='image/webp') return 'WEBP'; return (m||'IMAGE').split('/').pop().toUpperCase(); }
+function selectedFormat(){ return document.querySelector('input[name="format"]:checked').value; }
+function selectedQuality(){ return Math.max(10, Math.min(100, parseInt($('qualityInput').value || $('qualityRange').value,10))) / 100; }
+function setQuality(v){ v=Math.max(10,Math.min(100,parseInt(v||85,10))); $('qualityRange').value=v; $('qualityInput').value=v; $('qualityText').textContent=v; }
+function targetSize(){
+  if(!state.img) return {w:0,h:0};
+  if(state.mode==='percent'){ const p=(parseInt($('percentInput').value,10)||100)/100; return {w:Math.max(1,Math.round(state.img.naturalWidth*p)),h:Math.max(1,Math.round(state.img.naturalHeight*p))}; }
+  if(state.mode==='preset'){ const [w,h]=$('presetSelect').value.split('x').map(Number); return {w,h}; }
+  return {w:Math.max(1,parseInt($('targetWidth').value,10)||state.img.naturalWidth),h:Math.max(1,parseInt($('targetHeight').value,10)||state.img.naturalHeight)};
+}
+function updateTargetInfo(){ const t=targetSize(); $('targetInfo').textContent = state.img ? `리사이즈 후 예상 해상도: ${t.w.toLocaleString()} x ${t.h.toLocaleString()}px` : '리사이즈 후 예상 해상도: 이미지를 업로드하세요.'; }
+function setMode(mode){
+  state.mode=mode;
+  document.querySelectorAll('.mode-tab').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));
+  document.querySelectorAll('.mode-panel').forEach(p=>p.classList.remove('active'));
+  $(mode+'Panel').classList.add('active');
+  scheduleConvert();
+}
+function syncRatio(changed){
+  if(!state.img || !$('lockRatio').checked || state.mode!=='pixel') return;
+  if(changed==='w'){ const w=parseInt($('targetWidth').value,10); if(w>0) $('targetHeight').value=Math.max(1,Math.round(w/state.ratio)); }
+  if(changed==='h'){ const h=parseInt($('targetHeight').value,10); if(h>0) $('targetWidth').value=Math.max(1,Math.round(h*state.ratio)); }
+}
+function loadFile(file){
+  if(!file || !file.type.startsWith('image/')) return;
+  if(state.objectUrl) URL.revokeObjectURL(state.objectUrl);
+  state.file=file; state.objectUrl=URL.createObjectURL(file);
+  const img=new Image();
+  img.onload=()=>{ state.img=img; state.ratio=img.naturalWidth/img.naturalHeight; $('sourcePreview').src=state.objectUrl; $('sourcePreview').style.display='block'; $('previewEmpty').style.display='none'; $('fileName').textContent='파일: '+file.name; $('fileSize').textContent='크기: '+fmtBytes(file.size); $('imageInfo').textContent=`해상도/포맷: ${img.naturalWidth}x${img.naturalHeight} / ${formatName(file.type)}`; $('targetWidth').value=img.naturalWidth; $('targetHeight').value=img.naturalHeight; $('originalInfo').textContent=`${img.naturalWidth}x${img.naturalHeight} / ${formatName(file.type)} / ${fmtBytes(file.size)}`; scheduleConvert(); };
+  img.src=state.objectUrl;
+}
+let timer=null;
+function scheduleConvert(){ updateTargetInfo(); clearTimeout(timer); timer=setTimeout(convertImage,180); }
+function convertImage(){
+  if(!state.img){ $('downloadBtn').disabled=true; return; }
+  const t=targetSize(), fmt=selectedFormat(), canvas=$('workCanvas'), c=canvas.getContext('2d');
+  canvas.width=t.w; canvas.height=t.h; c.clearRect(0,0,t.w,t.h);
+  if(fmt==='image/jpeg'){ c.fillStyle='#fff'; c.fillRect(0,0,t.w,t.h); }
+  c.imageSmoothingEnabled=true; c.imageSmoothingQuality='high'; c.drawImage(state.img,0,0,t.w,t.h);
+  const quality = fmt==='image/png' ? undefined : selectedQuality();
+  canvas.toBlob(blob=>{
+    if(!blob) return;
+    if(state.resultUrl) URL.revokeObjectURL(state.resultUrl);
+    state.lastBlob=blob; state.resultUrl=URL.createObjectURL(blob);
+    $('resultPreview').innerHTML=`<img src="${state.resultUrl}" alt="변환된 이미지 미리보기">`;
+    const qText = fmt==='image/png' ? '' : ` (${Math.round(selectedQuality()*100)}%)`;
+    $('convertedInfo').textContent=`${t.w}x${t.h} / ${formatName(fmt)}${qText}`;
+    $('convertedSize').textContent=fmtBytes(blob.size);
+    $('downloadBtn').disabled=false;
+  }, fmt, quality);
+}
+function resetSettings(){
+  if(state.img){ $('targetWidth').value=state.img.naturalWidth; $('targetHeight').value=state.img.naturalHeight; }
+  $('lockRatio').checked=true; $('percentRange').value=100; $('percentInput').value=100; $('presetSelect').selectedIndex=0; $('fmtJpg').checked=true; setQuality(85); setMode('pixel');
+}
+function download(){
+  if(!state.lastBlob) return;
+  const fmt=selectedFormat(), a=document.createElement('a');
+  a.href=state.resultUrl; a.download=`mycalc-resized.${mimeExt[fmt]||'jpg'}`; document.body.appendChild(a); a.click(); a.remove();
+}
+$('fileBtn').addEventListener('click',()=>$('fileInput').click());
+$('fileInput').addEventListener('change',()=>loadFile($('fileInput').files[0]));
+['dragenter','dragover'].forEach(n=>$('dropZone').addEventListener(n,e=>{e.preventDefault();$('dropZone').classList.add('dragover');}));
+['dragleave','drop'].forEach(n=>$('dropZone').addEventListener(n,e=>{e.preventDefault();$('dropZone').classList.remove('dragover');}));
+$('dropZone').addEventListener('drop',e=>loadFile(e.dataTransfer.files[0]));
+document.addEventListener('paste',e=>{const item=[...e.clipboardData.items].find(i=>i.type.startsWith('image/')); if(item) loadFile(item.getAsFile());});
+document.querySelectorAll('.mode-tab').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));
+$('targetWidth').addEventListener('input',()=>{syncRatio('w');scheduleConvert();});
+$('targetHeight').addEventListener('input',()=>{syncRatio('h');scheduleConvert();});
+$('percentRange').addEventListener('input',()=>{$('percentInput').value=$('percentRange').value;scheduleConvert();});
+$('percentInput').addEventListener('input',()=>{$('percentRange').value=$('percentInput').value;scheduleConvert();});
+$('presetSelect').addEventListener('change',scheduleConvert);
+$('lockRatio').addEventListener('change',scheduleConvert);
+document.querySelectorAll('input[name="format"]').forEach(r=>r.addEventListener('change',()=>{const png=selectedFormat()==='image/png'; $('qualityWrap').style.display=png?'none':'block'; if(selectedFormat()==='image/webp') setQuality(80); else if(selectedFormat()==='image/jpeg') setQuality(85); scheduleConvert();}));
+$('qualityRange').addEventListener('input',()=>{setQuality($('qualityRange').value);scheduleConvert();});
+$('qualityInput').addEventListener('input',()=>{setQuality($('qualityInput').value);scheduleConvert();});
+$('downloadBtn').addEventListener('click',download); $('resetBtn').addEventListener('click',resetSettings);
+</script>
+</body>
+</html>

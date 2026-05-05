@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>이미지 색상 추출기 - HEX, RGB 컬러 코드 무료 추출 | mycalc</title>
+<meta name="description" content="이미지에서 색상 코드를 무료로 추출하세요. 클릭 한 번으로 HEX, RGB, HSL, CMYK 값 확인. 주요 색상 팔레트 자동 생성. 서버 전송 없는 안전한 온라인 컬러피커.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.page-hero{background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 100%);color:#fff;padding:1.75rem 0 1.5rem;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='.045'%3E%3Cpath d='M10 10h18v18H10zM14 14v10h10V14zM36 10h18v18H36zM40 14v10h10V14zM10 36h18v18H10zM14 40v10h10V40zM36 40h8v8h-8zM48 36h6v6h-6zM46 50h10v4H46z'/%3E%3C/g%3E%3C/svg%3E")}
+.hero-content{position:relative}
+.breadcrumb-mini{display:flex;gap:6px;align-items:center;font-size:.75rem;opacity:.86;margin-bottom:.5rem}
+.breadcrumb-mini a{color:#fff;text-decoration:none}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.75rem;margin-bottom:.5rem}
+.page-hero h1{font-size:1.4rem;font-weight:800;margin:0 0 .3rem}
+.page-hero p{font-size:.83rem;opacity:.88;margin:0}
+.gi-tabs-wrap{background:#fff;border-bottom:2px solid #e2e8f0}
+.gi-tabs{list-style:none;display:flex;overflow-x:auto;margin:0;padding:0 12px;-ms-overflow-style:none;scrollbar-width:none}
+.gi-tabs::-webkit-scrollbar{display:none}
+.gi-tabs li a,.gi-tabs li span{display:inline-block;padding:9px 13px;font-size:.82rem;font-weight:600;color:#64748b;text-decoration:none;border-bottom:2px solid transparent;white-space:nowrap;margin-bottom:-2px}
+.gi-tabs li a.cur{color:#1e3a8a;border-bottom-color:#1e3a8a;font-weight:700}
+.gi-tabs li span{opacity:.45}
+.main-layout{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start;padding:16px 0 32px}
+@media(max-width:991px){.main-layout{grid-template-columns:1fr}}
+.input-card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden}
+.input-card-header{padding:14px 16px;border-bottom:1px solid #dbeafe;background:#f0f7ff}
+.input-card-title{font-size:.88rem;font-weight:700;color:#0f172a;display:flex;align-items:center;gap:7px}
+.input-card-body{padding:16px}
+.drop-zone{border:2px dashed #93c5fd;background:#f8fbff;border-radius:12px;padding:28px 18px;text-align:center;transition:all .15s}
+.drop-zone.dragover{border-color:#2563eb;background:#eff6ff}
+.drop-icon{width:58px;height:58px;border-radius:18px;background:#dbeafe;color:#1e40af;display:flex;align-items:center;justify-content:center;font-size:1.7rem;margin:0 auto 12px}
+.drop-title{font-size:.95rem;font-weight:800;color:#0f172a;margin-bottom:5px}
+.drop-desc{font-size:.8rem;color:#64748b;line-height:1.55;margin-bottom:14px}
+.file-btn{display:inline-flex;align-items:center;gap:6px;background:#1e3a8a;color:#fff;border:0;border-radius:8px;padding:9px 18px;font-size:.85rem;font-weight:800}
+.support-text{font-size:.73rem;color:#64748b;margin-top:10px}
+.canvas-wrap{position:relative;margin-top:16px;background:#0f172a;border-radius:12px;min-height:280px;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:none}
+#imageCanvas{display:none;max-width:100%;height:auto;cursor:crosshair}
+.canvas-empty{color:rgba(255,255,255,.68);font-size:.82rem;text-align:center;line-height:1.5;padding:30px}
+.loupe{position:absolute;width:132px;height:132px;border:3px solid #fff;border-radius:50%;box-shadow:0 8px 28px rgba(0,0,0,.38);pointer-events:none;display:none;z-index:5;background:#fff;overflow:hidden}
+.loupe canvas{width:100%;height:100%;image-rendering:pixelated}
+.loupe::before,.loupe::after{content:'';position:absolute;background:#ef4444;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2}
+.loupe::before{width:1px;height:100%}
+.loupe::after{height:1px;width:100%}
+.image-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.meta-pill{background:#f8fafc;border:1px solid #e2e8f0;border-radius:20px;padding:5px 10px;font-size:.75rem;color:#475569}
+.result-panel{background:linear-gradient(160deg,#1e3a8a 0%,#2563eb 100%);border-radius:12px;color:#fff;padding:18px 20px;position:sticky;top:96px;box-shadow:0 4px 20px rgba(30,58,138,.35)}
+.result-title{font-size:.88rem;font-weight:700;opacity:.9;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.color-preview{height:128px;border-radius:12px;background:#ffffff;border:1px solid rgba(255,255,255,.5);box-shadow:inset 0 0 0 1px rgba(0,0,0,.08);margin-bottom:12px}
+.code-list{display:grid;gap:7px;margin-bottom:14px}
+.code-row{display:grid;grid-template-columns:44px 1fr 34px;align-items:center;gap:7px;background:rgba(255,255,255,.13);border-radius:8px;padding:7px}
+.code-label{font-size:.7rem;font-weight:800;opacity:.76}
+.code-value{font-size:.76rem;word-break:break-all}
+.copy-btn,.mini-copy{border:0;border-radius:7px;background:#fff;color:#1e3a8a;font-weight:800;height:30px;display:flex;align-items:center;justify-content:center}
+.panel-section{border-top:1px solid rgba(255,255,255,.22);padding-top:12px;margin-top:12px}
+.panel-subtitle{font-size:.78rem;font-weight:800;opacity:.88;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.history-grid,.palette-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.swatch{height:38px;border-radius:8px;border:1px solid rgba(255,255,255,.45);cursor:pointer;position:relative;overflow:hidden}
+.swatch span{position:absolute;inset:auto 0 0 0;background:rgba(15,23,42,.72);font-size:.58rem;color:#fff;text-align:center;padding:2px 1px}
+.palette-row{display:grid;grid-template-columns:38px 1fr 30px;align-items:center;gap:7px;background:rgba(255,255,255,.13);border-radius:8px;padding:6px;margin-bottom:7px}
+.palette-chip{width:38px;height:28px;border-radius:6px;border:1px solid rgba(255,255,255,.45)}
+.palette-code{font-size:.75rem;font-weight:700}
+.btn-reset{width:100%;background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.28);font-weight:700;border-radius:8px;padding:9px 12px;margin-top:10px}
+.empty-note{font-size:.75rem;color:rgba(255,255,255,.72);line-height:1.45}
+.toast-copy{font-size:.72rem;color:#bfdbfe;min-height:18px;margin-top:6px}
+.disclaimer{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.75rem;color:#713f12;margin-top:16px;display:flex;gap:8px;align-items:flex-start}
+.content-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px 20px;margin-top:16px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.content-card h2{font-size:1rem;font-weight:800;color:#0f172a;margin:0 0 10px}
+.use-list{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:0;padding:0;list-style:none}
+.use-list li{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;font-size:.8rem;color:#475569}
+.accordion-button{font-size:.85rem;font-weight:700}
+.accordion-body{font-size:.82rem;color:#475569;line-height:1.6}
+footer{background:#0f172a;color:rgba(255,255,255,.65);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}
+footer a{color:rgba(255,255,255,.7);text-decoration:none}
+@media(max-width:576px){
+  .page-hero h1{font-size:1.2rem}
+  .canvas-wrap{min-height:220px}
+  .use-list{grid-template-columns:1fr}
+  .history-grid{grid-template-columns:repeat(4,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../../tax/index.html">세금</a></li>
+<li><a href="../../work/index.html">급여·노동</a></li>
+<li><a href="../../tools/index.html" class="on">도구</a></li>
+<li><a href="../../realestate/index.html">부동산</a></li>
+<li><a href="../../money/index.html">금융·투자</a></li>
+<li><a href="../../student/index.html">학생</a></li>
+<li><a href="../../parent/index.html">학부모·육아</a></li>
+<li><a href="../../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="../qr-code/index.html" class="mc-done">QR코드</a></li>
+<li><a href="../color-picker/index.html" class="on mc-done">컬러피커</a></li>
+<li><a href="../image-resize/index.html" class="mc-done">이미지리사이즈</a></li>
+<li><a href="../pdf-merge/index.html" class="mc-done">PDF합치기</a></li>
+<li><a href="../pdf-split/index.html" class="mc-done">PDF분할</a></li>
+<li><a href="../signature/index.html" class="mc-done">서명생성</a></li>
+<li><a href="../watermark/index.html" class="mc-done">워터마크</a></li>
+<li><span class="wip">배경제거</span></li>
+<li><span class="wip">HWP변환</span></li>
+<li><span class="wip">증명사진</span></li>
+<li><span class="wip">동영상GIF</span></li>
+<li><span class="wip">오디오추출</span></li>
+<li><span class="wip">PDF압축</span></li>
+<li><span class="wip">목업</span></li>
+<li><span class="wip">엑셀이미지</span></li>
+<li><span class="wip">TTS</span></li>
+</ul></div></div>
+</div>
+
+<div class="page-hero">
+  <div class="container hero-content">
+    <div class="breadcrumb-mini"><a href="../../index.html">mycalc</a><i class="bi bi-chevron-right"></i><a href="../index.html">도구</a><i class="bi bi-chevron-right"></i><span>이미지 색상 추출기</span></div>
+    <div class="hero-badge"><i class="bi bi-shield-check me-1"></i>서버 전송 없음 · Canvas 처리</div>
+    <h1>이미지 색상 추출기</h1>
+    <p>이미지를 업로드하고 원하는 픽셀을 클릭해 HEX, RGB, HSL, CMYK 값을 확인합니다.</p>
+  </div>
+</div>
+
+<div class="gi-tabs-wrap"><div class="container"><ul class="gi-tabs">
+<li><a href="index.html" class="cur">색상 추출기</a></li>
+<li><span>사용 가이드</span></li>
+</ul></div></div>
+
+<div class="container">
+<div class="main-layout">
+<div>
+<div class="input-card">
+  <div class="input-card-header">
+    <div class="input-card-title"><i class="bi bi-eyedropper" style="color:#1e3a8a"></i> 이미지 업로드 및 픽셀 선택</div>
+  </div>
+  <div class="input-card-body">
+    <div class="drop-zone" id="dropZone">
+      <div class="drop-icon"><i class="bi bi-cloud-arrow-up"></i></div>
+      <div class="drop-title">이미지를 드래그하거나 붙여넣으세요</div>
+      <div class="drop-desc">JPG, PNG, WEBP, GIF 파일을 선택하거나 Ctrl+V / Cmd+V로 스크린샷을 붙여넣을 수 있습니다.</div>
+      <button class="file-btn" type="button" id="fileBtn"><i class="bi bi-folder2-open"></i> 파일 선택</button>
+      <input id="fileInput" type="file" accept="image/*" hidden>
+      <div class="support-text">이미지는 브라우저 메모리에서만 처리되며 서버로 전송되지 않습니다.</div>
+    </div>
+
+    <div class="canvas-wrap" id="canvasWrap">
+      <div class="canvas-empty" id="canvasEmpty"><i class="bi bi-image d-block fs-2 mb-2"></i>업로드한 이미지가 여기에 표시됩니다.</div>
+      <canvas id="imageCanvas"></canvas>
+      <div class="loupe" id="loupe"><canvas id="loupeCanvas" width="132" height="132"></canvas></div>
+    </div>
+
+    <div class="image-meta">
+      <span class="meta-pill" id="fileName">파일: 없음</span>
+      <span class="meta-pill" id="imageSize">크기: -</span>
+      <span class="meta-pill" id="cursorPos">좌표: -</span>
+    </div>
+  </div>
+</div>
+
+<div class="disclaimer">
+  <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1"></i>
+  <span>CMYK 값은 RGB 화면 색상을 기준으로 변환한 근사값입니다. 정확한 인쇄 색상 관리는 전문 컬러 프로파일 도구를 사용하세요.</span>
+</div>
+
+<div class="content-card">
+  <h2>이미지 색상 추출기란?</h2>
+  <p class="mb-0">이미지에서 원하는 픽셀의 색상 코드를 추출해 HEX, RGB, HSL, CMYK로 보여주는 브라우저 기반 컬러피커입니다.</p>
+</div>
+
+<div class="content-card">
+  <h2>활용법</h2>
+  <ul class="use-list">
+    <li><strong>브랜드 컬러 분석</strong><br>로고와 배너 색상 확인</li>
+    <li><strong>웹디자인</strong><br>시안 색상 코드 추출</li>
+    <li><strong>인쇄물 색상 매칭</strong><br>대략적인 CMYK 확인</li>
+    <li><strong>SNS 콘텐츠</strong><br>이미지 톤 팔레트 구성</li>
+  </ul>
+</div>
+
+<div class="content-card">
+  <h2>FAQ</h2>
+  <div class="accordion" id="colorFaq">
+    <div class="accordion-item">
+      <h3 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">업로드한 이미지가 서버에 저장되나요?</button></h3>
+      <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#colorFaq"><div class="accordion-body">아니오. 이미지는 서버로 전송되지 않고 브라우저의 Canvas에서만 처리됩니다.</div></div>
+    </div>
+    <div class="accordion-item">
+      <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">CMYK 값은 정확한가요?</button></h3>
+      <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#colorFaq"><div class="accordion-body">근사값입니다. 정확한 인쇄용 색상은 출력 조건과 프로파일에 따라 달라지므로 전문 도구를 권장합니다.</div></div>
+    </div>
+    <div class="accordion-item">
+      <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">모바일에서도 사용할 수 있나요?</button></h3>
+      <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#colorFaq"><div class="accordion-body">가능합니다. 모바일 브라우저에서 갤러리 사진을 업로드하고 터치로 색상을 선택할 수 있습니다.</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div>
+  <div class="result-panel">
+    <div class="result-title"><i class="bi bi-palette-fill"></i> 선택된 색상</div>
+    <div class="color-preview" id="colorPreview"></div>
+    <div class="code-list">
+      <div class="code-row"><div class="code-label">HEX</div><div class="code-value" id="hexValue">#FFFFFF</div><button class="copy-btn" data-copy="hexValue" type="button"><i class="bi bi-copy"></i></button></div>
+      <div class="code-row"><div class="code-label">RGB</div><div class="code-value" id="rgbValue">rgb(255, 255, 255)</div><button class="copy-btn" data-copy="rgbValue" type="button"><i class="bi bi-copy"></i></button></div>
+      <div class="code-row"><div class="code-label">HSL</div><div class="code-value" id="hslValue">hsl(0, 0%, 100%)</div><button class="copy-btn" data-copy="hslValue" type="button"><i class="bi bi-copy"></i></button></div>
+      <div class="code-row"><div class="code-label">CMYK</div><div class="code-value" id="cmykValue">cmyk(0, 0, 0, 0)</div><button class="copy-btn" data-copy="cmykValue" type="button"><i class="bi bi-copy"></i></button></div>
+    </div>
+    <div class="toast-copy" id="copyStatus"></div>
+
+    <div class="panel-section">
+      <div class="panel-subtitle"><i class="bi bi-clock-history"></i> 추출 히스토리</div>
+      <div class="history-grid" id="historyGrid"><div class="empty-note">아직 선택한 색상이 없습니다.</div></div>
+      <button class="btn-reset" id="clearHistory" type="button"><i class="bi bi-trash3 me-1"></i> 히스토리 초기화</button>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-subtitle"><i class="bi bi-grid-3x3-gap-fill"></i> 주요 색상 팔레트</div>
+      <div id="paletteList"><div class="empty-note">이미지를 업로드하면 자동으로 추출됩니다.</div></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+<footer><div class="container">© 2026 mycalc · 이미지는 서버로 전송되지 않습니다. | <a href="../../index.html">메인으로</a></div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const fileInput = document.getElementById('fileInput');
+const fileBtn = document.getElementById('fileBtn');
+const dropZone = document.getElementById('dropZone');
+const canvasWrap = document.getElementById('canvasWrap');
+const canvas = document.getElementById('imageCanvas');
+const ctx = canvas.getContext('2d', { willReadFrequently: true });
+const loupe = document.getElementById('loupe');
+const loupeCanvas = document.getElementById('loupeCanvas');
+const loupeCtx = loupeCanvas.getContext('2d');
+const state = { loaded: false, display: { width: 0, height: 0 }, history: [], selected: { r: 255, g: 255, b: 255 } };
+
+function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+function componentToHex(n) { return n.toString(16).padStart(2, '0').toUpperCase(); }
+function rgbToHex({ r, g, b }) { return `#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`; }
+function rgbToText(c) { return `rgb(${c.r}, ${c.g}, ${c.b})`; }
+
+function rgbToHsl({ r, g, b }) {
+  r /= 255; g /= 255; b /= 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  let h = 0, s = 0;
+  const l = (max + min) / 2;
+  if (max !== min) {
+    const d = max - min;
+    s = l > .5 ? d / (2 - max - min) : d / (max + min);
+    if (max === r) h = (g - b) / d + (g < b ? 6 : 0);
+    else if (max === g) h = (b - r) / d + 2;
+    else h = (r - g) / d + 4;
+    h *= 60;
+  }
+  return `hsl(${Math.round(h)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`;
+}
+
+function rgbToCmyk({ r, g, b }) {
+  const rr = r / 255, gg = g / 255, bb = b / 255;
+  const k = 1 - Math.max(rr, gg, bb);
+  if (k === 1) return 'cmyk(0, 0, 0, 100)';
+  const c = (1 - rr - k) / (1 - k);
+  const m = (1 - gg - k) / (1 - k);
+  const y = (1 - bb - k) / (1 - k);
+  return `cmyk(${Math.round(c * 100)}, ${Math.round(m * 100)}, ${Math.round(y * 100)}, ${Math.round(k * 100)})`;
+}
+
+function setSelectedColor(color, saveHistory = true) {
+  state.selected = color;
+  const hex = rgbToHex(color);
+  document.getElementById('colorPreview').style.background = hex;
+  document.getElementById('hexValue').textContent = hex;
+  document.getElementById('rgbValue').textContent = rgbToText(color);
+  document.getElementById('hslValue').textContent = rgbToHsl(color);
+  document.getElementById('cmykValue').textContent = rgbToCmyk(color);
+  if (saveHistory) addHistory(color);
+}
+
+function addHistory(color) {
+  const hex = rgbToHex(color);
+  state.history = state.history.filter(item => rgbToHex(item) !== hex);
+  state.history.unshift(color);
+  state.history = state.history.slice(0, 10);
+  renderHistory();
+}
+
+function renderHistory() {
+  const grid = document.getElementById('historyGrid');
+  if (!state.history.length) {
+    grid.innerHTML = '<div class="empty-note">아직 선택한 색상이 없습니다.</div>';
+    return;
+  }
+  grid.innerHTML = '';
+  state.history.forEach(color => {
+    const hex = rgbToHex(color);
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'swatch';
+    btn.style.background = hex;
+    btn.title = hex;
+    btn.innerHTML = `<span>${hex}</span>`;
+    btn.addEventListener('click', () => setSelectedColor(color, false));
+    grid.appendChild(btn);
+  });
+}
+
+function canvasPoint(evt) {
+  const rect = canvas.getBoundingClientRect();
+  const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+  const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
+  const x = clamp(Math.floor((clientX - rect.left) * canvas.width / rect.width), 0, canvas.width - 1);
+  const y = clamp(Math.floor((clientY - rect.top) * canvas.height / rect.height), 0, canvas.height - 1);
+  return { x, y, clientX, clientY, rect };
+}
+
+function pixelAt(x, y) {
+  const data = ctx.getImageData(x, y, 1, 1).data;
+  return { r: data[0], g: data[1], b: data[2] };
+}
+
+function updateLoupe(evt) {
+  if (!state.loaded) return;
+  if (evt.touches) evt.preventDefault();
+  const p = canvasPoint(evt);
+  document.getElementById('cursorPos').textContent = `좌표: ${p.x}, ${p.y}`;
+  const sample = 7;
+  const sx = clamp(p.x - Math.floor(sample / 2), 0, Math.max(0, canvas.width - sample));
+  const sy = clamp(p.y - Math.floor(sample / 2), 0, Math.max(0, canvas.height - sample));
+  loupeCtx.imageSmoothingEnabled = false;
+  loupeCtx.clearRect(0, 0, loupeCanvas.width, loupeCanvas.height);
+  loupeCtx.drawImage(canvas, sx, sy, sample, sample, 0, 0, loupeCanvas.width, loupeCanvas.height);
+  const left = clamp(p.clientX - p.rect.left + 18, 0, p.rect.width - 132);
+  const top = clamp(p.clientY - p.rect.top - 150, 0, p.rect.height - 132);
+  loupe.style.left = `${left}px`;
+  loupe.style.top = `${top}px`;
+  loupe.style.display = 'block';
+}
+
+function pickColor(evt) {
+  if (!state.loaded) return;
+  evt.preventDefault();
+  const p = canvasPoint(evt);
+  setSelectedColor(pixelAt(p.x, p.y));
+}
+
+function renderImage(img, name) {
+  const maxWidth = 1200;
+  const scale = Math.min(1, maxWidth / img.naturalWidth);
+  canvas.width = Math.max(1, Math.round(img.naturalWidth * scale));
+  canvas.height = Math.max(1, Math.round(img.naturalHeight * scale));
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  canvas.style.display = 'block';
+  document.getElementById('canvasEmpty').style.display = 'none';
+  state.loaded = true;
+  document.getElementById('fileName').textContent = `파일: ${name || '붙여넣은 이미지'}`;
+  document.getElementById('imageSize').textContent = `크기: ${img.naturalWidth} x ${img.naturalHeight}px`;
+  extractPalette();
+}
+
+function loadFile(file) {
+  if (!file || !file.type.startsWith('image/')) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    const img = new Image();
+    img.onload = () => renderImage(img, file.name);
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function extractPalette() {
+  const buckets = new Map();
+  const step = Math.max(1, Math.floor(Math.sqrt((canvas.width * canvas.height) / 12000)));
+  const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+  for (let y = 0; y < canvas.height; y += step) {
+    for (let x = 0; x < canvas.width; x += step) {
+      const i = (y * canvas.width + x) * 4;
+      if (data[i + 3] < 128) continue;
+      const r = Math.round(data[i] / 32) * 32;
+      const g = Math.round(data[i + 1] / 32) * 32;
+      const b = Math.round(data[i + 2] / 32) * 32;
+      const key = `${clamp(r,0,255)},${clamp(g,0,255)},${clamp(b,0,255)}`;
+      const current = buckets.get(key) || { count: 0, r: 0, g: 0, b: 0 };
+      current.count += 1;
+      current.r += data[i];
+      current.g += data[i + 1];
+      current.b += data[i + 2];
+      buckets.set(key, current);
+    }
+  }
+  const colors = [...buckets.values()]
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 5)
+    .map(item => ({ r: Math.round(item.r / item.count), g: Math.round(item.g / item.count), b: Math.round(item.b / item.count) }));
+  renderPalette(colors);
+  if (colors[0]) setSelectedColor(colors[0], false);
+}
+
+function renderPalette(colors) {
+  const list = document.getElementById('paletteList');
+  if (!colors.length) {
+    list.innerHTML = '<div class="empty-note">주요 색상을 찾지 못했습니다.</div>';
+    return;
+  }
+  list.innerHTML = '';
+  colors.forEach(color => {
+    const hex = rgbToHex(color);
+    const row = document.createElement('div');
+    row.className = 'palette-row';
+    row.innerHTML = `<button class="palette-chip" type="button" style="background:${hex}" title="${hex}"></button><div class="palette-code">${hex}</div><button class="mini-copy" type="button" title="복사"><i class="bi bi-copy"></i></button>`;
+    row.querySelector('.palette-chip').addEventListener('click', () => setSelectedColor(color));
+    row.querySelector('.mini-copy').addEventListener('click', () => copyText(hex));
+    list.appendChild(row);
+  });
+}
+
+async function copyText(text) {
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      const area = document.createElement('textarea');
+      area.value = text;
+      area.style.position = 'fixed';
+      area.style.opacity = '0';
+      document.body.appendChild(area);
+      area.select();
+      document.execCommand('copy');
+      area.remove();
+    }
+    document.getElementById('copyStatus').textContent = `${text} 복사됨`;
+  } catch {
+    document.getElementById('copyStatus').textContent = '클립보드 복사 권한을 확인하세요.';
+  }
+  window.setTimeout(() => document.getElementById('copyStatus').textContent = '', 1800);
+}
+
+fileBtn.addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', () => loadFile(fileInput.files[0]));
+['dragenter','dragover'].forEach(name => dropZone.addEventListener(name, event => {
+  event.preventDefault();
+  dropZone.classList.add('dragover');
+}));
+['dragleave','drop'].forEach(name => dropZone.addEventListener(name, event => {
+  event.preventDefault();
+  dropZone.classList.remove('dragover');
+}));
+dropZone.addEventListener('drop', event => loadFile(event.dataTransfer.files[0]));
+document.addEventListener('paste', event => {
+  const item = [...event.clipboardData.items].find(i => i.type.startsWith('image/'));
+  if (item) loadFile(item.getAsFile());
+});
+canvas.addEventListener('mousemove', updateLoupe);
+canvas.addEventListener('mouseleave', () => loupe.style.display = 'none');
+canvas.addEventListener('click', pickColor);
+canvas.addEventListener('touchstart', event => { updateLoupe(event); pickColor(event); }, { passive: false });
+canvas.addEventListener('touchmove', updateLoupe, { passive: false });
+document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', () => copyText(document.getElementById(btn.dataset.copy).textContent));
+});
+document.getElementById('clearHistory').addEventListener('click', () => {
+  state.history = [];
+  renderHistory();
+});
+renderHistory();
+setSelectedColor(state.selected, false);
+</script>
+</body>
+</html>

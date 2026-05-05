@@ -1,0 +1,320 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>주식 양도소득세 계산기 | mycalc</title>
+<meta name="description" content="주식 양도소득세 계산기. 대주주 판정, 비상장주식 세율, 소액주주 비과세 안내.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t1-ul{justify-content:flex-end}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.gi-tabs-wrap{background:#fff;border-bottom:2px solid #e2e8f0}
+.gi-tabs{list-style:none;display:flex;overflow-x:auto;margin:0;padding:0 12px;-ms-overflow-style:none;scrollbar-width:none}
+.gi-tabs::-webkit-scrollbar{display:none}
+.gi-tabs li a{display:inline-block;padding:9px 13px;font-size:.82rem;font-weight:600;color:#64748b;text-decoration:none;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;margin-bottom:-2px}
+.gi-tabs li a:hover{color:#1e3a8a}
+.gi-tabs li a.cur{color:#1e3a8a;border-bottom-color:#1e3a8a;font-weight:700}
+.page-hero{background:linear-gradient(135deg,#1e3a8a 0%,#065f46 60%,#047857 100%);color:#fff;padding:1.75rem 0 1.5rem}
+.page-hero h1{font-size:1.4rem;font-weight:800;margin:0 0 .3rem}
+.page-hero p{font-size:.83rem;opacity:.85;margin:0}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.75rem;margin-bottom:.5rem}
+.main-layout{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start;padding:16px 0 32px}
+@media(max-width:991px){.main-layout{grid-template-columns:1fr}}
+.input-card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.card-title{font-size:.88rem;font-weight:800;color:#0f172a;margin-bottom:14px;display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:2px solid #e2e8f0}
+.form-label{font-weight:600;font-size:.8rem;color:#374151;margin-bottom:4px;display:block}
+.form-control,.form-select{font-size:.85rem;border-color:#d1d5db;border-radius:7px}
+.form-control:focus,.form-select:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+.input-group-text{background:#f1f5f9;border-color:#d1d5db;font-size:.8rem;color:#64748b;min-width:36px;justify-content:center}
+.form-text{font-size:.72rem;color:#64748b;margin-top:3px}
+.auto-field{background:#f0f7ff!important;border-color:#bfdbfe!important;color:#1e40af!important;font-weight:600}
+/* 비과세 배너 */
+.exempt-banner{background:linear-gradient(135deg,#dcfce7,#bbf7d0);border:2px solid #16a34a;border-radius:10px;padding:14px 18px;margin-bottom:12px;display:none;align-items:flex-start;gap:10px}
+.exempt-banner.show{display:flex}
+/* 결과 */
+.result-panel{background:linear-gradient(160deg,#064e3b 0%,#065f46 100%);border-radius:12px;color:#fff;padding:18px 20px;position:sticky;top:88px;box-shadow:0 4px 20px rgba(6,78,59,.4)}
+.result-title{font-size:.88rem;font-weight:700;opacity:.85;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.result-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:.82rem;border-bottom:1px solid rgba(255,255,255,.1)}
+.result-row:last-child{border:none}
+.result-label{opacity:.8}
+.result-val{font-weight:600}
+.result-val.hl{color:#6ee7b7}
+.result-val.minus{color:#fca5a5}
+.result-divider{border:none;border-top:1.5px solid rgba(255,255,255,.2);margin:8px 0}
+.result-final{display:flex;justify-content:space-between;align-items:center;margin-top:6px;background:rgba(255,255,255,.12);border-radius:8px;padding:10px 12px}
+.result-final-label{font-size:.95rem;font-weight:700}
+.result-final-val{font-size:1.35rem;font-weight:900;color:#6ee7b7}
+.op-badge{display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,.18);border-radius:4px;width:18px;height:18px;font-size:.62rem;font-weight:800;flex-shrink:0}
+.rate-chip{background:rgba(255,255,255,.2);border-radius:6px;padding:1px 7px;font-size:.7rem;font-weight:700}
+/* 세율 안내 */
+.rate-guide{background:#fff;border-radius:10px;border:1px solid #e2e8f0;margin-top:10px;overflow:hidden}
+.rate-guide-hd{background:#f0f4ff;padding:9px 14px;font-size:.8rem;font-weight:700;color:#1e3a8a;border-bottom:1px solid #dbeafe}
+.rate-table{width:100%;border-collapse:collapse;font-size:.76rem}
+.rate-table th{background:#f8fafc;padding:5px 8px;font-weight:600;color:#475569;border-bottom:1px solid #e2e8f0;text-align:center}
+.rate-table td{padding:4px 8px;border-bottom:1px solid #f1f5f9;text-align:center;color:#334155}
+.rate-table tr.hl-row td{background:#d1fae5;color:#065f46;font-weight:700}
+.rate-table tr:last-child td{border:none}
+.disclaimer{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.75rem;color:#713f12;margin-top:16px;display:flex;gap:8px;align-items:flex-start}
+footer{background:#1e3a8a;color:rgba(255,255,255,.65);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}
+footer a{color:rgba(255,255,255,.7);text-decoration:none}
+@media(max-width:576px){.result-final-val{font-size:1.1rem}.page-hero h1{font-size:1.2rem}}
+</style>
+</head>
+<body>
+
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../../tax/index.html" class="on">세금</a></li>
+<li><a href="../../work/index.html">급여·노동</a></li>
+<li><a href="../../tools/index.html">도구</a></li>
+<li><a href="../../realestate/index.html">부동산</a></li>
+<li><a href="../../money/index.html">금융·투자</a></li>
+<li><a href="../../student/index.html">학생</a></li>
+<li><a href="../../parent/index.html">학부모·육아</a></li>
+<li><a href="../../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="../general-income/index.html" class="mc-done">종합소득세</a></li>
+<li><a href="../freelancer/index.html" class="mc-done">프리랜서 3.3%</a></li>
+<li><a href="../vat/index.html" class="mc-done">부가세</a></li>
+<li><a href="../day-laborer/index.html" class="mc-done">일용직</a></li>
+<li><a href="../earned-income/index.html" class="mc-done">근로소득세</a></li>
+<li><a href="../retirement-income/index.html" class="mc-done">퇴직소득세</a></li>
+<li><a href="index.html" class="on mc-done">양도소득세</a></li>
+<li><span class="wip">연말정산</span></li>
+<li><a href="../property/index.html" class="mc-done">부동산세금</a></li>
+<li><a href="../inheritance/index.html" class="mc-done">상속증여</a></li>
+<li><span class="wip">가상자산</span></li>
+<li><span class="wip">상금</span></li>
+</ul></div></div>
+</div>
+
+<div class="page-hero">
+  <div class="container">
+    <div class="hero-badge">2024년 귀속 · 금투세 폐지 반영</div>
+    <h1><i class="bi bi-graph-up-arrow me-2"></i>주식 양도소득세 계산기</h1>
+    <p>대주주·비상장주식 양도소득세 계산. 소액주주 상장주식은 현행 비과세.</p>
+  </div>
+</div>
+
+<div class="gi-tabs-wrap"><div class="container"><ul class="gi-tabs">
+<li><a href="index.html">부동산 양도세</a></li>
+<li><a href="stock.html" class="cur">주식 양도세</a></li>
+<li><a href="about.html">양도소득세란?</a></li>
+</ul></div></div>
+
+<div class="container">
+<div class="main-layout">
+
+<div>
+  <div class="input-card">
+    <div class="card-title"><i class="bi bi-bar-chart-fill" style="color:#1e40af"></i> 주식 매매 정보</div>
+
+    <div class="row g-3">
+      <div class="col-sm-6">
+        <label class="form-label">주식 유형</label>
+        <select class="form-select" id="stockType" onchange="calcStock()">
+          <option value="listed_minor">상장주식 (소액주주) — 현재 비과세</option>
+          <option value="listed_major">상장주식 (대주주)</option>
+          <option value="unlisted_sme">비상장주식 (중소기업)</option>
+          <option value="unlisted_general">비상장주식 (일반)</option>
+        </select>
+        <div class="form-text">소액주주 상장주식: 2025년 금투세 폐지 → 비과세 유지</div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label">매도금액</label>
+        <div class="input-group"><input type="number" class="form-control" id="sellAmt" min="0" step="100000" placeholder="0" oninput="calcStock()"><span class="input-group-text">원</span></div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label">매수금액 (취득원가)</label>
+        <div class="input-group"><input type="number" class="form-control" id="buyAmt" min="0" step="100000" placeholder="0" oninput="calcStock()"><span class="input-group-text">원</span></div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label">매매수수료·세금 등</label>
+        <div class="input-group"><input type="number" class="form-control" id="stockFee" min="0" step="1000" placeholder="0" oninput="calcStock()"><span class="input-group-text">원</span></div>
+      </div>
+    </div>
+
+    <!-- 대주주 기준 안내 (대주주 선택 시) -->
+    <div id="majorNote" style="display:none;background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;margin-top:12px;font-size:.78rem;color:#92400e">
+      <strong>대주주 기준 (코스피/코스닥 상장):</strong><br>
+      지분율 1% 이상 또는 종목별 시가총액 10억원 이상 보유자 (직전 사업연도 말 기준)
+    </div>
+  </div>
+
+  <div class="disclaimer mt-3"><i class="bi bi-info-circle flex-shrink-0 mt-1"></i><span>이 결과는 모의계산이므로 참고용으로만 사용하세요. 실제 세액은 보유기간, 손실 통산 등에 따라 달라질 수 있습니다.</span></div>
+</div>
+
+<div>
+  <div class="exempt-banner" id="stockExemptBanner">
+    <div style="font-size:1.4rem;flex-shrink:0">📊</div>
+    <div>
+      <div style="font-size:.88rem;font-weight:800;color:#15803d;margin-bottom:3px">소액주주 상장주식 — 비과세</div>
+      <div style="font-size:.78rem;color:#166534">2025년 금투세 폐지 확정. 소액주주 상장주식 양도소득세 없음.</div>
+    </div>
+  </div>
+
+  <div class="result-panel">
+    <div class="result-title"><i class="bi bi-receipt-cutoff"></i> 계산 결과</div>
+
+    <div class="result-row">
+      <span class="result-label"><span class="op-badge">①</span> 매도금액</span>
+      <span class="result-val" id="sr-sell">0원</span>
+    </div>
+    <div class="result-row">
+      <span class="result-label"><span class="op-badge">−</span> 매수금액 + 수수료</span>
+      <span class="result-val minus" id="sr-cost">0원</span>
+    </div>
+    <div class="result-row" style="background:rgba(255,255,255,.08);border-radius:4px;padding:5px 8px">
+      <span class="result-label"><span class="op-badge">=</span> 양도차익</span>
+      <span class="result-val hl" id="sr-gain">0원</span>
+    </div>
+
+    <div class="result-divider"></div>
+
+    <div class="result-row">
+      <span class="result-label"><span class="op-badge">−</span> 기본공제</span>
+      <span class="result-val minus" id="sr-basic">2,500,000원</span>
+    </div>
+    <div class="result-row" style="background:rgba(255,255,255,.08);border-radius:4px;padding:5px 8px">
+      <span class="result-label"><span class="op-badge">=</span> 과세표준</span>
+      <span class="result-val hl" id="sr-taxbase">0원</span>
+    </div>
+
+    <div class="result-divider"></div>
+
+    <div class="result-row">
+      <span class="result-label"><span class="op-badge">×</span> 세율 <span class="rate-chip" id="sr-rateChip">—</span></span>
+      <span class="result-val" id="sr-rateVal">—</span>
+    </div>
+    <div class="result-row" style="background:rgba(255,255,255,.08);border-radius:4px;padding:5px 8px">
+      <span class="result-label"><span class="op-badge">=</span> 산출세액</span>
+      <span class="result-val hl" id="sr-tax">0원</span>
+    </div>
+    <div class="result-row">
+      <span class="result-label" style="opacity:.7;padding-left:10px">+ 지방소득세 (10%)</span>
+      <span class="result-val" id="sr-local">0원</span>
+    </div>
+
+    <div class="result-final">
+      <span class="result-final-label">총 납부세액</span>
+      <span class="result-final-val" id="sr-total">0원</span>
+    </div>
+  </div>
+
+  <div class="rate-guide">
+    <div class="rate-guide-hd"><i class="bi bi-table me-1"></i> 주식 양도소득세율 (2024 귀속)</div>
+    <table class="rate-table">
+      <thead><tr><th>주식 유형</th><th>과세표준</th><th>세율</th></tr></thead>
+      <tbody>
+        <tr class="hl-row" id="rateRow1"><td>상장 소액주주</td><td>—</td><td>비과세</td></tr>
+        <tr id="rateRow2"><td>상장 대주주</td><td>3억 이하</td><td>20%</td></tr>
+        <tr id="rateRow3"><td>상장 대주주</td><td>3억 초과</td><td>25%</td></tr>
+        <tr id="rateRow4"><td>비상장 중소기업</td><td>전액</td><td>10%</td></tr>
+        <tr id="rateRow5"><td>비상장 일반</td><td>전액</td><td>20%</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div>
+</div>
+
+<footer><div class="container">© 2025 mycalc · 참고용이며 법적 효력이 없습니다. | <a href="../../index.html">← 메인으로</a></div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function fmt(n){return Math.round(n||0).toLocaleString('ko-KR')+'원'}
+function v(id){return parseFloat(document.getElementById(id).value)||0}
+function el(id){return document.getElementById(id)}
+
+function calcStock(){
+  const type=el('stockType').value;
+  const sell=v('sellAmt');
+  const buy=v('buyAmt');
+  const fee=v('stockFee');
+  const gain=Math.max(sell-buy-fee,0);
+  const BASIC_DEDUCT=2500000;
+
+  el('stockExemptBanner').classList.remove('show');
+  el('majorNote').style.display='none';
+
+  if(type==='listed_minor'){
+    el('stockExemptBanner').classList.add('show');
+    el('sr-sell').textContent=fmt(sell);
+    el('sr-cost').textContent=fmt(buy+fee);
+    el('sr-gain').textContent=fmt(gain);
+    el('sr-basic').textContent='비과세';
+    el('sr-taxbase').textContent='비과세';
+    el('sr-rateChip').textContent='비과세';
+    el('sr-rateVal').textContent='—';
+    el('sr-tax').textContent='0원';
+    el('sr-local').textContent='0원';
+    el('sr-total').textContent='0원';
+    return;
+  }
+
+  if(type==='listed_major') el('majorNote').style.display='';
+
+  const taxBase=Math.max(gain-BASIC_DEDUCT,0);
+  let tax=0, rateLabel='';
+
+  if(type==='listed_major'){
+    if(taxBase<=300000000){tax=Math.floor(taxBase*0.20);rateLabel='20% (3억 이하)';}
+    else{tax=Math.floor(60000000+(taxBase-300000000)*0.25);rateLabel='25% (3억 초과)';}
+  } else if(type==='unlisted_sme'){
+    tax=Math.floor(taxBase*0.10);rateLabel='10% (중소기업)';
+  } else {
+    tax=Math.floor(taxBase*0.20);rateLabel='20% (일반)';
+  }
+
+  const local=Math.floor(tax*0.1);
+  const total=tax+local;
+
+  el('sr-sell').textContent=fmt(sell);
+  el('sr-cost').textContent=fmt(buy+fee);
+  el('sr-gain').textContent=fmt(gain);
+  el('sr-basic').textContent=fmt(Math.min(BASIC_DEDUCT,gain));
+  el('sr-taxbase').textContent=fmt(taxBase);
+  el('sr-rateChip').textContent=rateLabel;
+  el('sr-rateVal').textContent=rateLabel;
+  el('sr-tax').textContent=fmt(tax);
+  el('sr-local').textContent=fmt(local);
+  el('sr-total').textContent=fmt(total);
+
+  // 세율표 하이라이트
+  ['rateRow1','rateRow2','rateRow3','rateRow4','rateRow5'].forEach(id=>el(id).classList.remove('hl-row'));
+  if(type==='listed_minor') el('rateRow1').classList.add('hl-row');
+  else if(type==='listed_major' && taxBase<=300000000) el('rateRow2').classList.add('hl-row');
+  else if(type==='listed_major' && taxBase>300000000) el('rateRow3').classList.add('hl-row');
+  else if(type==='unlisted_sme') el('rateRow4').classList.add('hl-row');
+  else el('rateRow5').classList.add('hl-row');
+}
+
+calcStock();
+</script>
+</body>
+</html>

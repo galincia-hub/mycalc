@@ -1,0 +1,175 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>종합소득세 세율 – mycalc</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Pretendard', -apple-system, sans-serif; background: #f8f9fa; font-size: 14px; color: #1a1a2e; }
+    .main-nav { background: #1e3a8a; padding: 0; z-index: 1000; }
+    .nav-inner { display: flex; align-items: center; gap: 8px; padding: 0 16px; min-height: 52px; flex-wrap: wrap; }
+    .nav-brand { color: #fff; font-weight: 700; font-size: 1rem; text-decoration: none; white-space: nowrap; padding: 10px 0; }
+    .nav-links { list-style: none; display: flex; flex-wrap: wrap; gap: 2px; margin: 0; padding: 4px 0; margin-left: auto; }
+    .nav-links a { color: rgba(255,255,255,.75); text-decoration: none; padding: 6px 10px; border-radius: 6px; font-size: .82rem; transition: all .2s; white-space: nowrap; }
+    .nav-links a:hover, .nav-links a.active { color: #fff; background: rgba(255,255,255,.15); }
+    .nav-toggle { display: none; background: none; border: none; color: #fff; font-size: 1.3rem; padding: 8px; cursor: pointer; margin-left: auto; }
+    @media(max-width:768px) { .nav-toggle { display: block; } .nav-links { display: none; width: 100%; padding-bottom: 8px; } .nav-links.open { display: flex; flex-direction: column; } .nav-links a { padding: 8px 12px; } }
+    .page-hero { background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); color: #fff; padding: 2rem 0 1.5rem; margin-bottom: 1.5rem; }
+    .page-hero h1 { font-size: 1.4rem; font-weight: 700; margin: 0 0 .25rem; }
+    .page-hero p { font-size: .85rem; opacity: .85; margin: 0; }
+    .breadcrumb-nav { font-size: .75rem; color: rgba(255,255,255,.7); margin-bottom: .5rem; }
+    .breadcrumb-nav a { color: rgba(255,255,255,.8); text-decoration: none; }
+    .breadcrumb-nav a:hover { color: #fff; }
+    .card-section { background: #fff; border-radius: 10px; border: 1px solid #e2e8f0; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+    .section-title { font-size: 1rem; font-weight: 700; color: #1e3a8a; margin-bottom: 1rem; padding-bottom: .5rem; border-bottom: 2px solid #dbeafe; display: flex; align-items: center; gap: 8px; }
+    .table th { background: #f0f4ff; font-size: .8rem; white-space: nowrap; }
+    .table td { font-size: .8rem; }
+    .badge-num { background: #dbeafe; color: #1e3a8a; border-radius: 12px; padding: 2px 8px; font-size: .72rem; font-weight: 700; }
+    .disclaimer { background: #fef9c3; border: 1px solid #fde047; border-radius: 8px; padding: .75rem 1rem; font-size: .78rem; color: #713f12; margin-top: 1.5rem; }
+    footer { background: #1e3a8a; color: rgba(255,255,255,.7); text-align: center; padding: 1rem; font-size: .78rem; margin-top: 2rem; }
+    footer a { color: rgba(255,255,255,.7); text-decoration: none; }
+    footer a:hover { color: #fff; }
+/* ── mc-nav: 2단 공통 네비게이션 ── */
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul{justify-content:flex-end}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.gi-tabs-wrap{background:#fff;border-bottom:2px solid #e2e8f0}
+.gi-tabs{list-style:none;display:flex;overflow-x:auto;margin:0;padding:0 12px;-ms-overflow-style:none;scrollbar-width:none}
+.gi-tabs::-webkit-scrollbar{display:none}
+.gi-tabs li a{display:inline-block;padding:9px 13px;font-size:.82rem;font-weight:600;color:#64748b;text-decoration:none;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;margin-bottom:-2px}
+.gi-tabs li a:hover{color:#1e3a8a}
+.gi-tabs li a.cur{color:#1e3a8a;border-bottom-color:#1e3a8a;font-weight:700}
+    .rate-table tbody tr { cursor: pointer; transition: background .15s; }
+    .rate-table tbody tr.highlighted { background: #fef3c7 !important; outline: 2px solid #f59e0b; outline-offset: -2px; }
+    .rate-table tbody tr.highlighted td { color: #92400e; font-weight: 700; }
+    .calc-input-group { background: linear-gradient(135deg, #eff6ff, #dbeafe); border: 1px solid #bfdbfe; border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+    .calc-input-group label { font-size: .82rem; font-weight: 700; color: #1e40af; margin-bottom: .4rem; display: block; }
+    .calc-input-wrap { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .calc-input-wrap input { border: 1.5px solid #93c5fd; border-radius: 8px; padding: 8px 12px; font-size: .9rem; font-family: 'Pretendard', sans-serif; outline: none; flex: 1; min-width: 180px; color: #1e3a8a; background: #fff; transition: border-color .2s; }
+    .calc-input-wrap input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,.15); }
+    .calc-result-box { margin-top: .75rem; background: #fff; border: 1px solid #bfdbfe; border-radius: 8px; padding: .75rem 1rem; display: none; }
+    .calc-result-box.show { display: block; }
+    .result-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: .35rem; font-size: .82rem; }
+    .result-row:last-child { margin-bottom: 0; border-top: 1px dashed #bfdbfe; padding-top: .35rem; margin-top: .35rem; }
+    .result-label { color: #6b7280; }
+    .result-value { font-weight: 700; color: #1e3a8a; }
+    .result-value.tax { color: #dc2626; font-size: .95rem; }
+    .formula-highlight { background: #fef3c7; border: 1px solid #fde68a; border-radius: 8px; padding: .75rem 1rem; font-size: .85rem; color: #78350f; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .formula-highlight .formula-text { font-size: .9rem; font-weight: 700; }
+    .example-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: .65rem 1rem; font-size: .82rem; color: #166534; margin-bottom: 1rem; }
+    .accordion-button { font-size: .85rem; font-weight: 600; color: #1e3a8a; background: #f0f4ff; }
+    .accordion-button:not(.collapsed) { background: #dbeafe; color: #1e40af; box-shadow: none; }
+    .year-badge { background: #e0e7ff; color: #3730a3; border-radius: 6px; padding: 3px 9px; font-size: .75rem; font-weight: 700; border: 1px solid #c7d2fe; }
+  </style>
+</head>
+<body>
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../../tax/index.html" class="on">세금</a></li>
+<li><a href="../../work/index.html">급여·노동</a></li>
+<li><a href="../../tools/index.html">도구</a></li>
+<li><a href="../../realestate/index.html">부동산</a></li>
+<li><a href="../../money/index.html">금융·투자</a></li>
+<li><a href="../../student/index.html">학생</a></li>
+<li><a href="../../parent/index.html">학부모·육아</a></li>
+<li><a href="../../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="index.html" class="mc-done">종합소득세</a></li>
+<li><a href="../freelancer/index.html" class="mc-done">프리랜서 3.3%</a></li>
+<li><a href="../vat/index.html" class="mc-done">부가세</a></li>
+<li><a href="../day-laborer/index.html" class="mc-done">일용직</a></li>
+<li><a href="../earned-income/index.html" class="mc-done">근로소득세</a></li>
+<li><a href="../retirement-income/index.html" class="mc-done">퇴직소득세</a></li>
+<li><a href="../capital-gains/index.html" class="mc-done">양도소득세</a></li>
+<li><span class="wip">연말정산</span></li>
+<li><a href="../property/index.html" class="mc-done">부동산세금</a></li>
+<li><a href="../inheritance/index.html" class="mc-done">상속증여</a></li>
+<li><span class="wip">가상자산</span></li>
+<li><span class="wip">상금</span></li>
+</ul></div></div>
+</div>
+<div class="page-hero">
+  <div class="container">
+    <h1><i class="bi bi-percent me-2"></i>종합소득세 세율</h1>
+    <p>과세표준에 따른 세율 구간과 누진공제액을 확인하세요.</p>
+  </div>
+</div>
+<div class="gi-tabs-wrap"><div class="container"><ul class="gi-tabs">
+<li><a href="index.html">계산기</a></li>
+<li><a href="about.html">종합소득세란?</a></li>
+<li><a href="tax-rate.html" class="cur">세율</a></li>
+<li><a href="flow.html">세액계산흐름도</a></li>
+<li><a href="penalty-calc.html">가산세 계산기</a></li>
+<li><a href="penalty.html">가산세</a></li>
+</ul></div></div>
+<div class="container pb-4">
+  <div class="card-section">
+    <div class="section-title"><i class="bi bi-calculator-fill" style="color:#1e3a8a;"></i> 세율 적용 방법</div>
+    <div class="formula-highlight"><i class="bi bi-lightning-fill" style="color:#d97706; font-size:1.1rem;"></i><div><div style="font-size:.75rem; color:#a16207; margin-bottom:2px;">공식</div><span class="formula-text">산출세액 = 과세표준 × 세율 − 누진공제액</span></div></div>
+    <div class="example-box"><i class="bi bi-lightbulb-fill me-1" style="color:#16a34a;"></i><strong>예시:</strong> 과세표준 <strong>30,000,000원</strong> × <strong>15%</strong> − <strong>1,260,000원</strong> = <strong>3,240,000원</strong></div>
+  </div>
+  <div class="card-section">
+    <div class="section-title"><i class="bi bi-table" style="color:#1e3a8a;"></i> 현행 세율표 <span class="year-badge ms-1">2023년 귀속 이후</span></div>
+    <div class="calc-input-group">
+      <label><i class="bi bi-pencil-fill me-1"></i>과세표준을 입력하면 해당 세율 구간이 자동으로 표시됩니다</label>
+      <div class="calc-input-wrap">
+        <input type="text" id="taxBaseInput" placeholder="예: 30000000" oninput="highlightRate(this.value)">
+        <span style="font-size:.82rem; color:#6b7280;">원</span>
+      </div>
+      <div class="calc-result-box" id="calcResult">
+        <div class="result-row"><span class="result-label">과세표준</span><span class="result-value" id="resBase">—</span></div>
+        <div class="result-row"><span class="result-label">적용 세율</span><span class="result-value" id="resRate">—</span></div>
+        <div class="result-row"><span class="result-label">누진공제</span><span class="result-value" id="resDeduction">—</span></div>
+        <div class="result-row"><span class="result-label"><strong>산출세액</strong></span><span class="result-value tax" id="resTax">—</span></div>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle rate-table mb-0" id="rateTable">
+        <thead><tr><th class="text-center">과세표준</th><th class="text-center">세율</th><th class="text-center">누진공제</th><th class="text-center">세액 계산식</th></tr></thead>
+        <tbody>
+          <tr data-min="0" data-max="14000000" data-rate="0.06" data-deduction="0"><td>14,000,000원 이하</td><td class="text-center fw-bold text-primary">6%</td><td class="text-center">—</td><td>과세표준 × 6%</td></tr>
+          <tr data-min="14000001" data-max="50000000" data-rate="0.15" data-deduction="1260000"><td>14,000,000원 초과 ~ 50,000,000원 이하</td><td class="text-center fw-bold text-primary">15%</td><td class="text-center">1,260,000원</td><td>과세표준 × 15% − 1,260,000원</td></tr>
+          <tr data-min="50000001" data-max="88000000" data-rate="0.24" data-deduction="5760000"><td>50,000,000원 초과 ~ 88,000,000원 이하</td><td class="text-center fw-bold text-primary">24%</td><td class="text-center">5,760,000원</td><td>과세표준 × 24% − 5,760,000원</td></tr>
+          <tr data-min="88000001" data-max="150000000" data-rate="0.35" data-deduction="15440000"><td>88,000,000원 초과 ~ 150,000,000원 이하</td><td class="text-center fw-bold text-primary">35%</td><td class="text-center">15,440,000원</td><td>과세표준 × 35% − 15,440,000원</td></tr>
+          <tr data-min="150000001" data-max="300000000" data-rate="0.38" data-deduction="19940000"><td>150,000,000원 초과 ~ 300,000,000원 이하</td><td class="text-center fw-bold text-primary">38%</td><td class="text-center">19,940,000원</td><td>과세표준 × 38% − 19,940,000원</td></tr>
+          <tr data-min="300000001" data-max="500000000" data-rate="0.40" data-deduction="25940000"><td>300,000,000원 초과 ~ 500,000,000원 이하</td><td class="text-center fw-bold text-primary">40%</td><td class="text-center">25,940,000원</td><td>과세표준 × 40% − 25,940,000원</td></tr>
+          <tr data-min="500000001" data-max="1000000000" data-rate="0.42" data-deduction="35940000"><td>500,000,000원 초과 ~ 1,000,000,000원 이하</td><td class="text-center fw-bold text-primary">42%</td><td class="text-center">35,940,000원</td><td>과세표준 × 42% − 35,940,000원</td></tr>
+          <tr data-min="1000000001" data-max="Infinity" data-rate="0.45" data-deduction="65940000"><td>1,000,000,000원 초과</td><td class="text-center fw-bold text-primary">45%</td><td class="text-center">65,940,000원</td><td>과세표준 × 45% − 65,940,000원</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="disclaimer"><i class="bi bi-info-circle-fill me-1"></i>세율표는 소득세법 제55조에 따른 것이며, 세법 개정에 따라 변경될 수 있습니다.</div>
+</div>
+<footer><div class="container"><p class="mb-0">본 계산기는 참고용이며 실제 세액과 다를 수 있습니다. | <a href="../../index.html">← 메인으로</a></p></div></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function toggleNav(){document.getElementById('navLinks').classList.toggle('open')}
+const brackets=[{min:0,max:14000000,rate:0.06,deduction:0},{min:14000001,max:50000000,rate:0.15,deduction:1260000},{min:50000001,max:88000000,rate:0.24,deduction:5760000},{min:88000001,max:150000000,rate:0.35,deduction:15440000},{min:150000001,max:300000000,rate:0.38,deduction:19940000},{min:300000001,max:500000000,rate:0.40,deduction:25900000},{min:500000001,max:1000000000,rate:0.42,deduction:35900000},{min:1000000001,max:Infinity,rate:0.45,deduction:65900000}];
+function formatKRW(num){if(!num&&num!==0)return'—';return num.toLocaleString('ko-KR')+'원'}
+function highlightRate(rawVal){const clean=rawVal.replace(/[,\s]/g,'');const val=parseFloat(clean);const rows=document.querySelectorAll('#rateTable tbody tr');const resultBox=document.getElementById('calcResult');rows.forEach(r=>r.classList.remove('highlighted'));if(!clean||isNaN(val)||val<0){resultBox.classList.remove('show');return}let matchedBracket=null,matchedRow=null;rows.forEach((row,i)=>{const min=parseFloat(row.dataset.min);const max=row.dataset.max==='Infinity'?Infinity:parseFloat(row.dataset.max);if(val>=min&&val<=max){row.classList.add('highlighted');matchedBracket=brackets[i];matchedRow=row}});if(matchedBracket){const tax=Math.round(val*matchedBracket.rate-matchedBracket.deduction);const rateStr=(matchedBracket.rate*100).toFixed(0)+'%';const deductStr=matchedBracket.deduction===0?'—':formatKRW(matchedBracket.deduction);document.getElementById('resBase').textContent=formatKRW(val);document.getElementById('resRate').textContent=rateStr;document.getElementById('resDeduction').textContent=deductStr;document.getElementById('resTax').textContent=formatKRW(Math.max(0,tax));resultBox.classList.add('show');if(matchedRow)matchedRow.scrollIntoView({behavior:'smooth',block:'nearest'})}else{resultBox.classList.remove('show')}}
+document.getElementById('taxBaseInput').addEventListener('input',function(){const clean=this.value.replace(/[^\d]/g,'');if(clean){const formatted=parseInt(clean,10).toLocaleString('ko-KR');this.value=formatted;highlightRate(clean)}else{this.value='';highlightRate('')}});
+</script>
+</body>
+</html>

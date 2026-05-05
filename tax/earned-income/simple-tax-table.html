@@ -1,0 +1,334 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>근로소득세 간이세액표 – 2025 | mycalc</title>
+<meta name="description" content="2024년 귀속 근로소득 간이세액표. 월급여 × 부양가족 수 → 원천징수세액 조회.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}
+/* ── mc-nav ── */
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t1-ul{justify-content:flex-end}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+/* Sub-tabs */
+.gi-tabs-wrap{background:#fff;border-bottom:2px solid #e2e8f0}
+.gi-tabs{list-style:none;display:flex;overflow-x:auto;margin:0;padding:0 12px;-ms-overflow-style:none;scrollbar-width:none}
+.gi-tabs::-webkit-scrollbar{display:none}
+.gi-tabs li a{display:inline-block;padding:9px 13px;font-size:.82rem;font-weight:600;color:#64748b;text-decoration:none;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;margin-bottom:-2px}
+.gi-tabs li a:hover{color:#1e3a8a}
+.gi-tabs li a.cur{color:#1e3a8a;border-bottom-color:#1e3a8a;font-weight:700}
+/* 히어로 */
+.page-hero{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 50%,#0891b2 100%);color:#fff;padding:1.75rem 0 1.5rem}
+.page-hero h1{font-size:1.4rem;font-weight:800;margin:0 0 .3rem}
+.page-hero p{font-size:.83rem;opacity:.85;margin:0}
+/* 조회 박스 */
+.lookup-box{background:#fff;border-radius:14px;border:1px solid #e2e8f0;padding:20px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.lookup-title{font-size:.9rem;font-weight:800;color:#0f172a;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.lookup-result{background:linear-gradient(135deg,#1e3a8a,#1e40af);border-radius:12px;color:#fff;padding:16px 20px;margin-top:16px;display:none}
+.lookup-result.show{display:block}
+.lookup-result-label{font-size:.78rem;opacity:.8;margin-bottom:4px}
+.lookup-result-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:8px}
+.lookup-result-card{background:rgba(255,255,255,.12);border-radius:8px;padding:10px;text-align:center}
+.lookup-result-pct{font-size:.7rem;opacity:.7;margin-bottom:3px}
+.lookup-result-val{font-size:1.05rem;font-weight:800}
+/* 테이블 */
+.tax-table-wrap{background:#fff;border-radius:12px;border:1px solid #e2e8f0;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.tax-table-header{background:#f0f4ff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.tax-table-header h3{font-size:.88rem;font-weight:800;color:#1e3a8a;margin:0}
+.rate-toggle{display:flex;gap:4px}
+.rate-btn{font-size:.75rem;font-weight:700;padding:4px 12px;border-radius:6px;border:1.5px solid #cbd5e1;background:#fff;color:#475569;cursor:pointer;transition:all .15s}
+.rate-btn:hover{border-color:#3b82f6;color:#1e3a8a}
+.rate-btn.active{background:#1e3a8a;border-color:#1e3a8a;color:#fff}
+.tax-table{width:100%;border-collapse:collapse;font-size:.78rem}
+.tax-table th{background:#1e3a8a;color:#fff;padding:8px 10px;text-align:center;font-weight:700;white-space:nowrap;position:sticky;top:0}
+.tax-table td{padding:6px 10px;text-align:right;border-bottom:1px solid #f1f5f9;border-right:1px solid #f1f5f9;color:#334155}
+.tax-table td:first-child{text-align:left;font-weight:600;color:#1e293b;background:#f8fafc;border-right:2px solid #e2e8f0}
+.tax-table tr:hover td{background:#eff6ff}
+.tax-table tr.highlight-row td{background:#dbeafe;color:#1e40af;font-weight:700}
+.tax-table tr:last-child td{border-bottom:none}
+.zero-tax{color:#16a34a;font-weight:700}
+/* 공식 */
+.formula-card{background:#fef3c7;border:1px solid #fde68a;border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:.82rem;color:#78350f}
+.formula-card .formula{font-family:monospace;font-size:.85rem;font-weight:700;color:#92400e;line-height:1.8}
+.disclaimer{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.75rem;color:#713f12;margin-top:16px;display:flex;gap:8px}
+footer{background:#1e3a8a;color:rgba(255,255,255,.65);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}
+footer a{color:rgba(255,255,255,.7);text-decoration:none}
+.form-label{font-weight:700;font-size:.82rem;color:#374151;margin-bottom:4px;display:block}
+.form-control,.form-select{font-size:.85rem;border-color:#d1d5db;border-radius:8px}
+.form-control:focus,.form-select:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+.input-group-text{background:#f1f5f9;border-color:#d1d5db;font-size:.8rem;color:#64748b;min-width:40px;justify-content:center}
+</style>
+</head>
+<body>
+
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../../tax/index.html" class="on">세금</a></li>
+<li><a href="../../work/index.html">급여·노동</a></li>
+<li><a href="../../tools/index.html">도구</a></li>
+<li><a href="../../realestate/index.html">부동산</a></li>
+<li><a href="../../money/index.html">금융·투자</a></li>
+<li><a href="../../student/index.html">학생</a></li>
+<li><a href="../../parent/index.html">학부모·육아</a></li>
+<li><a href="../../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="../general-income/index.html" class="mc-done">종합소득세</a></li>
+<li><a href="../freelancer/index.html" class="mc-done">프리랜서 3.3%</a></li>
+<li><a href="../vat/index.html" class="mc-done">부가세</a></li>
+<li><a href="../day-laborer/index.html" class="mc-done">일용직</a></li>
+<li><a href="index.html" class="on mc-done">근로소득세</a></li>
+<li><a href="../retirement-income/index.html" class="mc-done">퇴직소득세</a></li>
+<li><a href="../capital-gains/index.html" class="mc-done">양도소득세</a></li>
+<li><span class="wip">연말정산</span></li>
+<li><a href="../property/index.html" class="mc-done">부동산세금</a></li>
+<li><a href="../inheritance/index.html" class="mc-done">상속증여</a></li>
+<li><span class="wip">가상자산</span></li>
+<li><span class="wip">상금</span></li>
+</ul></div></div>
+</div>
+
+<div class="page-hero">
+  <div class="container">
+    <h1><i class="bi bi-table me-2"></i>근로소득 간이세액표</h1>
+    <p>월급여 × 부양가족 수 → 매월 원천징수할 세액 조회 (2024년 귀속)</p>
+  </div>
+</div>
+
+<div class="gi-tabs-wrap"><div class="container"><ul class="gi-tabs">
+<li><a href="index.html">계산기</a></li>
+<li><a href="about.html">근로소득세란?</a></li>
+<li><a href="simple-tax-table.html" class="cur">간이세액표</a></li>
+</ul></div></div>
+
+<div class="container py-3">
+
+  <!-- 설명 박스 -->
+  <div class="formula-card">
+    <div style="font-weight:700;margin-bottom:8px"><i class="bi bi-info-circle me-1"></i> 간이세액표 계산 원리</div>
+    <div class="formula">
+      ① 월급여 × 12 = 연간 총급여<br>
+      ② 근로소득공제 차감 → 근로소득금액<br>
+      ③ 인적공제 (본인+부양가족 × 150만) 차감 → 과세표준<br>
+      ④ 세율 적용 → 산출세액 → 근로소득세액공제 → 결정세액<br>
+      ⑤ 결정세액 ÷ 12 = 월 원천징수액 (100% 기준)
+    </div>
+    <div style="margin-top:8px;font-size:.75rem;color:#a16207">
+      ※ 80%·120% 옵션: 100% 기준 금액 × 0.8 또는 × 1.2 |
+      ※ 표준세액공제 130,000원 포함 | 지방소득세(10%) 별도
+    </div>
+  </div>
+
+  <!-- 개별 조회 -->
+  <div class="lookup-box">
+    <div class="lookup-title"><i class="bi bi-search" style="color:#1e40af"></i> 내 월급여로 직접 조회</div>
+    <div class="row g-2">
+      <div class="col-sm-5">
+        <label class="form-label">월 급여액 (과세대상)</label>
+        <div class="input-group">
+          <input type="number" class="form-control" id="lookupWage" placeholder="예: 3000000" min="0" step="10000" oninput="lookup()">
+          <span class="input-group-text">원</span>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <label class="form-label">부양가족 수 (본인 포함)</label>
+        <select class="form-select" id="lookupDep" onchange="lookup()">
+          <option value="1">1명 (본인만)</option>
+          <option value="2">2명</option>
+          <option value="3">3명</option>
+          <option value="4">4명</option>
+          <option value="5">5명</option>
+          <option value="6">6명</option>
+          <option value="7">7명 이상</option>
+        </select>
+      </div>
+    </div>
+    <div class="lookup-result" id="lookupResult">
+      <div class="lookup-result-label"><i class="bi bi-receipt-cutoff me-1"></i> 월 원천징수 세액 (소득세만, 지방소득세 별도)</div>
+      <div class="lookup-result-grid">
+        <div class="lookup-result-card"><div class="lookup-result-pct">80% 적용</div><div class="lookup-result-val" id="r80">—</div></div>
+        <div class="lookup-result-card" style="background:rgba(255,255,255,.25)"><div class="lookup-result-pct">100% (기본)</div><div class="lookup-result-val" id="r100">—</div></div>
+        <div class="lookup-result-card"><div class="lookup-result-pct">120% 적용</div><div class="lookup-result-val" id="r120">—</div></div>
+      </div>
+      <div style="font-size:.72rem;opacity:.7;margin-top:8px;text-align:center">지방소득세 = 소득세 × 10% 별도 납부</div>
+    </div>
+  </div>
+
+  <!-- 전체 테이블 -->
+  <div class="tax-table-wrap">
+    <div class="tax-table-header">
+      <h3><i class="bi bi-table me-1"></i> 간이세액표 (부양가족 수별, 100% 기준)</h3>
+      <div class="rate-toggle">
+        <button class="rate-btn" onclick="setRate(0.8,this)">80%</button>
+        <button class="rate-btn active" onclick="setRate(1.0,this)">100%</button>
+        <button class="rate-btn" onclick="setRate(1.2,this)">120%</button>
+      </div>
+    </div>
+    <div style="overflow-x:auto;max-height:560px;overflow-y:auto">
+      <table class="tax-table" id="mainTable">
+        <thead>
+          <tr>
+            <th>월 급여액</th>
+            <th>1명</th>
+            <th>2명</th>
+            <th>3명</th>
+            <th>4명</th>
+            <th>5명</th>
+            <th>6명</th>
+            <th>7명+</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+    <div style="padding:8px 14px;font-size:.73rem;color:#64748b;background:#f8fafc;border-top:1px solid #e2e8f0">
+      ※ 단위: 원 | 소득세만 표시 (지방소득세 10% 별도) | 비과세 소득 제외한 과세대상 급여 기준 | 2024년 귀속
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    <i class="bi bi-info-circle flex-shrink-0 mt-1"></i>
+    <span>이 표는 공식 간이세액표의 계산 공식에 따라 산출한 참고용 자료입니다. 실제 원천징수 시에는 국세청 홈택스에서 공시하는 공식 간이세액표를 반드시 확인하세요.</span>
+  </div>
+
+</div>
+
+<footer><div class="container"><p class="mb-0">© 2025 mycalc · 참고용이며 법적 효력이 없습니다. | <a href="../../index.html">← 메인으로</a></p></div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ── 세율표 ──
+const TAX_RATES=[
+  {min:0,max:14000000,rate:.06,deduction:0},
+  {min:14000000,max:50000000,rate:.15,deduction:1260000},
+  {min:50000000,max:88000000,rate:.24,deduction:5760000},
+  {min:88000000,max:150000000,rate:.35,deduction:15440000},
+  {min:150000000,max:300000000,rate:.38,deduction:19940000},
+  {min:300000000,max:500000000,rate:.40,deduction:25900000},
+  {min:500000000,max:1000000000,rate:.42,deduction:35900000},
+  {min:1000000000,max:Infinity,rate:.45,deduction:65900000},
+];
+
+function getCalcTax(b){
+  if(b<=0)return 0;
+  const br=TAX_RATES.find(x=>b<=x.max)||TAX_RATES[TAX_RATES.length-1];
+  return Math.max(b*br.rate-br.deduction,0);
+}
+
+function earnedDeduction(s){
+  if(s<=0)return 0;
+  let d;
+  if(s<=5000000)d=s*0.7;
+  else if(s<=15000000)d=3500000+(s-5000000)*0.4;
+  else if(s<=45000000)d=7500000+(s-15000000)*0.15;
+  else if(s<=100000000)d=12000000+(s-45000000)*0.05;
+  else d=14750000+(s-100000000)*0.02;
+  return Math.min(d,20000000);
+}
+
+function earnedCredit(calcTaxAmt,totalSalary){
+  let cr=calcTaxAmt<=1300000?calcTaxAmt*0.55:715000+(calcTaxAmt-1300000)*0.30;
+  cr=Math.max(cr,0);
+  let lim;
+  if(totalSalary<=33000000)lim=740000;
+  else if(totalSalary<=70000000)lim=Math.max(740000-(totalSalary-33000000)*8/1000,660000);
+  else if(totalSalary<=120000000)lim=Math.max(660000-(totalSalary-70000000)*0.5,500000);
+  else lim=Math.max(500000-(totalSalary-120000000)*0.5,200000);
+  return Math.min(cr,lim);
+}
+
+// ── 월 원천징수 계산 (100% 기준) ──
+function calcMonthlyTax(monthlyWage, dependants) {
+  const annual = monthlyWage * 12;
+  const earnDeduct = earnedDeduction(annual);
+  const earnIncome = Math.max(annual - earnDeduct, 0);
+  const personalDeduct = Math.min(1500000 * dependants, earnIncome);
+  const taxBase = Math.max(earnIncome - personalDeduct, 0);
+  const calcTaxAmt = getCalcTax(taxBase);
+  const earnCr = earnedCredit(calcTaxAmt, annual);
+  const stdCredit = 130000;
+  const annualTax = Math.max(calcTaxAmt - earnCr - stdCredit, 0);
+  // 월 원천징수액: 10원 단위 절사
+  return Math.floor(annualTax / 12 / 10) * 10;
+}
+
+function fmt(n){return n===0?'<span class="zero-tax">0</span>':Math.round(n).toLocaleString('ko-KR')}
+function fmtPlain(n){return Math.round(n).toLocaleString('ko-KR')+'원'}
+
+// ── 테이블 구성 ──
+const WAGES = [
+  1060000,1200000,1400000,1600000,1800000,2000000,2200000,2400000,2600000,
+  2800000,3000000,3200000,3400000,3600000,3800000,4000000,4500000,5000000,
+  5500000,6000000,7000000,8000000,9000000,10000000,12000000,15000000,20000000
+];
+
+let currentRate = 1.0;
+
+function setRate(rate, btn){
+  currentRate=rate;
+  document.querySelectorAll('.rate-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+  lookup();
+}
+
+function renderTable(){
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = WAGES.map(w => {
+    const label = w>=10000000?(w/10000000).toFixed(0)+'천만':(w/10000)+'만';
+    const cells = [1,2,3,4,5,6,7].map(dep => {
+      const tax = Math.round(calcMonthlyTax(w, dep) * currentRate / 10) * 10;
+      return `<td>${fmt(tax)}</td>`;
+    }).join('');
+    return `<tr><td>${(w/10000).toLocaleString()}만원</td>${cells}</tr>`;
+  }).join('');
+}
+
+// ── 조회 ──
+function lookup(){
+  const wage = parseFloat(document.getElementById('lookupWage').value)||0;
+  const dep = parseInt(document.getElementById('lookupDep').value)||1;
+  const res = document.getElementById('lookupResult');
+  if(wage<=0){res.classList.remove('show');return}
+  const base = calcMonthlyTax(wage,dep);
+  const t80 = Math.round(base*0.8/10)*10;
+  const t100 = base;
+  const t120 = Math.round(base*1.2/10)*10;
+  document.getElementById('r80').textContent=fmtPlain(t80);
+  document.getElementById('r100').textContent=fmtPlain(t100);
+  document.getElementById('r120').textContent=fmtPlain(t120);
+  res.classList.add('show');
+
+  // 테이블 해당 행 하이라이트
+  document.querySelectorAll('#tableBody tr').forEach((tr,i)=>{
+    const w=WAGES[i];
+    tr.classList.toggle('highlight-row',w===wage||(i>0&&WAGES[i-1]<wage&&wage<=w));
+  });
+}
+
+renderTable();
+</script>
+</body>
+</html>

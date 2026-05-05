@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>무료 전자서명 생성기 - 서명 그리기 & 도장 만들기 | mycalc</title>
+<meta name="description" content="무료 온라인 서명 생성기. 직접 그리기, 텍스트 입력, 도장 생성 3가지 방식 지원. 투명 배경 PNG 다운로드. 서버 전송 없는 안전한 서명 도구.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Gowun+Batang:wght@700&family=Great+Vibes&family=Nanum+Myeongjo:wght@700&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.page-hero{background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 100%);color:#fff;padding:1.75rem 0 1.5rem;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='72' height='72' viewBox='0 0 72 72' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.055' stroke-width='2'%3E%3Cpath d='M12 44c9-20 23 19 34-3 4-8 9-9 14-5'/%3E%3Cpath d='M14 18h44v36H14z'/%3E%3C/g%3E%3C/svg%3E")}
+.hero-content{position:relative}
+.breadcrumb-mini{display:flex;gap:6px;align-items:center;font-size:.75rem;opacity:.86;margin-bottom:.5rem}
+.breadcrumb-mini a{color:#fff;text-decoration:none}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.75rem;margin-bottom:.5rem}
+.page-hero h1{font-size:1.4rem;font-weight:800;margin:0 0 .3rem;letter-spacing:0}
+.page-hero p{font-size:.83rem;opacity:.88;margin:0}
+.gi-tabs-wrap{background:#fff;border-bottom:2px solid #e2e8f0}
+.gi-tabs{list-style:none;display:flex;overflow-x:auto;margin:0;padding:0 12px;-ms-overflow-style:none;scrollbar-width:none}
+.gi-tabs::-webkit-scrollbar{display:none}
+.gi-tabs li a,.gi-tabs li span{display:inline-block;padding:9px 13px;font-size:.82rem;font-weight:600;color:#64748b;text-decoration:none;border-bottom:2px solid transparent;white-space:nowrap;margin-bottom:-2px}
+.gi-tabs li a.cur{color:#1e3a8a;border-bottom-color:#1e3a8a;font-weight:700}
+.gi-tabs li span{opacity:.45}
+.main-layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start;padding:16px 0 32px}
+.input-card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden}
+.input-card-header{padding:14px 16px;border-bottom:1px solid #dbeafe;background:#f0f7ff}
+.input-card-title{font-size:.88rem;font-weight:700;color:#0f172a;display:flex;align-items:center;gap:7px}
+.input-card-body{padding:16px}
+.sig-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:#f1f5f9;border-radius:8px;padding:4px;margin-bottom:14px}
+.sig-tab{border:0;background:transparent;color:#64748b;border-radius:6px;padding:8px 6px;font-size:.78rem;font-weight:700;white-space:nowrap}
+.sig-tab.active{background:#fff;color:#1e3a8a;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.sig-form{display:none}
+.sig-form.active{display:block}
+.form-label{font-weight:600;font-size:.8rem;color:#374151;margin-bottom:4px;display:block}
+.form-control,.form-select{font-size:.85rem;border-color:#d1d5db;border-radius:7px}
+.form-control:focus,.form-select:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.form-range::-webkit-slider-thumb{background:#2563eb}
+.canvas-wrap{background:#fff;border:1px solid #cbd5e1;border-radius:10px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.4)}
+#drawCanvas{display:block;width:100%;height:260px;background:#fff;touch-action:none;cursor:crosshair}
+.toolbar-grid{display:grid;grid-template-columns:1fr 136px;gap:12px;align-items:end;margin-top:14px}
+.color-input{height:38px;padding:4px}
+.preset-row{display:flex;gap:7px;align-items:center;margin-top:7px}
+.swatch{width:28px;height:28px;border:2px solid #fff;border-radius:50%;box-shadow:0 0 0 1px #cbd5e1;cursor:pointer}
+.swatch.active{box-shadow:0 0 0 2px #2563eb}
+.tool-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.btn-soft{background:#f8fafc;color:#334155;border:1px solid #cbd5e1;font-weight:700;border-radius:8px;padding:8px 11px;font-size:.82rem}
+.section-divider{border:none;border-top:1px solid #f1f5f9;margin:14px 0}
+.radio-pills{display:flex;flex-wrap:wrap;gap:8px}
+.radio-pill input{position:absolute;opacity:0}
+.radio-pill span{display:inline-flex;align-items:center;gap:6px;border:1px solid #cbd5e1;border-radius:8px;padding:8px 11px;font-weight:700;font-size:.82rem;color:#475569;background:#fff}
+.radio-pill input:checked+span{border-color:#2563eb;background:#eff6ff;color:#1e3a8a}
+.result-panel{background:linear-gradient(160deg,#1e3a8a 0%,#2563eb 100%);border-radius:12px;color:#fff;padding:18px 20px;position:sticky;top:96px;box-shadow:0 4px 20px rgba(30,58,138,.35)}
+.result-title{font-size:.88rem;font-weight:700;opacity:.9;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.preview-box{background-color:#fff;border-radius:12px;min-height:260px;display:flex;align-items:center;justify-content:center;padding:18px;margin-bottom:12px;overflow:auto;background-image:linear-gradient(45deg,#e2e8f0 25%,transparent 25%),linear-gradient(-45deg,#e2e8f0 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#e2e8f0 75%),linear-gradient(-45deg,transparent 75%,#e2e8f0 75%);background-size:18px 18px;background-position:0 0,0 9px,9px -9px,-9px 0}
+#previewCanvas{display:block;max-width:100%;height:auto}
+.empty-preview{color:#64748b;text-align:center;font-size:.82rem;line-height:1.5;background:rgba(255,255,255,.86);border-radius:8px;padding:14px}
+.download-options{background:rgba(255,255,255,.13);border-radius:8px;padding:10px 11px;margin-bottom:12px}
+.download-options label{display:flex;gap:7px;align-items:center;font-size:.78rem;margin:7px 0;color:rgba(255,255,255,.92)}
+.result-actions{display:grid;gap:8px}
+.btn-download{background:#fff;color:#1e3a8a;border:0;font-weight:800;border-radius:8px;padding:10px 12px}
+.btn-reset{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.28);font-weight:700;border-radius:8px;padding:9px 12px}
+.disclaimer{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.75rem;color:#713f12;margin-top:16px;display:flex;gap:8px;align-items:flex-start}
+.content-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px 20px;margin-top:16px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.content-card h2{font-size:1rem;font-weight:800;color:#0f172a;margin:0 0 10px}
+.use-list{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0;padding:0;list-style:none}
+.use-list li{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;font-size:.8rem;color:#475569}
+.accordion-button{font-size:.85rem;font-weight:700}
+.accordion-body{font-size:.82rem;color:#475569;line-height:1.6}
+footer{background:#0f172a;color:rgba(255,255,255,.65);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}
+footer a{color:rgba(255,255,255,.7);text-decoration:none}
+@media(max-width:991px){.main-layout{grid-template-columns:1fr}.result-panel{position:static}}
+@media(max-width:576px){
+  .page-hero h1{font-size:1.2rem}
+  .sig-tabs{grid-template-columns:1fr}
+  .toolbar-grid,.use-list{grid-template-columns:1fr}
+  #drawCanvas{height:220px}
+  .preview-box{min-height:220px}
+}
+</style>
+</head>
+<body>
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../../tax/index.html">세금</a></li>
+<li><a href="../../work/index.html">급여·노동</a></li>
+<li><a href="../../tools/index.html" class="on">도구</a></li>
+<li><a href="../../realestate/index.html">부동산</a></li>
+<li><a href="../../money/index.html">금융·투자</a></li>
+<li><a href="../../student/index.html">학생</a></li>
+<li><a href="../../parent/index.html">학부모·육아</a></li>
+<li><a href="../../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="../qr-code/index.html" class="mc-done">QR코드</a></li>
+<li><a href="../color-picker/index.html" class="mc-done">컬러피커</a></li>
+<li><a href="../image-resize/index.html" class="mc-done">이미지리사이즈</a></li>
+<li><a href="../pdf-merge/index.html" class="mc-done">PDF합치기</a></li>
+<li><a href="../pdf-split/index.html" class="mc-done">PDF분할</a></li>
+<li><a href="../signature/index.html" class="on mc-done">서명생성</a></li>
+<li><a href="../watermark/index.html" class="mc-done">워터마크</a></li>
+<li><span class="wip">배경제거</span></li>
+<li><span class="wip">HWP변환</span></li>
+<li><span class="wip">증명사진</span></li>
+<li><span class="wip">동영상GIF</span></li>
+<li><span class="wip">오디오추출</span></li>
+<li><span class="wip">PDF압축</span></li>
+<li><span class="wip">목업</span></li>
+<li><span class="wip">엑셀이미지</span></li>
+<li><span class="wip">TTS</span></li>
+</ul></div></div>
+</div>
+
+<div class="page-hero">
+  <div class="container hero-content">
+    <div class="breadcrumb-mini"><a href="../../index.html">mycalc</a><i class="bi bi-chevron-right"></i><a href="../index.html">도구</a><i class="bi bi-chevron-right"></i><span>서명 생성기</span></div>
+    <div class="hero-badge"><i class="bi bi-shield-check me-1"></i>브라우저 처리 · 서버 저장 없음</div>
+    <h1>전자서명 & 도장 생성기</h1>
+    <p>직접 그리기, 텍스트 입력, 도장 생성 방식으로 투명 배경 서명 이미지를 만듭니다.</p>
+  </div>
+</div>
+
+<div class="gi-tabs-wrap"><div class="container"><ul class="gi-tabs">
+<li><a href="index.html" class="cur">서명 만들기</a></li>
+<li><span>사용 가이드</span></li>
+</ul></div></div>
+
+<div class="container">
+<div class="main-layout">
+<div>
+<div class="input-card">
+  <div class="input-card-header">
+    <div class="input-card-title"><i class="bi bi-vector-pen" style="color:#1e3a8a"></i> 서명 입력</div>
+  </div>
+  <div class="input-card-body">
+    <div class="sig-tabs" role="tablist" aria-label="서명 생성 방식">
+      <button class="sig-tab active" data-tab="draw" type="button"><i class="bi bi-pencil me-1"></i>직접 그리기</button>
+      <button class="sig-tab" data-tab="text" type="button"><i class="bi bi-type me-1"></i>텍스트 입력</button>
+      <button class="sig-tab" data-tab="stamp" type="button"><i class="bi bi-record-circle me-1"></i>도장 생성</button>
+    </div>
+
+    <div class="sig-form active" data-form="draw">
+      <label class="form-label" for="drawCanvas">드로잉 영역</label>
+      <div class="canvas-wrap"><canvas id="drawCanvas" width="720" height="260" aria-label="서명을 그리는 캔버스"></canvas></div>
+      <div class="toolbar-grid">
+        <div>
+          <label class="form-label" for="lineWidth">선 굵기 <span id="lineWidthValue">3px</span></label>
+          <input class="form-range sig-input" id="lineWidth" type="range" min="1" max="10" value="3">
+        </div>
+        <div>
+          <label class="form-label" for="drawColor">선 색상</label>
+          <input class="form-control form-control-color color-input sig-input" id="drawColor" type="color" value="#000000">
+        </div>
+      </div>
+      <div class="preset-row" aria-label="선 색상 프리셋">
+        <button class="swatch active" type="button" data-color="#000000" style="background:#000000" aria-label="검정"></button>
+        <button class="swatch" type="button" data-color="#1d4ed8" style="background:#1d4ed8" aria-label="파랑"></button>
+        <button class="swatch" type="button" data-color="#dc2626" style="background:#dc2626" aria-label="빨강"></button>
+      </div>
+      <div class="tool-actions">
+        <button class="btn-soft" type="button" id="undoBtn"><i class="bi bi-arrow-counterclockwise me-1"></i>되돌리기</button>
+        <button class="btn-soft" type="button" id="clearDrawBtn"><i class="bi bi-trash3 me-1"></i>지우기</button>
+      </div>
+    </div>
+
+    <div class="sig-form" data-form="text">
+      <div class="mb-3">
+        <label class="form-label" for="textName">이름</label>
+        <input class="form-control form-control-lg sig-input" id="textName" type="text" placeholder="홍길동">
+      </div>
+      <div class="row g-2">
+        <div class="col-sm-6">
+          <label class="form-label" for="fontFamily">글꼴</label>
+          <select class="form-select sig-input" id="fontFamily">
+            <option value="'Nanum Pen Script', cursive" selected>나눔손글씨</option>
+            <option value="'Nanum Myeongjo', serif">나눔명조</option>
+            <option value="'Gowun Batang', serif">궁서체 스타일</option>
+            <option value="'Dancing Script', cursive">영문 필기 - Dancing Script</option>
+            <option value="'Great Vibes', cursive">영문 필기 - Great Vibes</option>
+          </select>
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label" for="textColor">글자 색상</label>
+          <input class="form-control form-control-color color-input sig-input" id="textColor" type="color" value="#000000">
+        </div>
+      </div>
+      <div class="mt-3">
+        <label class="form-label" for="fontSize">글자 크기 <span id="fontSizeValue">48px</span></label>
+        <input class="form-range sig-input" id="fontSize" type="range" min="24" max="72" value="48">
+      </div>
+    </div>
+
+    <div class="sig-form" data-form="stamp">
+      <div class="mb-3">
+        <label class="form-label" for="stampName">도장 이름</label>
+        <input class="form-control form-control-lg sig-input" id="stampName" type="text" maxlength="4" placeholder="홍길동">
+        <div class="form-text">2~4글자로 입력하면 도장 형태에 맞춰 배치됩니다.</div>
+      </div>
+      <div class="row g-3">
+        <div class="col-sm-6">
+          <label class="form-label">도장 스타일</label>
+          <div class="radio-pills">
+            <label class="radio-pill"><input class="sig-input" type="radio" name="stampShape" value="circle" checked><span><i class="bi bi-circle"></i>원형</span></label>
+            <label class="radio-pill"><input class="sig-input" type="radio" name="stampShape" value="square"><span><i class="bi bi-square"></i>사각형</span></label>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label">도장 색상</label>
+          <div class="radio-pills">
+            <label class="radio-pill"><input class="sig-input" type="radio" name="stampColor" value="#dc2626" checked><span>빨강</span></label>
+            <label class="radio-pill"><input class="sig-input" type="radio" name="stampColor" value="#1d4ed8"><span>파랑</span></label>
+            <label class="radio-pill"><input class="sig-input" type="radio" name="stampColor" value="#111827"><span>검정</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="disclaimer">
+  <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1"></i>
+  <span>이 도구는 서명 이미지를 만드는 용도입니다. 계약이나 공공 제출 전에는 문서의 요구 형식과 법적 효력 요건을 별도로 확인하세요.</span>
+</div>
+
+<div class="content-card">
+  <h2>전자 서명이란?</h2>
+  <p class="mb-0">전자 서명은 전자문서에 본인 의사를 표시하는 방식입니다. 이 도구는 문서에 삽입할 수 있는 서명·도장 이미지를 브라우저에서 생성합니다.</p>
+</div>
+
+<div class="content-card">
+  <h2>활용법</h2>
+  <ul class="use-list">
+    <li><strong>PDF 문서 삽입</strong><br>투명 PNG를 PDF 편집기에 올려 서명란에 배치</li>
+    <li><strong>이메일 서명</strong><br>메일 푸터나 명함 이미지에 서명 추가</li>
+    <li><strong>계약서</strong><br>내부 확인용 문서에 서명 또는 도장 이미지 삽입</li>
+  </ul>
+</div>
+
+<div class="content-card">
+  <h2>FAQ</h2>
+  <div class="accordion" id="signatureFaq">
+    <div class="accordion-item">
+      <h3 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">만든 서명에 법적 효력이 있나요?</button></h3>
+      <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#signatureFaq"><div class="accordion-body">이 도구가 만드는 결과물은 단순 이미지입니다. 본인 인증, 위변조 방지, 전자서명 인증 절차가 필요한 법적 전자서명과는 다릅니다.</div></div>
+    </div>
+    <div class="accordion-item">
+      <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">서명이 서버에 저장되나요?</button></h3>
+      <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#signatureFaq"><div class="accordion-body">아니오. 모든 그리기와 이미지 생성은 100% 브라우저에서 처리되며 서버로 전송하지 않습니다.</div></div>
+    </div>
+    <div class="accordion-item">
+      <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">투명 배경 서명은 어떻게 쓰나요?</button></h3>
+      <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#signatureFaq"><div class="accordion-body">다운로드 옵션에서 PNG 투명 배경을 선택한 뒤 문서, PDF 편집기, 이미지 편집기에 삽입하면 배경 없이 서명만 배치할 수 있습니다.</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div>
+  <div class="result-panel">
+    <div class="result-title"><i class="bi bi-eye-fill"></i> 서명 미리보기</div>
+    <div class="preview-box">
+      <canvas id="previewCanvas" width="720" height="260" aria-label="생성된 서명 미리보기"></canvas>
+      <div class="empty-preview" id="emptyPreview"><i class="bi bi-vector-pen fs-2 d-block mb-2"></i>서명을 그리거나 이름을 입력하세요.</div>
+    </div>
+    <div class="download-options">
+      <div class="payload-label mb-1">다운로드 옵션</div>
+      <label><input type="radio" name="downloadType" value="png-transparent" checked> PNG (투명 배경)</label>
+      <label><input type="radio" name="downloadType" value="png-white"> PNG (흰색 배경)</label>
+      <label><input type="radio" name="downloadType" value="jpg-white"> JPG (흰색 배경)</label>
+    </div>
+    <div class="result-actions">
+      <button class="btn-download" id="downloadBtn" type="button"><i class="bi bi-download me-1"></i> 다운로드</button>
+      <button class="btn-reset" type="button" id="resetBtn"><i class="bi bi-arrow-clockwise me-1"></i> 새 서명 만들기</button>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+<footer><div class="container">© 2026 mycalc · 서명 이미지는 브라우저에서만 생성됩니다. | <a href="../../index.html">메인으로</a></div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const state = {
+  tab: 'draw',
+  drawing: false,
+  strokes: [],
+  currentStroke: null,
+  hasContent: false
+};
+const $ = id => document.getElementById(id);
+const drawCanvas = $('drawCanvas');
+const drawCtx = drawCanvas.getContext('2d');
+const previewCanvas = $('previewCanvas');
+const previewCtx = previewCanvas.getContext('2d');
+const logicalSize = { width: 720, height: 260 };
+
+function getRadioValue(name) {
+  const selected = document.querySelector(`input[name="${name}"]:checked`);
+  return selected ? selected.value : '';
+}
+
+function updateRangeLabels() {
+  $('lineWidthValue').textContent = `${$('lineWidth').value}px`;
+  $('fontSizeValue').textContent = `${$('fontSize').value}px`;
+}
+
+function clearCanvas(ctx) {
+  ctx.clearRect(0, 0, logicalSize.width, logicalSize.height);
+}
+
+function prepareLine(ctx, color, width) {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = width;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+}
+
+function drawStroke(ctx, stroke) {
+  if (!stroke.points.length) return;
+  prepareLine(ctx, stroke.color, stroke.width);
+  ctx.beginPath();
+  ctx.moveTo(stroke.points[0].x, stroke.points[0].y);
+  if (stroke.points.length === 1) {
+    ctx.lineTo(stroke.points[0].x + 0.1, stroke.points[0].y + 0.1);
+  } else {
+    for (let i = 1; i < stroke.points.length; i += 1) {
+      const prev = stroke.points[i - 1];
+      const point = stroke.points[i];
+      const midX = (prev.x + point.x) / 2;
+      const midY = (prev.y + point.y) / 2;
+      ctx.quadraticCurveTo(prev.x, prev.y, midX, midY);
+    }
+  }
+  ctx.stroke();
+}
+
+function redrawDrawCanvas() {
+  clearCanvas(drawCtx);
+  state.strokes.forEach(stroke => drawStroke(drawCtx, stroke));
+}
+
+function updateEmptyState() {
+  $('emptyPreview').style.display = state.hasContent ? 'none' : 'block';
+  previewCanvas.style.display = state.hasContent ? 'block' : 'none';
+}
+
+function renderDrawMode() {
+  clearCanvas(previewCtx);
+  state.strokes.forEach(stroke => drawStroke(previewCtx, stroke));
+  state.hasContent = state.strokes.length > 0;
+  updateEmptyState();
+}
+
+function renderTextMode() {
+  clearCanvas(previewCtx);
+  const name = $('textName').value.trim();
+  if (!name) {
+    state.hasContent = false;
+    updateEmptyState();
+    return;
+  }
+  const size = parseInt($('fontSize').value, 10) || 48;
+  previewCtx.fillStyle = $('textColor').value;
+  previewCtx.font = `${size}px ${$('fontFamily').value}`;
+  previewCtx.textAlign = 'center';
+  previewCtx.textBaseline = 'middle';
+  previewCtx.fillText(name, logicalSize.width / 2, logicalSize.height / 2 + 8);
+  state.hasContent = true;
+  updateEmptyState();
+}
+
+function renderStampMode() {
+  clearCanvas(previewCtx);
+  const name = $('stampName').value.trim().slice(0, 4);
+  if (name.length < 2) {
+    state.hasContent = false;
+    updateEmptyState();
+    return;
+  }
+  const color = getRadioValue('stampColor') || '#dc2626';
+  const shape = getRadioValue('stampShape') || 'circle';
+  const cx = logicalSize.width / 2;
+  const cy = logicalSize.height / 2;
+  const size = 156;
+  previewCtx.strokeStyle = color;
+  previewCtx.fillStyle = color;
+  previewCtx.lineWidth = 7;
+  previewCtx.lineJoin = 'round';
+  if (shape === 'circle') {
+    previewCtx.beginPath();
+    previewCtx.arc(cx, cy, size / 2, 0, Math.PI * 2);
+    previewCtx.stroke();
+    previewCtx.beginPath();
+    previewCtx.arc(cx, cy, size / 2 - 14, 0, Math.PI * 2);
+    previewCtx.lineWidth = 2;
+    previewCtx.stroke();
+  } else {
+    previewCtx.strokeRect(cx - size / 2, cy - size / 2, size, size);
+    previewCtx.lineWidth = 2;
+    previewCtx.strokeRect(cx - size / 2 + 14, cy - size / 2 + 14, size - 28, size - 28);
+  }
+  previewCtx.font = `700 ${name.length >= 4 ? 40 : 48}px 'Gowun Batang', serif`;
+  previewCtx.textAlign = 'center';
+  previewCtx.textBaseline = 'middle';
+  const chars = Array.from(name);
+  const positions = chars.length === 2
+    ? [[cx, cy - 26], [cx, cy + 26]]
+    : chars.length === 3
+      ? [[cx, cy - 42], [cx - 28, cy + 24], [cx + 28, cy + 24]]
+      : [[cx - 32, cy - 32], [cx + 32, cy - 32], [cx - 32, cy + 32], [cx + 32, cy + 32]];
+  chars.forEach((char, index) => previewCtx.fillText(char, positions[index][0], positions[index][1]));
+  state.hasContent = true;
+  updateEmptyState();
+}
+
+function renderActive() {
+  updateRangeLabels();
+  if (state.tab === 'draw') renderDrawMode();
+  if (state.tab === 'text') renderTextMode();
+  if (state.tab === 'stamp') renderStampMode();
+}
+
+function getCanvasPoint(event) {
+  const rect = drawCanvas.getBoundingClientRect();
+  return {
+    x: ((event.clientX - rect.left) / rect.width) * logicalSize.width,
+    y: ((event.clientY - rect.top) / rect.height) * logicalSize.height
+  };
+}
+
+function startDrawing(event) {
+  if (state.tab !== 'draw') return;
+  event.preventDefault();
+  drawCanvas.setPointerCapture(event.pointerId);
+  state.drawing = true;
+  state.currentStroke = {
+    color: $('drawColor').value,
+    width: parseInt($('lineWidth').value, 10) || 3,
+    points: [getCanvasPoint(event)]
+  };
+  drawStroke(drawCtx, state.currentStroke);
+  renderDrawMode();
+}
+
+function continueDrawing(event) {
+  if (!state.drawing || !state.currentStroke) return;
+  event.preventDefault();
+  state.currentStroke.points.push(getCanvasPoint(event));
+  redrawDrawCanvas();
+  drawStroke(drawCtx, state.currentStroke);
+  clearCanvas(previewCtx);
+  state.strokes.forEach(stroke => drawStroke(previewCtx, stroke));
+  drawStroke(previewCtx, state.currentStroke);
+  state.hasContent = true;
+  updateEmptyState();
+}
+
+function stopDrawing(event) {
+  if (!state.drawing || !state.currentStroke) return;
+  event.preventDefault();
+  state.strokes.push(state.currentStroke);
+  state.currentStroke = null;
+  state.drawing = false;
+  renderDrawMode();
+}
+
+function setTab(tab) {
+  state.tab = tab;
+  document.querySelectorAll('.sig-tab').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
+  document.querySelectorAll('.sig-form').forEach(form => form.classList.toggle('active', form.dataset.form === tab));
+  renderActive();
+}
+
+function makeDownloadCanvas(type) {
+  const out = document.createElement('canvas');
+  out.width = logicalSize.width;
+  out.height = logicalSize.height;
+  const ctx = out.getContext('2d');
+  if (type !== 'png-transparent') {
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, out.width, out.height);
+  }
+  ctx.drawImage(previewCanvas, 0, 0);
+  return out;
+}
+
+function downloadSignature() {
+  if (!state.hasContent) return;
+  const type = getRadioValue('downloadType') || 'png-transparent';
+  const out = makeDownloadCanvas(type);
+  const mime = type === 'jpg-white' ? 'image/jpeg' : 'image/png';
+  const url = out.toDataURL(mime, 0.95);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = type === 'jpg-white' ? 'mycalc-signature.jpg' : 'mycalc-signature.png';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+function resetAll() {
+  state.tab = 'draw';
+  state.drawing = false;
+  state.strokes = [];
+  state.currentStroke = null;
+  $('lineWidth').value = '3';
+  $('drawColor').value = '#000000';
+  $('textName').value = '';
+  $('fontFamily').selectedIndex = 0;
+  $('fontSize').value = '48';
+  $('textColor').value = '#000000';
+  $('stampName').value = '';
+  document.querySelector('input[name="stampShape"][value="circle"]').checked = true;
+  document.querySelector('input[name="stampColor"][value="#dc2626"]').checked = true;
+  document.querySelector('input[name="downloadType"][value="png-transparent"]').checked = true;
+  document.querySelectorAll('.swatch').forEach(btn => btn.classList.toggle('active', btn.dataset.color === '#000000'));
+  redrawDrawCanvas();
+  setTab('draw');
+}
+
+drawCanvas.addEventListener('pointerdown', startDrawing);
+drawCanvas.addEventListener('pointermove', continueDrawing);
+drawCanvas.addEventListener('pointerup', stopDrawing);
+drawCanvas.addEventListener('pointercancel', stopDrawing);
+drawCanvas.addEventListener('pointerleave', event => {
+  if (state.drawing) stopDrawing(event);
+});
+['touchstart','touchmove','touchend','touchcancel'].forEach(type => {
+  drawCanvas.addEventListener(type, event => event.preventDefault(), { passive: false });
+});
+document.querySelectorAll('.sig-tab').forEach(btn => btn.addEventListener('click', () => setTab(btn.dataset.tab)));
+document.querySelectorAll('.sig-input').forEach(input => {
+  input.addEventListener('input', renderActive);
+  input.addEventListener('change', renderActive);
+});
+document.querySelectorAll('.swatch').forEach(btn => {
+  btn.addEventListener('click', () => {
+    $('drawColor').value = btn.dataset.color;
+    document.querySelectorAll('.swatch').forEach(item => item.classList.toggle('active', item === btn));
+  });
+});
+$('undoBtn').addEventListener('click', () => {
+  state.strokes.pop();
+  redrawDrawCanvas();
+  renderDrawMode();
+});
+$('clearDrawBtn').addEventListener('click', () => {
+  state.strokes = [];
+  redrawDrawCanvas();
+  renderDrawMode();
+});
+$('downloadBtn').addEventListener('click', downloadSignature);
+$('resetBtn').addEventListener('click', resetAll);
+document.fonts.ready.then(renderActive);
+resetAll();
+</script>
+</body>
+</html>
