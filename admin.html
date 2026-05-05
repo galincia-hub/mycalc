@@ -63,7 +63,12 @@ select{border:1px solid #d1d5db;border-radius:6px;padding:5px 10px;font-size:.8r
   <a href="index.html" class="brand">my<span>calc</span></a>
   <span class="header-sub">관리자 대시보드</span>
   <span class="last-updated" id="lastUpdated"></span>
-  <button class="refresh-btn" onclick="loadAll()"><i class="bi bi-arrow-clockwise me-1"></i>새로고침</button>
+  <div style="margin-left:auto;display:flex;gap:6px;align-items:center">
+    <a href="https://search.google.com/search-console/performance/search-analytics?resource_id=https%3A%2F%2Fmycalc.co.kr%2F&last_24_hours=true&time_granularity=HOUR" target="_blank" class="refresh-btn" style="text-decoration:none"><i class="bi bi-bar-chart-line me-1"></i>GSC <i class="bi bi-box-arrow-up-right" style="font-size:.65rem"></i></a>
+    <a href="https://app.netlify.com/projects/mycalckr/domain-management" target="_blank" class="refresh-btn" style="text-decoration:none"><i class="bi bi-cloud me-1"></i>Netlify <i class="bi bi-box-arrow-up-right" style="font-size:.65rem"></i></a>
+    <a href="https://supabase.com/dashboard/project/wblffwhxaqxtqjccmwig" target="_blank" class="refresh-btn" style="text-decoration:none"><i class="bi bi-database me-1"></i>Supabase <i class="bi bi-box-arrow-up-right" style="font-size:.65rem"></i></a>
+    <button class="refresh-btn" onclick="loadAll()"><i class="bi bi-arrow-clockwise me-1"></i>새로고침</button>
+  </div>
 </header>
 
 <div class="tabs-wrap">
