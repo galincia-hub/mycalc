@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -70,7 +70,17 @@
     .law-badge { display: inline-flex; align-items: center; gap: 4px; background: #1e3a8a; color: #fff; border-radius: 6px; padding: 3px 8px; font-size: .72rem; font-weight: 600; margin-right: 4px; }
     .section-num { display: inline-flex; align-items: center; justify-content: center; background: #1e3a8a; color: #fff; border-radius: 6px; width: 22px; height: 22px; font-size: .72rem; font-weight: 700; flex-shrink: 0; }
   </style>
-</head>
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mycalc.co.kr/tax/general-income/about.html">
+  <meta property="og:title" content="종합소득세란? – mycalc">
+  <meta property="og:description" content="종합소득세란? – mycalc">
+  <meta property="og:url" content="https://mycalc.co.kr/tax/general-income/about.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="마이캘크">
+<script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"종합소득세란? – mycalc","url":"https://mycalc.co.kr/tax/general-income/about.html","applicationCategory":"FinanceApplication","operatingSystem":"All","inLanguage":"ko","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}}
+  </script>
+  </head>
 <body>
 <div class="mc-nav-wrap">
 <div class="mc-t1"><div class="container"><div class="mc-row">
@@ -228,5 +238,34 @@
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>function toggleNav(){document.getElementById('navLinks').classList.toggle('open')}</script>
+<script>
+(function(){
+  var B=/bot|crawler|spider|crawling|googlebot|bingbot|yandexbot|baiduspider|slurp|duckduckbot|facebookexternalhit|ia_archiver|msnbot|scrapy|applebot|semrushbot|ahrefsbot|petalbot|bytespider/i;
+  if(B.test(navigator.userAgent))return;
+  var S='https://wblffwhxaqxtqjccmwig.supabase.co';
+  var K='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndibGZmd2h4YXF4dHFqY2Ntd2lnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4OTQzMDcsImV4cCI6MjA5MzQ3MDMwN30.9uGXG1zw3bF5ojMcfQnPr8zsirn3WejIjK60XOZfAcg';
+  var p=location.pathname;
+  var s=(p.replace(/^\//,'')||'').split('/')[0]||'main';
+  var r=document.referrer,t='direct';
+  if(r){try{var h=new URL(r).hostname;
+    if(/google\.(com|co\.kr)$/.test(h))t='google';
+    else if(/search\.naver\.com/.test(h))t='naver';
+    else if(/search\.daum\.net/.test(h))t='daum';
+    else if(/bing\.com/.test(h))t='bing';
+    else if(/(^|\.)t\.co$|twitter\.com|x\.com/.test(h))t='twitter';
+    else if(/facebook\.com/.test(h))t='facebook';
+    else if(/instagram\.com/.test(h))t='instagram';
+    else if(/youtube\.com/.test(h))t='youtube';
+    else if(/perplexity\.ai/.test(h))t='perplexity';
+    else if(/chatgpt\.com|chat\.openai\.com/.test(h))t='chatgpt';
+    else t='other';
+  }catch(e){t='other';}}
+  fetch(S+'/rest/v1/mycalc_page_views',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','apikey':K,'Authorization':'Bearer '+K,'Prefer':'return=minimal'},
+    body:JSON.stringify({page_path:p,page_title:document.title,subdomain:s,referrer:r,ref_type:t,user_agent:navigator.userAgent})
+  }).catch(function(){});
+})();
+</script>
 </body>
 </html>

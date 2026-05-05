@@ -23,7 +23,17 @@ body{font-family:'Pretendard',-apple-system,sans-serif;background:#f1f5f9;font-s
 .result-panel{background:linear-gradient(160deg,#1e3a8a 0%,#2563eb 100%);border-radius:12px;color:#fff;padding:18px 20px;position:sticky;top:96px;box-shadow:0 4px 20px rgba(30,58,138,.35)}.result-title{font-size:.88rem;font-weight:700;opacity:.9;margin-bottom:12px;display:flex;align-items:center;gap:6px}.split-btn{width:100%;background:#fff;color:#1e3a8a;border:0;font-weight:900;border-radius:8px;padding:11px 12px}.split-btn:disabled{opacity:.55;cursor:not-allowed}.progress-wrap{margin:14px 0}.progress{height:10px;background:rgba(255,255,255,.22)}.progress-bar{background:#bfdbfe}.status-text{font-size:.76rem;opacity:.82;margin-top:7px;line-height:1.45}.info-card{background:rgba(255,255,255,.13);border-radius:8px;padding:9px 10px;margin:12px 0}.info-row{display:flex;justify-content:space-between;gap:10px;font-size:.76rem;padding:3px 0}.info-row span:first-child{opacity:.76}.info-row span:last-child{font-weight:800;text-align:right}.result-actions{display:grid;gap:8px}.download-btn{background:#fff;color:#1e3a8a;border:0;font-weight:800;border-radius:8px;padding:10px 12px}.download-btn:disabled{opacity:.55;cursor:not-allowed}.reset-btn{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.28);font-weight:700;border-radius:8px;padding:9px 12px}.panel-note{font-size:.73rem;color:rgba(255,255,255,.72);line-height:1.45;margin-top:10px}
 .disclaimer{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.75rem;color:#713f12;margin-top:16px;display:flex;gap:8px;align-items:flex-start}.content-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px 20px;margin-top:16px;box-shadow:0 1px 4px rgba(0,0,0,.04)}.content-card h2{font-size:1rem;font-weight:800;color:#0f172a;margin:0 0 10px}.accordion-button{font-size:.85rem;font-weight:700}.accordion-body{font-size:.82rem;color:#475569;line-height:1.6}footer{background:#0f172a;color:rgba(255,255,255,.65);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}footer a{color:rgba(255,255,255,.7);text-decoration:none}@media(max-width:576px){.page-hero h1{font-size:1.2rem}.split-tabs{grid-template-columns:1fr}}
 </style>
-</head>
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mycalc.co.kr/tools/pdf-split/">
+  <meta property="og:title" content="PDF 분할 - 무료 온라인 PDF 페이지 나누기 (서버 전송 없음) | mycalc">
+  <meta property="og:description" content="PDF 파일을 원하는 페이지로 분할하세요. 범위 지정, 페이지별, N페이지 단위 분할 지원. 서버 전송 없이 브라우저에서 100% 처리.">
+  <meta property="og:url" content="https://mycalc.co.kr/tools/pdf-split/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="마이캘크">
+<script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"PDF 분할 - 무료 온라인 PDF 페이지 나누기 (서버 전송 없음) | mycalc","url":"https://mycalc.co.kr/tools/pdf-split/","applicationCategory":"UtilitiesApplication","operatingSystem":"All","inLanguage":"ko","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}}
+  </script>
+  </head>
 <body>
 <div class="mc-nav-wrap">
 <div class="mc-t1"><div class="container"><div class="mc-row">
@@ -230,6 +240,35 @@ $('fileInput').addEventListener('change',()=>loadFile($('fileInput').files[0]));
 $('dropZone').addEventListener('drop',e=>loadFile(e.dataTransfer.files[0]));
 document.querySelectorAll('.split-tab').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));
 $('splitBtn').addEventListener('click',splitPdf); $('downloadBtn').addEventListener('click',download); $('resetBtn').addEventListener('click',resetAll);
+</script>
+<script>
+(function(){
+  var B=/bot|crawler|spider|crawling|googlebot|bingbot|yandexbot|baiduspider|slurp|duckduckbot|facebookexternalhit|ia_archiver|msnbot|scrapy|applebot|semrushbot|ahrefsbot|petalbot|bytespider/i;
+  if(B.test(navigator.userAgent))return;
+  var S='https://wblffwhxaqxtqjccmwig.supabase.co';
+  var K='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndibGZmd2h4YXF4dHFqY2Ntd2lnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4OTQzMDcsImV4cCI6MjA5MzQ3MDMwN30.9uGXG1zw3bF5ojMcfQnPr8zsirn3WejIjK60XOZfAcg';
+  var p=location.pathname;
+  var s=(p.replace(/^\//,'')||'').split('/')[0]||'main';
+  var r=document.referrer,t='direct';
+  if(r){try{var h=new URL(r).hostname;
+    if(/google\.(com|co\.kr)$/.test(h))t='google';
+    else if(/search\.naver\.com/.test(h))t='naver';
+    else if(/search\.daum\.net/.test(h))t='daum';
+    else if(/bing\.com/.test(h))t='bing';
+    else if(/(^|\.)t\.co$|twitter\.com|x\.com/.test(h))t='twitter';
+    else if(/facebook\.com/.test(h))t='facebook';
+    else if(/instagram\.com/.test(h))t='instagram';
+    else if(/youtube\.com/.test(h))t='youtube';
+    else if(/perplexity\.ai/.test(h))t='perplexity';
+    else if(/chatgpt\.com|chat\.openai\.com/.test(h))t='chatgpt';
+    else t='other';
+  }catch(e){t='other';}}
+  fetch(S+'/rest/v1/mycalc_page_views',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','apikey':K,'Authorization':'Bearer '+K,'Prefer':'return=minimal'},
+    body:JSON.stringify({page_path:p,page_title:document.title,subdomain:s,referrer:r,ref_type:t,user_agent:navigator.userAgent})
+  }).catch(function(){});
+})();
 </script>
 </body>
 </html>

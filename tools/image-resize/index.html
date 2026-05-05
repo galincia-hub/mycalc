@@ -33,7 +33,17 @@ body{font-family:'Pretendard',-apple-system,sans-serif;background:#f1f5f9;font-s
 footer{background:#0f172a;color:rgba(255,255,255,.65);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}footer a{color:rgba(255,255,255,.7);text-decoration:none}
 @media(max-width:576px){.page-hero h1{font-size:1.2rem}.mode-tabs,.format-options{grid-template-columns:1fr}.range-row{grid-template-columns:1fr}.preview-wrap{min-height:190px}}
 </style>
-</head>
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mycalc.co.kr/tools/image-resize/">
+  <meta property="og:title" content="이미지 크기 변환 - 리사이즈 & 포맷 변환 무료 | mycalc">
+  <meta property="og:description" content="이미지 크기를 무료로 변환하세요. 픽셀 직접 입력, 비율 조정, SNS 프리셋(인스타·유튜브·카카오) 지원. JPG/PNG/WEBP 포맷 변환. 서버 전송 없는 안전한 온라인 도구.">
+  <meta property="og:url" content="https://mycalc.co.kr/tools/image-resize/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="마이캘크">
+<script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"이미지 크기 변환 - 리사이즈 & 포맷 변환 무료 | mycalc","url":"https://mycalc.co.kr/tools/image-resize/","applicationCategory":"UtilitiesApplication","operatingSystem":"All","inLanguage":"ko","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}}
+  </script>
+  </head>
 <body>
 <div class="mc-nav-wrap">
 <div class="mc-t1"><div class="container"><div class="mc-row">
@@ -244,6 +254,35 @@ document.querySelectorAll('input[name="format"]').forEach(r=>r.addEventListener(
 $('qualityRange').addEventListener('input',()=>{setQuality($('qualityRange').value);scheduleConvert();});
 $('qualityInput').addEventListener('input',()=>{setQuality($('qualityInput').value);scheduleConvert();});
 $('downloadBtn').addEventListener('click',download); $('resetBtn').addEventListener('click',resetSettings);
+</script>
+<script>
+(function(){
+  var B=/bot|crawler|spider|crawling|googlebot|bingbot|yandexbot|baiduspider|slurp|duckduckbot|facebookexternalhit|ia_archiver|msnbot|scrapy|applebot|semrushbot|ahrefsbot|petalbot|bytespider/i;
+  if(B.test(navigator.userAgent))return;
+  var S='https://wblffwhxaqxtqjccmwig.supabase.co';
+  var K='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndibGZmd2h4YXF4dHFqY2Ntd2lnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4OTQzMDcsImV4cCI6MjA5MzQ3MDMwN30.9uGXG1zw3bF5ojMcfQnPr8zsirn3WejIjK60XOZfAcg';
+  var p=location.pathname;
+  var s=(p.replace(/^\//,'')||'').split('/')[0]||'main';
+  var r=document.referrer,t='direct';
+  if(r){try{var h=new URL(r).hostname;
+    if(/google\.(com|co\.kr)$/.test(h))t='google';
+    else if(/search\.naver\.com/.test(h))t='naver';
+    else if(/search\.daum\.net/.test(h))t='daum';
+    else if(/bing\.com/.test(h))t='bing';
+    else if(/(^|\.)t\.co$|twitter\.com|x\.com/.test(h))t='twitter';
+    else if(/facebook\.com/.test(h))t='facebook';
+    else if(/instagram\.com/.test(h))t='instagram';
+    else if(/youtube\.com/.test(h))t='youtube';
+    else if(/perplexity\.ai/.test(h))t='perplexity';
+    else if(/chatgpt\.com|chat\.openai\.com/.test(h))t='chatgpt';
+    else t='other';
+  }catch(e){t='other';}}
+  fetch(S+'/rest/v1/mycalc_page_views',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','apikey':K,'Authorization':'Bearer '+K,'Prefer':'return=minimal'},
+    body:JSON.stringify({page_path:p,page_title:document.title,subdomain:s,referrer:r,ref_type:t,user_agent:navigator.userAgent})
+  }).catch(function(){});
+})();
 </script>
 </body>
 </html>

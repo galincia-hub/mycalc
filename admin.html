@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mycalc 관리자 대시보드</title>
+<meta name="robots" content="noindex, nofollow">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}
+header{background:#0f172a;color:#fff;padding:0 20px;display:flex;align-items:center;min-height:52px;gap:12px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.brand{font-weight:800;font-size:1rem;color:#fff;text-decoration:none}.brand span{color:#38bdf8}
+.header-sub{font-size:.78rem;color:rgba(255,255,255,.5);margin-left:4px}
+.refresh-btn{margin-left:auto;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;padding:5px 14px;border-radius:6px;cursor:pointer;font-size:.8rem;transition:background .15s}
+.refresh-btn:hover{background:rgba(255,255,255,.22)}
+.tabs-wrap{background:#1e293b;padding:0 20px;display:flex;gap:0}
+.tab-btn{color:rgba(255,255,255,.55);padding:10px 18px;border:none;background:none;cursor:pointer;font-size:.82rem;font-weight:600;border-bottom:2px solid transparent;transition:all .15s}
+.tab-btn:hover{color:#fff}
+.tab-btn.active{color:#38bdf8;border-bottom-color:#38bdf8}
+.tab-pane{display:none}.tab-pane.active{display:block}
+.container{max-width:1100px;margin:0 auto;padding:20px 16px}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+@media(max-width:768px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
+.stat-card{background:#fff;border-radius:10px;border:1px solid #e2e8f0;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.stat-label{font-size:.72rem;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.stat-value{font-size:1.6rem;font-weight:800;color:#0f172a}
+.stat-sub{font-size:.72rem;color:#94a3b8;margin-top:3px}
+.card{background:#fff;border-radius:10px;border:1px solid #e2e8f0;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:16px}
+.card-title{font-size:.82rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{text-align:left;padding:8px 10px;color:#64748b;font-weight:700;border-bottom:2px solid #f1f5f9;white-space:nowrap}
+td{padding:8px 10px;border-bottom:1px solid #f8fafc;color:#334155}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#f8fafc}
+.badge{display:inline-block;padding:2px 8px;border-radius:8px;font-size:.68rem;font-weight:700}
+.badge-blue{background:#dbeafe;color:#1e40af}
+.badge-green{background:#dcfce7;color:#166534}
+.num{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.bar-wrap{height:80px;display:flex;align-items:flex-end;gap:6px;padding:0 4px}
+.chart-wrap{display:flex;gap:20px}
+.chart-area{flex:1}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bar{background:linear-gradient(to top,#3b82f6,#60a5fa);border-radius:4px 4px 0 0;min-height:2px;width:100%;transition:height .3s}
+.bar-label{font-size:.65rem;color:#94a3b8;white-space:nowrap}
+.bar-val{font-size:.68rem;font-weight:700;color:#1e40af}
+.ref-bar{background:#e2e8f0;border-radius:4px;height:8px;overflow:hidden;margin-top:4px}
+.ref-bar-inner{background:linear-gradient(90deg,#3b82f6,#60a5fa);height:100%;border-radius:4px;transition:width .4s}
+.filter-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.filter-row label{font-size:.78rem;font-weight:600;color:#475569}
+select{border:1px solid #d1d5db;border-radius:6px;padding:5px 10px;font-size:.8rem;color:#1e293b;background:#fff}
+.loading{text-align:center;color:#94a3b8;padding:32px;font-size:.85rem}
+.rank{color:#94a3b8;font-weight:700;font-size:.78rem;width:28px}
+.realtime-time{font-size:.72rem;color:#94a3b8;white-space:nowrap}
+.path-cell{max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:monospace;font-size:.78rem}
+.domain-chip{display:inline-block;padding:1px 7px;border-radius:10px;font-size:.65rem;font-weight:700;background:#f1f5f9;color:#64748b}
+.last-updated{font-size:.72rem;color:rgba(255,255,255,.4);margin-left:8px}
+</style>
+</head>
+<body>
+<header>
+  <a href="index.html" class="brand">my<span>calc</span></a>
+  <span class="header-sub">관리자 대시보드</span>
+  <span class="last-updated" id="lastUpdated"></span>
+  <button class="refresh-btn" onclick="loadAll()"><i class="bi bi-arrow-clockwise me-1"></i>새로고침</button>
+</header>
+
+<div class="tabs-wrap">
+  <button class="tab-btn active" onclick="switchTab(0)"><i class="bi bi-bar-chart-fill me-1"></i>전체 현황</button>
+  <button class="tab-btn" onclick="switchTab(1)"><i class="bi bi-trophy me-1"></i>인기 페이지</button>
+  <button class="tab-btn" onclick="switchTab(2)"><i class="bi bi-signpost-split me-1"></i>유입 경로</button>
+  <button class="tab-btn" onclick="switchTab(3)"><i class="bi bi-activity me-1"></i>실시간</button>
+</div>
+
+<!-- Tab 0: 전체 현황 -->
+<div class="tab-pane active" id="tab0">
+<div class="container">
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-label"><i class="bi bi-eye me-1"></i>총 조회수</div><div class="stat-value" id="statTotal">-</div><div class="stat-sub">누적 전체</div></div>
+    <div class="stat-card"><div class="stat-label"><i class="bi bi-calendar-day me-1"></i>오늘</div><div class="stat-value" id="statToday">-</div><div class="stat-sub" id="statTodayDate"></div></div>
+    <div class="stat-card"><div class="stat-label"><i class="bi bi-calendar-minus me-1"></i>어제</div><div class="stat-value" id="statYesterday">-</div><div class="stat-sub">전일 조회수</div></div>
+    <div class="stat-card"><div class="stat-label"><i class="bi bi-calendar-week me-1"></i>이번 주</div><div class="stat-value" id="statWeek">-</div><div class="stat-sub">최근 7일</div></div>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="card" style="flex:1">
+      <div class="card-title"><i class="bi bi-bar-chart"></i> 최근 7일 일별 조회수</div>
+      <div class="bar-wrap" id="dayChart"><div class="loading">로딩 중...</div></div>
+    </div>
+    <div class="card" style="flex:1">
+      <div class="card-title"><i class="bi bi-grid-3x3-gap"></i> 도메인별 조회수</div>
+      <div id="domainLoading" class="loading">로딩 중...</div>
+      <table id="domainTable" style="display:none">
+        <thead><tr><th>도메인</th><th class="num">조회수</th><th class="num">비율</th></tr></thead>
+        <tbody id="domainBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Tab 1: 인기 페이지 -->
+<div class="tab-pane" id="tab1">
+<div class="container">
+  <div class="filter-row">
+    <label>도메인 필터:</label>
+    <select id="pageFilter" onchange="renderTopPages()">
+      <option value="">전체</option>
+      <option value="main">메인</option>
+      <option value="tax">세금</option>
+      <option value="work">급여·노동</option>
+      <option value="tools">도구</option>
+      <option value="realestate">부동산</option>
+      <option value="money">금융·투자</option>
+      <option value="student">학생</option>
+      <option value="parent">학부모·육아</option>
+      <option value="life">생활</option>
+    </select>
+  </div>
+  <div class="card">
+    <div class="card-title"><i class="bi bi-trophy"></i> TOP 20 인기 페이지</div>
+    <div id="pageLoading" class="loading">로딩 중...</div>
+    <table id="pageTable" style="display:none">
+      <thead><tr><th>#</th><th>페이지</th><th>도메인</th><th class="num">조회수</th></tr></thead>
+      <tbody id="pageBody"></tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- Tab 2: 유입 경로 -->
+<div class="tab-pane" id="tab2">
+<div class="container">
+  <div class="filter-row">
+    <label>도메인 필터:</label>
+    <select id="refFilter" onchange="renderRefTypes()">
+      <option value="">전체</option>
+      <option value="main">메인</option>
+      <option value="tax">세금</option>
+      <option value="work">급여·노동</option>
+      <option value="tools">도구</option>
+      <option value="realestate">부동산</option>
+      <option value="money">금융·투자</option>
+      <option value="student">학생</option>
+      <option value="parent">학부모·육아</option>
+      <option value="life">생활</option>
+    </select>
+  </div>
+  <div class="card">
+    <div class="card-title"><i class="bi bi-signpost-split"></i> 유입 경로별 조회수</div>
+    <div id="refLoading" class="loading">로딩 중...</div>
+    <table id="refTable" style="display:none">
+      <thead><tr><th>유입 경로</th><th class="num">조회수</th><th class="num">비율</th><th style="width:160px">바</th></tr></thead>
+      <tbody id="refBody"></tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- Tab 3: 실시간 -->
+<div class="tab-pane" id="tab3">
+<div class="container">
+  <div class="card">
+    <div class="card-title"><i class="bi bi-activity"></i> 최근 50건 실시간 로그</div>
+    <div id="rtLoading" class="loading">로딩 중...</div>
+    <table id="rtTable" style="display:none">
+      <thead><tr><th>시간</th><th>페이지</th><th>도메인</th><th>유입</th></tr></thead>
+      <tbody id="rtBody"></tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<script>
+const SB = 'https://wblffwhxaqxtqjccmwig.supabase.co';
+const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndibGZmd2h4YXF4dHFqY2Ntd2lnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4OTQzMDcsImV4cCI6MjA5MzQ3MDMwN30.9uGXG1zw3bF5ojMcfQnPr8zsirn3WejIjK60XOZfAcg';
+const HEADERS = { 'apikey': KEY, 'Authorization': 'Bearer ' + KEY };
+
+const REF_LABELS = {
+  google:'구글검색', naver:'네이버검색', daum:'다음검색', bing:'빙검색',
+  direct:'직접접속', twitter:'트위터/X', facebook:'페이스북',
+  instagram:'인스타그램', youtube:'유튜브', perplexity:'퍼플렉시티',
+  chatgpt:'ChatGPT', other:'기타'
+};
+
+let allData = [];
+let rtData = [];
+
+function sbFetch(path, params) {
+  const url = SB + '/rest/v1/' + path + (params ? '?' + params : '');
+  return fetch(url, { headers: HEADERS }).then(r => r.json());
+}
+
+function fmt(n) { return n.toLocaleString('ko-KR'); }
+function dateStr(d) {
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function timeStr(iso) {
+  const d = new Date(iso);
+  return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0') + ':' + String(d.getSeconds()).padStart(2,'0');
+}
+
+async function loadAll() {
+  document.getElementById('lastUpdated').textContent = '로딩 중...';
+  try {
+    // Fetch main data (all records, large limit)
+    const [main, rt] = await Promise.all([
+      sbFetch('mycalc_page_views', 'select=page_path,page_title,subdomain,ref_type,created_at&order=created_at.desc&limit=50000'),
+      sbFetch('mycalc_page_views', 'select=created_at,page_path,page_title,subdomain,ref_type&order=created_at.desc&limit=50')
+    ]);
+    allData = Array.isArray(main) ? main : [];
+    rtData = Array.isArray(rt) ? rt : [];
+    renderOverview();
+    renderTopPages();
+    renderRefTypes();
+    renderRealtime();
+    const now = new Date();
+    document.getElementById('lastUpdated').textContent = '업데이트: ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+  } catch(e) {
+    document.getElementById('lastUpdated').textContent = '오류 발생';
+    console.error(e);
+  }
+}
+
+function renderOverview() {
+  const now = new Date();
+  const todayStr = dateStr(now);
+  const yd = new Date(now); yd.setDate(yd.getDate()-1);
+  const ydStr = dateStr(yd);
+  const week7 = new Date(now); week7.setDate(week7.getDate()-7);
+
+  let total=0, today=0, yesterday=0, week=0;
+  const domainCounts = {};
+  const dayCounts = {};
+
+  allData.forEach(r => {
+    total++;
+    const d = r.created_at ? r.created_at.slice(0,10) : '';
+    if (d === todayStr) today++;
+    if (d === ydStr) yesterday++;
+    const rd = r.created_at ? new Date(r.created_at) : null;
+    if (rd && rd >= week7) week++;
+    const sub = r.subdomain || 'other';
+    domainCounts[sub] = (domainCounts[sub]||0) + 1;
+    if (d) dayCounts[d] = (dayCounts[d]||0) + 1;
+  });
+
+  document.getElementById('statTotal').textContent = fmt(total);
+  document.getElementById('statToday').textContent = fmt(today);
+  document.getElementById('statTodayDate').textContent = todayStr;
+  document.getElementById('statYesterday').textContent = fmt(yesterday);
+  document.getElementById('statWeek').textContent = fmt(week);
+
+  // 7-day chart
+  const days = [];
+  for (let i=6; i>=0; i--) {
+    const d = new Date(now); d.setDate(d.getDate()-i);
+    days.push({date: dateStr(d), label: (d.getMonth()+1)+'/'+(d.getDate())});
+  }
+  const maxDay = Math.max(1, ...days.map(d => dayCounts[d.date]||0));
+  const chartHtml = days.map(d => {
+    const v = dayCounts[d.date]||0;
+    const h = Math.max(4, Math.round((v/maxDay)*72));
+    return `<div class="bar-col">
+      <div class="bar-val">${v||''}</div>
+      <div class="bar" style="height:${h}px"></div>
+      <div class="bar-label">${d.label}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('dayChart').innerHTML = '<div class="bar-wrap" style="height:80px;display:flex;align-items:flex-end;gap:6px;padding:0">' + chartHtml + '</div>';
+
+  // Domain table
+  const domOrder = ['tax','work','tools','realestate','money','student','parent','life','main'];
+  const domLabels = {tax:'세금',work:'급여·노동',tools:'도구',realestate:'부동산',money:'금융·투자',student:'학생',parent:'학부모·육아',life:'생활',main:'메인'};
+  const rows = domOrder.map(d => {
+    const c = domainCounts[d]||0;
+    const pct = total > 0 ? ((c/total)*100).toFixed(1) : '0.0';
+    return `<tr><td><span class="domain-chip">${domLabels[d]||d}</span></td><td class="num">${fmt(c)}</td><td class="num">${pct}%</td></tr>`;
+  }).join('');
+  document.getElementById('domainBody').innerHTML = rows;
+  document.getElementById('domainLoading').style.display = 'none';
+  document.getElementById('domainTable').style.display = '';
+}
+
+function renderTopPages() {
+  const filter = document.getElementById('pageFilter').value;
+  const counts = {};
+  const titles = {};
+  allData.filter(r => !filter || r.subdomain === filter).forEach(r => {
+    const p = r.page_path||'/';
+    counts[p] = (counts[p]||0) + 1;
+    if (!titles[p] && r.page_title) titles[p] = r.page_title;
+  });
+  const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,20);
+  const rows = sorted.map(([path, cnt], i) => {
+    const sub = (path.replace(/^\//,'').split('/')[0])||'main';
+    const title = (titles[path]||path).replace(/</g,'&lt;');
+    return `<tr><td class="rank">${i+1}</td><td><div style="font-size:.78rem;color:#64748b;font-family:monospace">${path}</div><div style="font-size:.82rem;font-weight:600">${title}</div></td><td><span class="domain-chip">${sub}</span></td><td class="num">${fmt(cnt)}</td></tr>`;
+  }).join('') || '<tr><td colspan="4" class="loading">데이터 없음</td></tr>';
+  document.getElementById('pageBody').innerHTML = rows;
+  document.getElementById('pageLoading').style.display = 'none';
+  document.getElementById('pageTable').style.display = '';
+}
+
+function renderRefTypes() {
+  const filter = document.getElementById('refFilter').value;
+  const counts = {};
+  let total = 0;
+  allData.filter(r => !filter || r.subdomain === filter).forEach(r => {
+    const rt = r.ref_type||'direct';
+    counts[rt] = (counts[rt]||0) + 1;
+    total++;
+  });
+  const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  const maxVal = Math.max(1, ...sorted.map(e=>e[1]));
+  const rows = sorted.map(([rt, cnt]) => {
+    const pct = total > 0 ? ((cnt/total)*100).toFixed(1) : '0.0';
+    const barW = Math.round((cnt/maxVal)*100);
+    const label = REF_LABELS[rt]||rt;
+    return `<tr><td><i class="bi bi-arrow-right-circle me-1" style="color:#3b82f6"></i>${label}</td><td class="num">${fmt(cnt)}</td><td class="num">${pct}%</td><td><div class="ref-bar"><div class="ref-bar-inner" style="width:${barW}%"></div></div></td></tr>`;
+  }).join('') || '<tr><td colspan="4" class="loading">데이터 없음</td></tr>';
+  document.getElementById('refBody').innerHTML = rows;
+  document.getElementById('refLoading').style.display = 'none';
+  document.getElementById('refTable').style.display = '';
+}
+
+function renderRealtime() {
+  const rows = rtData.map(r => {
+    const t = r.created_at ? timeStr(r.created_at) : '-';
+    const date = r.created_at ? r.created_at.slice(0,10) : '';
+    const path = (r.page_path||'/').replace(/</g,'&lt;');
+    const title = (r.page_title||'').replace(/</g,'&lt;');
+    const sub = r.subdomain||'-';
+    const rt = REF_LABELS[r.ref_type||'direct']||r.ref_type||'-';
+    return `<tr><td class="realtime-time">${date}<br>${t}</td><td><div class="path-cell">${path}</div><div style="font-size:.78rem;color:#475569">${title}</div></td><td><span class="domain-chip">${sub}</span></td><td style="font-size:.78rem">${rt}</td></tr>`;
+  }).join('') || '<tr><td colspan="4" class="loading">데이터 없음</td></tr>';
+  document.getElementById('rtBody').innerHTML = rows;
+  document.getElementById('rtLoading').style.display = 'none';
+  document.getElementById('rtTable').style.display = '';
+}
+
+function switchTab(n) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===n));
+  document.querySelectorAll('.tab-pane').forEach((p,i) => p.classList.toggle('active', i===n));
+}
+
+// 초기 로드
+loadAll();
+</script>
+</body>
+</html>

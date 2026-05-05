@@ -28,7 +28,17 @@ body{font-family:'Pretendard',-apple-system,sans-serif;background:#f1f5f9;font-s
 .disclaimer{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.75rem;color:#713f12;margin-top:16px;display:flex;gap:8px;align-items:flex-start}.content-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px 20px;margin-top:16px;box-shadow:0 1px 4px rgba(0,0,0,.04)}.content-card h2{font-size:1rem;font-weight:800;color:#0f172a;margin:0 0 10px}.feature-list{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0;padding:0;list-style:none}.feature-list li{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;font-size:.8rem;color:#475569}.accordion-button{font-size:.85rem;font-weight:700}.accordion-body{font-size:.82rem;color:#475569;line-height:1.6}
 footer{background:#0f172a;color:rgba(255,255,255,.65);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}footer a{color:rgba(255,255,255,.7);text-decoration:none}@media(max-width:576px){.page-hero h1{font-size:1.2rem}.file-item{grid-template-columns:28px 1fr auto}.feature-list{grid-template-columns:1fr}}
 </style>
-</head>
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mycalc.co.kr/tools/pdf-merge/">
+  <meta property="og:title" content="PDF 합치기 - 무료 온라인 PDF 병합 (서버 전송 없음) | mycalc">
+  <meta property="og:description" content="여러 PDF 파일을 하나로 합치세요. 서버 전송 없이 브라우저에서 100% 처리. 드래그로 순서 변경, 무제한 파일 병합. 무료 온라인 PDF 합치기.">
+  <meta property="og:url" content="https://mycalc.co.kr/tools/pdf-merge/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="마이캘크">
+<script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"PDF 합치기 - 무료 온라인 PDF 병합 (서버 전송 없음) | mycalc","url":"https://mycalc.co.kr/tools/pdf-merge/","applicationCategory":"UtilitiesApplication","operatingSystem":"All","inLanguage":"ko","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}}
+  </script>
+  </head>
 <body>
 <div class="mc-nav-wrap">
 <div class="mc-t1"><div class="container"><div class="mc-row">
@@ -232,6 +242,35 @@ $('mergeBtn').addEventListener('click',mergePdfs);
 $('downloadBtn').addEventListener('click',download);
 $('resetBtn').addEventListener('click',()=>resetResult(true));
 renderList();
+</script>
+<script>
+(function(){
+  var B=/bot|crawler|spider|crawling|googlebot|bingbot|yandexbot|baiduspider|slurp|duckduckbot|facebookexternalhit|ia_archiver|msnbot|scrapy|applebot|semrushbot|ahrefsbot|petalbot|bytespider/i;
+  if(B.test(navigator.userAgent))return;
+  var S='https://wblffwhxaqxtqjccmwig.supabase.co';
+  var K='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndibGZmd2h4YXF4dHFqY2Ntd2lnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4OTQzMDcsImV4cCI6MjA5MzQ3MDMwN30.9uGXG1zw3bF5ojMcfQnPr8zsirn3WejIjK60XOZfAcg';
+  var p=location.pathname;
+  var s=(p.replace(/^\//,'')||'').split('/')[0]||'main';
+  var r=document.referrer,t='direct';
+  if(r){try{var h=new URL(r).hostname;
+    if(/google\.(com|co\.kr)$/.test(h))t='google';
+    else if(/search\.naver\.com/.test(h))t='naver';
+    else if(/search\.daum\.net/.test(h))t='daum';
+    else if(/bing\.com/.test(h))t='bing';
+    else if(/(^|\.)t\.co$|twitter\.com|x\.com/.test(h))t='twitter';
+    else if(/facebook\.com/.test(h))t='facebook';
+    else if(/instagram\.com/.test(h))t='instagram';
+    else if(/youtube\.com/.test(h))t='youtube';
+    else if(/perplexity\.ai/.test(h))t='perplexity';
+    else if(/chatgpt\.com|chat\.openai\.com/.test(h))t='chatgpt';
+    else t='other';
+  }catch(e){t='other';}}
+  fetch(S+'/rest/v1/mycalc_page_views',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','apikey':K,'Authorization':'Bearer '+K,'Prefer':'return=minimal'},
+    body:JSON.stringify({page_path:p,page_title:document.title,subdomain:s,referrer:r,ref_type:t,user_agent:navigator.userAgent})
+  }).catch(function(){});
+})();
 </script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -87,7 +87,17 @@
     .reduction-indicator.show { display: flex; align-items: center; gap: 6px; }
     @media(min-width: 992px) { .sticky-result { position: sticky; top: 68px; } }
   </style>
-</head>
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mycalc.co.kr/tax/general-income/penalty-calc.html">
+  <meta property="og:title" content="종합소득세 가산세 계산기 – mycalc">
+  <meta property="og:description" content="종합소득세 가산세 계산기 – mycalc">
+  <meta property="og:url" content="https://mycalc.co.kr/tax/general-income/penalty-calc.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="마이캘크">
+<script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"종합소득세 가산세 계산기 – mycalc","url":"https://mycalc.co.kr/tax/general-income/penalty-calc.html","applicationCategory":"FinanceApplication","operatingSystem":"All","inLanguage":"ko","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}}
+  </script>
+  </head>
 <body>
 <div class="mc-nav-wrap">
 <div class="mc-t1"><div class="container"><div class="mc-row">
@@ -226,6 +236,35 @@ renderResult({typeName,reasonName,baseAmt,reductionRate,reductionAmt,reductionLa
 function renderResult(data){const{typeName,reasonName,baseAmt,reductionRate,reductionAmt,reductionLabel,finalPenalty,formula}=data;document.getElementById('resultEmpty').style.display='none';const content=document.getElementById('resultContent');content.style.display='';let reductionRow='';if(reductionRate>0){reductionRow=`<div class="result-row"><span class="result-key">기한후신고 감면율</span><span class="result-val"><span class="badge-reduction">${reductionLabel}</span></span></div><div class="result-row"><span class="result-key">감면액</span><span class="result-val text-success">- ${fmt(reductionAmt)}원</span></div>`}content.innerHTML=`<div class="result-row"><span class="result-key">가산세 종류</span><span class="result-val">${typeName}</span></div><div class="result-row"><span class="result-key">부과사유</span><span class="result-val">${reasonName}</span></div><div class="result-row"><span class="result-key">기본 가산세</span><span class="result-val">${fmt(baseAmt)}원</span></div>${reductionRow}<div class="result-final"><div class="result-final-label">최종 가산세</div><div class="result-final-amount">${fmt(finalPenalty)}<span style="font-size:1rem; font-weight:600;">원</span></div></div><div class="result-basis"><strong style="color:#374151;">계산 근거</strong><br>${formula}${reductionRate>0?`<br>감면 후: ${fmt(baseAmt)}원 × (1 - ${Math.round(reductionRate*100)}%) = ${fmt(finalPenalty)}원`:''}</div>`}
 function resetForm(){document.querySelector('input[name="penaltyType"][value="musinggo"]').checked=true;['penaltyReason','legalDeadline','filingDate','taxAmount','revenue','filedAmount','unpaidAmount','overdueDays','dueDate','payDate'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});document.getElementById('isInternational').checked=false;reductionRate=0;reductionDays=null;document.getElementById('reductionIndicator').classList.remove('show');document.getElementById('resultEmpty').style.display='';document.getElementById('resultContent').style.display='none';currentType='musinggo';currentReason='general';onTypeChange()}
 onTypeChange();
+</script>
+<script>
+(function(){
+  var B=/bot|crawler|spider|crawling|googlebot|bingbot|yandexbot|baiduspider|slurp|duckduckbot|facebookexternalhit|ia_archiver|msnbot|scrapy|applebot|semrushbot|ahrefsbot|petalbot|bytespider/i;
+  if(B.test(navigator.userAgent))return;
+  var S='https://wblffwhxaqxtqjccmwig.supabase.co';
+  var K='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndibGZmd2h4YXF4dHFqY2Ntd2lnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4OTQzMDcsImV4cCI6MjA5MzQ3MDMwN30.9uGXG1zw3bF5ojMcfQnPr8zsirn3WejIjK60XOZfAcg';
+  var p=location.pathname;
+  var s=(p.replace(/^\//,'')||'').split('/')[0]||'main';
+  var r=document.referrer,t='direct';
+  if(r){try{var h=new URL(r).hostname;
+    if(/google\.(com|co\.kr)$/.test(h))t='google';
+    else if(/search\.naver\.com/.test(h))t='naver';
+    else if(/search\.daum\.net/.test(h))t='daum';
+    else if(/bing\.com/.test(h))t='bing';
+    else if(/(^|\.)t\.co$|twitter\.com|x\.com/.test(h))t='twitter';
+    else if(/facebook\.com/.test(h))t='facebook';
+    else if(/instagram\.com/.test(h))t='instagram';
+    else if(/youtube\.com/.test(h))t='youtube';
+    else if(/perplexity\.ai/.test(h))t='perplexity';
+    else if(/chatgpt\.com|chat\.openai\.com/.test(h))t='chatgpt';
+    else t='other';
+  }catch(e){t='other';}}
+  fetch(S+'/rest/v1/mycalc_page_views',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','apikey':K,'Authorization':'Bearer '+K,'Prefer':'return=minimal'},
+    body:JSON.stringify({page_path:p,page_title:document.title,subdomain:s,referrer:r,ref_type:t,user_agent:navigator.userAgent})
+  }).catch(function(){});
+})();
 </script>
 </body>
 </html>
