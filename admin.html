@@ -71,6 +71,7 @@ select{border:1px solid #d1d5db;border-radius:6px;padding:5px 10px;font-size:.8r
   <button class="tab-btn" onclick="switchTab(1)"><i class="bi bi-trophy me-1"></i>인기 페이지</button>
   <button class="tab-btn" onclick="switchTab(2)"><i class="bi bi-signpost-split me-1"></i>유입 경로</button>
   <button class="tab-btn" onclick="switchTab(3)"><i class="bi bi-activity me-1"></i>실시간</button>
+  <button class="tab-btn" onclick="switchTab(4);loadSitemap()"><i class="bi bi-diagram-3 me-1"></i>사이트맵</button>
 </div>
 
 <!-- Tab 0: 전체 현황 -->
@@ -168,6 +169,20 @@ select{border:1px solid #d1d5db;border-radius:6px;padding:5px 10px;font-size:.8r
       <thead><tr><th>시간</th><th>페이지</th><th>도메인</th><th>유입</th></tr></thead>
       <tbody id="rtBody"></tbody>
     </table>
+  </div>
+</div>
+</div>
+
+<!-- Tab 4: 사이트맵 -->
+<div class="tab-pane" id="tab4">
+<div class="container">
+  <div id="smLoading" class="loading">로딩 중...</div>
+  <div id="smContent" style="display:none">
+    <div class="stat-card" style="margin-bottom:16px;display:inline-flex;align-items:center;gap:10px;padding:12px 20px">
+      <i class="bi bi-diagram-3" style="font-size:1.2rem;color:#3b82f6"></i>
+      <div><div class="stat-label" style="margin-bottom:2px">sitemap.xml 총 URL 수</div><div class="stat-value" id="smTotal" style="font-size:1.3rem">-</div></div>
+    </div>
+    <div id="smGroups"></div>
   </div>
 </div>
 </div>
@@ -343,6 +358,54 @@ function renderRealtime() {
 function switchTab(n) {
   document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===n));
   document.querySelectorAll('.tab-pane').forEach((p,i) => p.classList.toggle('active', i===n));
+}
+
+let smLoaded = false;
+async function loadSitemap() {
+  if (smLoaded) return;
+  try {
+    const res = await fetch('sitemap.xml');
+    const text = await res.text();
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(text, 'application/xml');
+    const locs = Array.from(xml.querySelectorAll('url loc')).map(el => el.textContent.trim());
+
+    const BASE = 'https://mycalc.co.kr';
+    const domLabels = {tax:'세금',work:'급여·노동',tools:'도구',realestate:'부동산',money:'금융·투자',student:'학생',parent:'학부모·육아',life:'생활',main:'메인'};
+    const domIcons = {tax:'bi-receipt-cutoff',work:'bi-briefcase',tools:'bi-tools',realestate:'bi-house-door',money:'bi-graph-up-arrow',student:'bi-mortarboard',parent:'bi-people-fill',life:'bi-heart-fill',main:'bi-calculator-fill'};
+    const groups = {main:[],tax:[],work:[],tools:[],realestate:[],money:[],student:[],parent:[],life:[]};
+
+    locs.forEach(url => {
+      const path = url.replace(BASE,'') || '/';
+      const parts = path.replace(/^\//,'').split('/').filter(Boolean);
+      const dom = parts.length === 0 ? 'main' : (groups.hasOwnProperty(parts[0]) ? parts[0] : 'main');
+      groups[dom].push({url, path});
+    });
+
+    document.getElementById('smTotal').textContent = locs.length;
+
+    const order = ['main','tax','work','tools','realestate','money','student','parent','life'];
+    const html = order.filter(d => groups[d].length > 0).map(d => {
+      const rows = groups[d].map(({url,path}) =>
+        `<tr><td><a href="${url}" target="_blank" style="color:#2563eb;text-decoration:none;font-family:monospace;font-size:.8rem">${path}</a></td></tr>`
+      ).join('');
+      return `<div class="card">
+        <div class="card-title">
+          <i class="bi ${domIcons[d]||'bi-folder'}" style="color:#3b82f6"></i>
+          ${domLabels[d]||d}
+          <span class="badge badge-blue" style="margin-left:6px">${groups[d].length}개</span>
+        </div>
+        <table><tbody>${rows}</tbody></table>
+      </div>`;
+    }).join('');
+
+    document.getElementById('smGroups').innerHTML = html;
+    document.getElementById('smLoading').style.display = 'none';
+    document.getElementById('smContent').style.display = '';
+    smLoaded = true;
+  } catch(e) {
+    document.getElementById('smLoading').textContent = 'sitemap.xml 로드 실패: ' + e.message;
+  }
 }
 
 // 초기 로드
