@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>금연 절약 계산기 - 금연으로 절약한 돈과 건강 회복 | mycalc</title>
-<meta name="description" content="금연으로 얼마나 절약했는지 계산하세요. 일별·월별·연별 절약 금액, 안 피운 담배 수, 건강 회복 타임라인까지 한눈에 확인.">
+<title>BMI · 칼로리 계산기 | mycalc</title>
+<meta name="description" content="체질량지수(BMI)와 하루 필요 칼로리(TDEE)를 계산합니다">
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -96,14 +96,14 @@ footer a{color:rgba(255,255,255,.82);text-decoration:none}
 @media(max-width:640px){.result-final-val,.big-num{font-size:1.12rem}.timeline-row{grid-template-columns:72px 1fr 56px}.milestone{grid-template-columns:24px 1fr 62px}.card-hd{align-items:flex-start}}
 </style>
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://mycalc.co.kr/life/quit-smoking/">
-  <meta property="og:title" content="금연 절약 계산기 - 금연으로 절약한 돈과 건강 회복 | mycalc">
-  <meta property="og:description" content="금연으로 얼마나 절약했는지 계산하세요. 일별·월별·연별 절약 금액, 안 피운 담배 수, 건강 회복 타임라인까지 한눈에 확인.">
-  <meta property="og:url" content="https://mycalc.co.kr/life/quit-smoking/">
+  <link rel="canonical" href="https://mycalc.co.kr/life/bmi/">
+  <meta property="og:title" content="BMI · 칼로리 계산기 | mycalc">
+  <meta property="og:description" content="체질량지수(BMI)와 하루 필요 칼로리(TDEE)를 계산합니다">
+  <meta property="og:url" content="https://mycalc.co.kr/life/bmi/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="마이캘크">
 <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"WebApplication","name":"금연 절약 계산기 - 금연으로 절약한 돈과 건강 회복 | mycalc","url":"https://mycalc.co.kr/life/quit-smoking/","applicationCategory":"LifestyleApplication","operatingSystem":"All","inLanguage":"ko","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}}
+  {"@context":"https://schema.org","@type":"WebApplication","name":"BMI · 칼로리 계산기","url":"https://mycalc.co.kr/life/bmi/","applicationCategory":"HealthApplication","operatingSystem":"All","inLanguage":"ko","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}}
   </script>
   </head>
 <body>
@@ -122,194 +122,185 @@ footer a{color:rgba(255,255,255,.82);text-decoration:none}
 </ul>
 </div></div></div>
 <div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
-<li><a href="../bmi/index.html" class="mc-done">BMI</a></li>
+<li><a href="index.html" class="on mc-done">BMI</a></li>
 <li><span class="wip">할부이자</span></li>
 <li><span class="wip">칼로리</span></li>
 <li><span class="wip">관부가세</span></li>
 <li><span class="wip">혈압</span></li>
 <li><span class="wip">임신주수</span></li>
-<li><a href="index.html" class="on mc-done">금연 절약</a></li>
+<li><a href="../quit-smoking/index.html" class="mc-done">금연 절약</a></li>
 <li><span class="wip">수면</span></li>
 </ul></div></div>
 </div>
 <div class="page-hero">
   <div class="container hero-content">
-    <div class="breadcrumb-nav"><a href="../../index.html">홈</a> / <a href="../index.html">생활</a> / 금연 절약 계산기</div>
-    <div class="hero-badge">금연 절약 계산기</div>
-    <h1>금연 절약 계산기</h1>
-    <p>금연으로 얼마나 절약했는지 계산하고, 건강 회복 타임라인을 함께 확인하세요.</p>
+    <div class="breadcrumb-nav"><a href="../../index.html">홈</a> / <a href="../index.html">생활</a> / BMI·칼로리 계산기</div>
+    <div class="hero-badge">생활</div>
+    <h1>BMI · 칼로리 계산기</h1>
+    <p>체질량지수(BMI)와 하루 필요 칼로리(TDEE)를 계산합니다</p>
     <div class="hero-stats">
-      <span class="hero-stat">일별 · 월별 · 연별 절약</span>
-      <span class="hero-stat">건강 회복 타임라인</span>
+      <span class="hero-stat">BMI 판정</span>
+      <span class="hero-stat">BMR · TDEE 계산</span>
       <span class="hero-stat">참고용 계산</span>
     </div>
   </div>
 </div>
 <div class="container"><div class="main-layout"><main>
 <section class="calc-card">
-  <div class="card-hd"><div class="card-hd-left"><span class="card-icon"><i class="bi bi-pencil-square"></i></span><span class="card-title">금연 정보 입력</span></div></div>
+  <div class="card-hd"><div class="card-hd-left"><span class="card-icon"><i class="bi bi-pencil-square"></i></span><span class="card-title">신체 정보 입력</span></div></div>
   <div class="card-body">
     <div class="row g-3">
       <div class="col-sm-6">
-        <label class="form-label" for="dailyCigs">하루 흡연량</label>
-        <div class="input-group"><input type="number" class="form-control" id="dailyCigs" min="0" step="1" value="10" inputmode="numeric"><span class="input-group-text">개비</span></div>
-      </div>
-      <div class="col-sm-6">
-        <label class="form-label" for="packPrice">담배 한 갑 가격</label>
-        <div class="input-group"><input type="text" class="form-control comma-input" id="packPrice" value="4,500" inputmode="numeric"><span class="input-group-text">원</span></div>
-      </div>
-      <div class="col-sm-6">
-        <label class="form-label" for="sticksPerPack">한 갑 개비 수</label>
-        <select class="form-select" id="sticksPerPack">
-          <option value="20">20개비</option>
-          <option value="18">18개비</option>
-          <option value="16">16개비</option>
-          <option value="15">15개비</option>
-          <option value="12">12개비</option>
-          <option value="10">10개비</option>
-        </select>
-      </div>
-      <div class="col-sm-6">
-        <label class="form-label">금연 기준</label>
+        <label class="form-label">성별</label>
         <div class="mode-tabs">
-          <input type="radio" name="quitMode" id="modeDate" value="date" checked><label for="modeDate">금연 시작일</label>
-          <input type="radio" name="quitMode" id="modeDays" value="days"><label for="modeDays">금연 일차</label>
+          <input type="radio" name="gender" id="male" value="male" checked><label for="male">남성</label>
+          <input type="radio" name="gender" id="female" value="female"><label for="female">여성</label>
         </div>
       </div>
-      <div class="col-sm-6" id="dateWrap">
-        <label class="form-label" for="quitDate">금연 시작일</label>
-        <input type="date" class="form-control" id="quitDate">
+      <div class="col-sm-6">
+        <label class="form-label" for="age">나이</label>
+        <div class="input-group"><input type="number" class="form-control" id="age" min="10" max="100" step="1" value="30" inputmode="numeric"><span class="input-group-text">세</span></div>
       </div>
-      <div class="col-sm-6 d-none" id="daysWrap">
-        <label class="form-label" for="quitDays">금연 일차</label>
-        <div class="input-group"><input type="number" class="form-control" id="quitDays" min="0" step="1" value="1" inputmode="numeric"><span class="input-group-text">일</span></div>
+      <div class="col-sm-6">
+        <label class="form-label" for="height">신장</label>
+        <div class="input-group"><input type="number" class="form-control" id="height" min="1" step="0.1" value="170" inputmode="decimal"><span class="input-group-text">cm</span></div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="weight">체중</label>
+        <div class="input-group"><input type="number" class="form-control" id="weight" min="1" step="0.1" value="70" inputmode="decimal"><span class="input-group-text">kg</span></div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="activity">활동량</label>
+        <select class="form-select" id="activity">
+          <option value="1.2">비활동적(1.2)</option>
+          <option value="1.375">가벼운 활동(1.375)</option>
+          <option value="1.55" selected>보통 활동(1.55)</option>
+          <option value="1.725">활발한 활동(1.725)</option>
+          <option value="1.9">매우 활발(1.9)</option>
+        </select>
       </div>
     </div>
-    <div class="subtle mt-2">일일 비용 = (하루 개비 수 / 갑당 개비 수) × 갑 가격</div>
+    <div class="subtle mt-2">BMI = 체중 / (신장/100)², TDEE = BMR × 활동계수</div>
   </div>
 </section>
 
 <section class="calc-card mt-3">
-  <div class="card-hd"><div class="card-hd-left"><span class="card-icon"><i class="bi bi-heart-pulse"></i></span><span class="card-title">건강 회복 타임라인</span></div></div>
-  <div class="card-body"><div id="timeline"></div></div>
+  <div class="card-hd"><div class="card-hd-left"><span class="card-icon"><i class="bi bi-heart-pulse"></i></span><span class="card-title">BMI 판정 기준</span></div></div>
+  <div class="card-body">
+    <div id="timeline">
+      <div class="timeline-row"><div class="timeline-label">저체중</div><div class="bar-track"><div class="bar-fill" style="width:18.5%"></div></div><div class="timeline-val">&lt; 18.5</div></div>
+      <div class="timeline-row"><div class="timeline-label">정상</div><div class="bar-track"><div class="bar-fill" style="width:22.9%;background:#22c55e"></div></div><div class="timeline-val">18.5~22.9</div></div>
+      <div class="timeline-row"><div class="timeline-label">과체중</div><div class="bar-track"><div class="bar-fill" style="width:24.9%;background:#f59e0b"></div></div><div class="timeline-val">23~24.9</div></div>
+      <div class="timeline-row"><div class="timeline-label">비만</div><div class="bar-track"><div class="bar-fill" style="width:29.9%;background:#ef4444"></div></div><div class="timeline-val">25~29.9</div></div>
+      <div class="timeline-row"><div class="timeline-label">고도비만</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#b91c1c"></div></div><div class="timeline-val">≥ 30</div></div>
+    </div>
+  </div>
 </section>
 
-<div class="notice"><i class="bi bi-info-circle"></i><div>본 계산기는 의료비 절감, 생산성 향상, 간접비용을 제외한 담배 구매비용 기준의 참고용 계산입니다. 금연 건강 효과는 AHA와 WHO의 공개 자료를 바탕으로 정리했습니다.</div></div>
+<div class="notice"><i class="bi bi-info-circle"></i><div>본 계산기는 입력값을 기준으로 한 참고용 계산입니다. BMI 판정은 WHO 아시아태평양 기준을 사용하며, 개인의 건강 상태를 진단하거나 치료 방향을 결정하는 용도로 사용할 수 없습니다.</div></div>
 
 <section class="info-grid">
   <article class="info-card">
-    <h2>금연의 경제적 효과</h2>
-    <p>하루 흡연량과 담배 가격을 기준으로 절약액을 단순 계산하면, 연간 절약액은 일일 절약액의 365배입니다. 5년이면 1,825일치 절약액이 누적됩니다. 실제로는 가격 인상, 간접흡연 관련 비용, 건강관리 비용 절감까지 더해질 수 있습니다.</p>
-    <p>예를 들어 하루 10개비를 피우고 한 갑이 4,500원이라면 하루 비용은 2,250원이고, 1년 절약액은 821,250원입니다.</p>
+    <h2>BMI와 칼로리 계산</h2>
+    <p>BMI는 신장과 체중으로 체중 상태를 간단히 확인하는 지표입니다. 같은 BMI라도 근육량, 체지방률, 질환 여부에 따라 실제 건강 상태는 다를 수 있습니다.</p>
+    <p>BMR은 생명 유지에 필요한 기초대사량이고, TDEE는 활동량을 반영한 하루 필요 칼로리입니다. 체중 감량은 TDEE보다 적게, 증량은 TDEE보다 많이 섭취하는 방식으로 참고할 수 있습니다.</p>
   </article>
   <article class="info-card faq">
     <h2>FAQ</h2>
     <div class="accordion" id="faqAcc">
       <div class="accordion-item">
-        <h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">전자담배도 계산할 수 있나요?</button></h2>
-        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAcc"><div class="accordion-body">갑 가격과 일일 사용량을 직접 조정하면 비슷한 방식으로 계산할 수 있습니다.</div></div>
+        <h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">BMI만으로 비만을 판단해도 되나요?</button></h2>
+        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAcc"><div class="accordion-body">BMI는 간단한 선별 지표입니다. 근육량이 많거나 체지방률이 높은 경우 실제 상태와 차이가 날 수 있습니다.</div></div>
       </div>
       <div class="accordion-item">
-        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">절약 금액이 정확한가요?</button></h2>
-        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAcc"><div class="accordion-body">담배 가격 기준 단순 계산이며, 의료비 절감이나 생산성 향상 같은 간접효과는 포함하지 않습니다.</div></div>
+        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">다이어트 칼로리는 어떻게 계산하나요?</button></h2>
+        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAcc"><div class="accordion-body">일일 필요 칼로리(TDEE)에서 500kcal를 뺀 값을 표시합니다. 실제 식단 조절은 건강 상태와 목표에 따라 달라질 수 있습니다.</div></div>
       </div>
       <div class="accordion-item">
-        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">금연 건강 효과 출처?</button></h2>
-        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAcc"><div class="accordion-body">미국심장협회(AHA)와 WHO의 금연 건강 효과 공개 자료를 기준으로 작성했습니다.</div></div>
+        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">BMR 공식은 무엇을 쓰나요?</button></h2>
+        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAcc"><div class="accordion-body">Mifflin-St Jeor 공식을 사용합니다. 남성은 +5, 여성은 -161을 적용합니다.</div></div>
       </div>
     </div>
   </article>
 </section>
 </main><aside>
   <div class="result-panel">
-    <div class="result-title"><i class="bi bi-check2-circle"></i>금연 성과</div>
-    <div class="result-final"><span class="result-final-label">금연 일수</span><span class="big-num" id="sideDays">0일째</span></div>
-    <div class="side-row"><span>절약 금액</span><span class="side-val" id="sideSaved">₩0</span></div>
-    <div class="side-row"><span>안 피운 담배</span><span class="side-val" id="sideCigs">0개비</span></div>
-    <div class="side-row"><span>하루 비용</span><span class="side-val" id="sideDaily">₩0</span></div>
+    <div class="result-title"><i class="bi bi-check2-circle"></i>계산 결과</div>
+    <div class="result-final"><span class="result-final-label">BMI</span><span class="big-num" id="sideBmi">0.0</span></div>
+    <div class="side-row"><span>판정</span><span class="side-val" id="sideStatus">-</span></div>
+    <div class="side-row"><span>정상 체중 범위</span><span class="side-val" id="sideRange">-</span></div>
+    <div class="side-row"><span>일일 필요 칼로리</span><span class="side-val" id="sideTdee">0 kcal</span></div>
   </div>
   <section class="calc-card mt-3">
-    <div class="card-hd"><div class="card-hd-left"><span class="card-icon"><i class="bi bi-table"></i></span><span class="card-title">기간별 절약 예측</span></div></div>
+    <div class="card-hd"><div class="card-hd-left"><span class="card-icon"><i class="bi bi-table"></i></span><span class="card-title">대사량·목표 칼로리</span></div></div>
     <div class="table-responsive">
       <table class="result-table">
         <tbody>
-          <tr><th>1개월</th><td class="money" id="t1m">₩0</td></tr>
-          <tr><th>3개월</th><td class="money" id="t3m">₩0</td></tr>
-          <tr><th>6개월</th><td class="money" id="t6m">₩0</td></tr>
-          <tr><th>1년</th><td class="money" id="t1y">₩0</td></tr>
-          <tr><th>3년</th><td class="money" id="t3y">₩0</td></tr>
-          <tr><th>5년</th><td class="money" id="t5y">₩0</td></tr>
+          <tr><th>기초대사량(BMR)</th><td class="money" id="bmrVal">0 kcal</td></tr>
+          <tr><th>일일 필요 칼로리(TDEE)</th><td class="money" id="tdeeVal">0 kcal</td></tr>
+          <tr><th>다이어트 칼로리</th><td class="money" id="cutVal">0 kcal</td></tr>
+          <tr><th>증량 칼로리</th><td class="money" id="bulkVal">0 kcal</td></tr>
         </tbody>
       </table>
     </div>
   </section>
   <section class="calc-card mt-3">
-    <div class="card-hd"><div class="card-hd-left"><span class="card-icon"><i class="bi bi-bag-heart"></i></span><span class="card-title">이 돈으로 살 수 있는 것</span></div></div>
+    <div class="card-hd"><div class="card-hd-left"><span class="card-icon"><i class="bi bi-bag-heart"></i></span><span class="card-title">BMI 상세</span></div></div>
     <div class="card-body">
-      <div class="side-row" style="border-top:none;margin-top:0;padding-top:0"><span>커피</span><span class="side-val" id="coffeeCnt">0잔</span></div>
-      <div class="side-row"><span>치킨</span><span class="side-val" id="chickenCnt">0마리</span></div>
-      <div class="side-row"><span>아이폰</span><span class="side-val" id="iphoneCnt">0대</span></div>
-      <div class="side-row"><span>해외여행</span><span class="side-val" id="tripCnt">0회</span></div>
+      <div class="side-row" style="border-top:none;margin-top:0;padding-top:0"><span>현재 체중</span><span class="side-val" id="currentWeight">0 kg</span></div>
+      <div class="side-row"><span>정상 하한</span><span class="side-val" id="minWeight">0 kg</span></div>
+      <div class="side-row"><span>정상 상한</span><span class="side-val" id="maxWeight">0 kg</span></div>
+      <div class="side-row"><span>활동계수</span><span class="side-val" id="activityVal">0</span></div>
     </div>
   </section>
 </aside></div></div>
 
-<footer><div class="container">© 2026 mycalc · 금연 계산 결과는 참고용입니다. | <a href="../../index.html">메인으로</a></div></footer>
+<footer><div class="container">© 2026 mycalc · BMI·칼로리 계산 결과는 참고용입니다. | <a href="../../index.html">메인으로</a></div></footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 function el(id){return document.getElementById(id)}
 function raw(v){return parseFloat(String(v||'').replace(/,/g,''))||0}
-function won(v){return '₩'+Math.round(v||0).toLocaleString('ko-KR')}
-function pad(n){return String(n).padStart(2,'0')}
-function todayISO(){const d=new Date();return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}
-function daysBetween(from,to){const a=new Date(from.getFullYear(),from.getMonth(),from.getDate()), b=new Date(to.getFullYear(),to.getMonth(),to.getDate()); return Math.max(0,Math.floor((b-a)/86400000))}
-function mode(){return document.querySelector('input[name="quitMode"]:checked').value}
-function toggleMode(){const d=mode()==='date';el('dateWrap').classList.toggle('d-none',!d);el('daysWrap').classList.toggle('d-none',d);calc()}
-function formatInput(e){const input=e.target;const n=String(input.value).replace(/[^\d.]/g,'');if(!n){input.value='';calc();return}const parts=n.split('.');parts[0]=Number(parts[0]||0).toLocaleString('ko-KR');input.value=parts.length>1?parts[0]+'.'+parts.slice(1).join(''):parts[0];calc()}
-function calc(){
-  const dailyCigs=Math.max(0,raw(el('dailyCigs').value));
-  const packPrice=raw(el('packPrice').value);
-  const sticksPerPack=Math.max(1,raw(el('sticksPerPack').value));
-  const dailyCost=(dailyCigs/sticksPerPack)*packPrice;
-  let quitDays=0;
-  if(mode()==='date'){
-    const q=el('quitDate').value;
-    quitDays=q?daysBetween(new Date(q+'T00:00:00'),new Date()):0;
-  }else{
-    quitDays=Math.max(0,Math.floor(raw(el('quitDays').value)));
-  }
-  const saved=dailyCost*quitDays;
-  const notSmoked=dailyCigs*quitDays;
-  const months={m1:30,m3:90,m6:180,y1:365,y3:1095,y5:1825};
-  el('sideDays').textContent=`${quitDays.toLocaleString('ko-KR')}일째`;
-  el('sideSaved').textContent=won(saved);
-  el('sideCigs').textContent=`${Math.round(notSmoked).toLocaleString('ko-KR')}개비`;
-  el('sideDaily').textContent=won(dailyCost);
-  el('t1m').textContent=won(dailyCost*months.m1);
-  el('t3m').textContent=won(dailyCost*months.m3);
-  el('t6m').textContent=won(dailyCost*months.m6);
-  el('t1y').textContent=won(dailyCost*months.y1);
-  el('t3y').textContent=won(dailyCost*months.y3);
-  el('t5y').textContent=won(dailyCost*months.y5);
-  const goods=[['coffeeCnt',5000],['chickenCnt',20000],['iphoneCnt',1500000],['tripCnt',2000000]];
-  goods.forEach(([id,price])=>{el(id).textContent=Math.floor(saved/price).toLocaleString('ko-KR')+(id==='coffeeCnt'?'잔':id==='chickenCnt'?'마리':id==='iphoneCnt'?'대':'회')});
-  const milestones=[
-    {days:0.014,label:'20분',desc:'심박수·혈압 정상화'},
-    {days:0.5,label:'12시간',desc:'혈중 일산화탄소 정상화'},
-    {days:14,label:'2주~3개월',desc:'혈액순환·폐기능 개선'},
-    {days:30,label:'1~9개월',desc:'기침·숨가쁨 감소'},
-    {days:365,label:'1년',desc:'심장병 위험 50% 감소'},
-    {days:1825,label:'5년',desc:'뇌졸중 위험 비흡연자 수준'},
-    {days:3650,label:'10년',desc:'폐암 사망률 50% 감소'},
-    {days:5475,label:'15년',desc:'심장병 위험 비흡연자 수준'}
-  ];
-  el('timeline').innerHTML=milestones.map(m=>{const done=quitDays>=m.days;const pct=Math.min(quitDays/m.days*100,100);return `<div class="milestone ${done?'done':''}"><div class="timeline-icon"><i class="bi ${done?'bi-check-lg':'bi-dash-lg'}"></i></div><div class="timeline-text"><div class="timeline-label">${m.label}</div><div class="timeline-sub">${m.desc}</div><div class="bar-track"><div class="bar-fill" style="width:${pct.toFixed(1)}%"></div></div></div><div class="timeline-val">${done?'달성':'미달성'}</div></div>`}).join('');
+function kcal(v){return Math.round(v||0).toLocaleString('ko-KR')+' kcal'}
+function kg(v){return (v||0).toFixed(1)+' kg'}
+function getStatus(bmi){
+  if(bmi<18.5)return {text:'저체중',color:'#ccfbf1'};
+  if(bmi<23)return {text:'정상',color:'#86efac'};
+  if(bmi<25)return {text:'과체중',color:'#fbbf24'};
+  if(bmi<30)return {text:'비만',color:'#f87171'};
+  return {text:'고도비만',color:'#ef4444'};
 }
-document.querySelectorAll('.comma-input').forEach(x=>x.addEventListener('input',formatInput));
-document.querySelectorAll('input[name="quitMode"]').forEach(x=>x.addEventListener('change',toggleMode));
+function calc(){
+  const gender=document.querySelector('input[name="gender"]:checked').value;
+  const age=Math.min(100,Math.max(10,raw(el('age').value)));
+  const height=Math.max(1,raw(el('height').value));
+  const weight=Math.max(1,raw(el('weight').value));
+  const activity=raw(el('activity').value);
+  const meter=height/100;
+  const bmi=weight/(meter*meter);
+  const status=getStatus(bmi);
+  const minNormal=18.5*meter*meter;
+  const maxNormal=22.9*meter*meter;
+  const bmr=gender==='male'
+    ? 10*weight+6.25*height-5*age+5
+    : 10*weight+6.25*height-5*age-161;
+  const tdee=bmr*activity;
+  el('sideBmi').textContent=bmi.toFixed(1);
+  el('sideStatus').textContent=status.text;
+  el('sideStatus').style.color=status.color;
+  el('sideRange').textContent=`${kg(minNormal)} ~ ${kg(maxNormal)}`;
+  el('sideTdee').textContent=kcal(tdee);
+  el('bmrVal').textContent=kcal(bmr);
+  el('tdeeVal').textContent=kcal(tdee);
+  el('cutVal').textContent=kcal(tdee-500);
+  el('bulkVal').textContent=kcal(tdee+500);
+  el('currentWeight').textContent=kg(weight);
+  el('minWeight').textContent=kg(minNormal);
+  el('maxWeight').textContent=kg(maxNormal);
+  el('activityVal').textContent=activity.toString();
+}
+document.querySelectorAll('input[name="gender"]').forEach(x=>x.addEventListener('change',calc));
 document.querySelectorAll('input,select').forEach(x=>x.addEventListener('input',calc));
-el('quitDate').value=todayISO();
-toggleMode();
+calc();
 </script>
 <script>
 (function(){
