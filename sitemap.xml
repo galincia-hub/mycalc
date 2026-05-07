@@ -22,7 +22,6 @@
   <url><loc>https://mycalc.co.kr/tax/capital-gains/about.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/tax/capital-gains/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/tax/capital-gains/stock.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://mycalc.co.kr/tax/crypto/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/tax/day-laborer/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/tax/earned-income/about.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/tax/earned-income/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
@@ -38,16 +37,13 @@
   <url><loc>https://mycalc.co.kr/tax/inheritance/about.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/tax/inheritance/gift.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/tax/inheritance/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://mycalc.co.kr/tax/prize/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/tax/property/acquisition.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/tax/property/comprehensive.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/tax/property/holding.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/tax/property/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://mycalc.co.kr/tax/property/transfer.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/tax/retirement-income/about.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/tax/retirement-income/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/tax/vat/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://mycalc.co.kr/tax/yearend/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/tools/color-picker/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/tools/image-resize/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/tools/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
@@ -71,7 +67,10 @@
   <url><loc>https://mycalc.co.kr/life/quit-smoking/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/student/naesin/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/work/annual-leave/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://mycalc.co.kr/work/overtime-pay/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/work/overtime/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/parent/education-support/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://mycalc.co.kr/privacy.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://mycalc.co.kr/terms.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://mycalc.co.kr/about.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://mycalc.co.kr/contact.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
 </urlset>
