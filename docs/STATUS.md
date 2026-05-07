@@ -1,6 +1,6 @@
 # mycalc 완성 현황
 
-> 최종 업데이트: 2026-05-07 | 40개 완성, 50+ 준비중
+> 최종 업데이트: 2026-05-07 | 48개 완성, 50+ 준비중
 
 ## ① tax — 10완성 / 3준비중
 ✅ general-income (index, about, flow, penalty, penalty-calc, tax-rate)
@@ -33,26 +33,27 @@
 ⬜ 비밀번호 | ⬜ 단위환산 | ⬜ 날짜계산 | ⬜ 배경제거 | ⬜ HWP변환 | ⬜ 증명사진
 ⬜ 동영상GIF | ⬜ 오디오추출 | ⬜ PDF압축 | ⬜ 목업 | ⬜ 엑셀이미지 | ⬜ TTS
 
-## ④ realestate — 5완성 / 6준비중
+## ④ realestate — 7완성 / 4준비중
 ✅ fee | ✅ jeonwolse | ✅ pyeong | ✅ maintenance | ✅ eviction
-⬜ 주택담보대출 | ⬜ LTV·DTI·DSR | ⬜ 임대수익 | ⬜ 경매수익률 | ⬜ 빌라수익률 | ⬜ 학군
+✅ LTV·DTI·DSR | ✅ 임대수익
+⬜ 주택담보대출 | ⬜ 경매수익률 | ⬜ 빌라수익률 | ⬜ 학군
 
-## ⑤ money — 3완성 / 6준비중
-✅ compound (index, about) | ✅ dividend (index, about) | ✅ average-down
-⬜ 대출상환 | ⬜ 은퇴자금 | ⬜ 국민연금 | ⬜ 공모주 | ⬜ 인플레이션 | ⬜ 환율
+## ⑤ money — 4완성 / 5준비중
+✅ compound (index, about) | ✅ dividend (index, about) | ✅ average-down | ✅ 국민연금
+⬜ 대출상환 | ⬜ 은퇴자금 | ⬜ 공모주 | ⬜ 인플레이션 | ⬜ 환율
 
-## ⑥ student — 3완성 / 5준비중
-✅ gpa | ✅ military | ✅ naesin
-⬜ 수능등급컷 | ⬜ 출결 | ⬜ 학자금대출 | ⬜ 장학금
+## ⑥ student — 4완성 / 4준비중
+✅ gpa | ✅ military | ✅ naesin | ✅ 수능등급컷
+⬜ 출결 | ⬜ 학자금대출 | ⬜ 장학금
 
-## ⑦ parent — 1완성 / 10준비중
-✅ vaccine
-⬜ 출산예정일 | ⬜ 성장발달 | ⬜ 어린이집 | ⬜ 교육급여 | ⬜ 대입전형
+## ⑦ parent — 4완성 / 7준비중
+✅ vaccine | ✅ 출산예정일 | ✅ 육아휴직급여 | ✅ 교육급여
+⬜ 성장발달 | ⬜ 어린이집 | ⬜ 대입전형
 ⬜ 학원비 | ⬜ 자녀보험 | ⬜ 돌봄 | ⬜ 용돈 | ⬜ 아동수당
 
-## ⑧ life — 2완성 / 7준비중
-✅ quit-smoking | ✅ BMI
-⬜ 할부이자 | ⬜ 칼로리 | ⬜ 혈압·맥박 | ⬜ 수면 | ⬜ 관부가세 | ⬜ 임신주수 | ⬜ 음주측정
+## ⑧ life — 4완성 / 5준비중
+✅ quit-smoking | ✅ BMI | ✅ 관부가세 | ✅ 음주측정
+⬜ 할부이자 | ⬜ 칼로리 | ⬜ 혈압·맥박 | ⬜ 수면 | ⬜ 임신주수
 
 ---
 

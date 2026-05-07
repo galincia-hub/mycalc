@@ -1,0 +1,147 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>수능 등급컷 · 백분위 변환기 | mycalc</title><meta name="description" content="수능 원점수와 표준점수를 입력하면 예상 등급과 백분위를 확인할 수 있습니다"><link rel="preconnect" href="https://cdn.jsdelivr.net"><link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"><link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"><link rel="icon" href="/favicon.ico" type="image/x-icon"><style>
+*{box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.page-hero{background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 100%);color:#fff;padding:1.8rem 0 1.45rem;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='72' height='72' viewBox='0 0 72 72' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.045'%3E%3Cpath d='M18 14h36v6H18zm0 14h28v6H18zm0 14h36v6H18z'/%3E%3C/g%3E%3C/svg%3E")}
+.hero-content{position:relative}
+.breadcrumb-mini{display:flex;align-items:center;gap:6px;font-size:.74rem;opacity:.82;margin-bottom:.45rem;flex-wrap:wrap}
+.breadcrumb-mini a{color:#fff;text-decoration:none}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.75rem;margin-bottom:.5rem}
+.page-hero h1{font-size:1.42rem;font-weight:800;margin:0 0 .3rem;letter-spacing:0}
+.page-hero p{font-size:.84rem;opacity:.86;margin:0}
+.tool-tabs-wrap{background:#fff;border-bottom:2px solid #e2e8f0}
+.tool-tabs{list-style:none;display:flex;overflow-x:auto;margin:0;padding:0 12px;-ms-overflow-style:none;scrollbar-width:none}
+.tool-tabs::-webkit-scrollbar{display:none}
+.tool-tabs button{display:inline-flex;align-items:center;gap:6px;padding:10px 13px;font-size:.82rem;font-weight:700;color:#64748b;border:0;background:none;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;margin-bottom:-2px}
+.tool-tabs button:hover{color:#1e3a8a}
+.tool-tabs button.active{color:#1e3a8a;border-bottom-color:#1e3a8a}
+.main-layout{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start;padding:16px 0 32px}
+@media(max-width:991px){.main-layout{grid-template-columns:1fr}}
+.input-card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden;margin-bottom:14px}
+.input-card-header{padding:14px 16px;border-bottom:1px solid #dbeafe;background:#f0f7ff}
+.input-card-title{font-size:.9rem;font-weight:800;color:#0f172a;display:flex;align-items:center;gap:7px}
+.input-card-body{padding:16px}
+.form-label{font-weight:700;font-size:.8rem;color:#374151;margin-bottom:5px;display:block}
+.form-control,.form-select{font-size:.85rem;border-color:#d1d5db;border-radius:7px}
+.form-control:focus,.form-select:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.section-divider{border:none;border-top:1px solid #f1f5f9;margin:14px 0}
+.radio-pills{display:flex;gap:7px;flex-wrap:wrap}
+.radio-pill{position:relative}
+.radio-pill input{position:absolute;opacity:0;pointer-events:none}
+.radio-pill span{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:8px;border:1.5px solid #d1d5db;background:#fff;color:#475569;font-size:.8rem;font-weight:700;cursor:pointer}
+.radio-pill input:checked+span{border-color:#2563eb;background:#eff6ff;color:#1d4ed8}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.subject-table-wrap{overflow-x:auto;border:1px solid #e2e8f0;border-radius:10px}
+.subject-table{width:100%;min-width:560px;margin:0;border-collapse:separate;border-spacing:0}
+.subject-table th{background:#f8fafc;color:#475569;font-size:.75rem;font-weight:800;padding:9px;border-bottom:1px solid #e2e8f0;text-align:center}
+.subject-table td{padding:7px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+.subject-table tr:last-child td{border-bottom:0}
+.subject-table .col-name{width:38%}
+.subject-table .col-unit{width:20%}
+.subject-table .col-grade{width:22%}
+.subject-table .col-remove{width:52px;text-align:center}
+.icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid #e2e8f0;background:#fff;color:#64748b;display:inline-flex;align-items:center;justify-content:center;transition:all .15s}
+.icon-btn:hover{border-color:#fecaca;background:#fef2f2;color:#dc2626}
+.btn-primary{background:#1e3a8a;border-color:#1e3a8a;font-weight:800}
+.btn-primary:hover{background:#1d4ed8;border-color:#1d4ed8}
+.btn-outline-secondary{font-weight:700}
+.result-panel{background:linear-gradient(160deg,#1e3a8a 0%,#2563eb 100%);border-radius:12px;color:#fff;padding:18px 20px;position:sticky;top:88px;box-shadow:0 4px 20px rgba(30,58,138,.35)}
+.result-title{font-size:.9rem;font-weight:800;opacity:.9;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.score-main{background:rgba(255,255,255,.14);border-radius:12px;padding:14px;margin-bottom:10px}
+.score-label{font-size:.75rem;opacity:.78;margin-bottom:2px}
+.score-value{font-size:2rem;font-weight:900;line-height:1.05;color:#bfdbfe}
+.score-value.good{color:#bbf7d0}.score-value.mid{color:#bfdbfe}.score-value.warn{color:#fed7aa}.score-value.bad{color:#fecaca}
+.score-sub{font-size:.78rem;opacity:.78;margin-top:4px}
+.result-row{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.13);gap:12px}
+.result-row:last-child{border-bottom:0}
+.result-row span:first-child{opacity:.82}
+.result-row strong{font-size:.88rem;text-align:right}
+.metric-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px}
+.metric-card{background:rgba(255,255,255,.12);border-radius:8px;padding:8px;text-align:center}
+.metric-lbl{font-size:.65rem;opacity:.74;margin-bottom:2px}
+.metric-val{font-size:.9rem;font-weight:900}
+.dist-list{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.dist-row{display:grid;grid-template-columns:42px 1fr 34px;gap:7px;align-items:center;font-size:.72rem}
+.dist-track{height:10px;background:rgba(255,255,255,.16);border-radius:999px;overflow:hidden}
+.dist-fill{height:100%;background:#bfdbfe;border-radius:999px;width:0%}
+.cutoff-table-wrap{overflow-x:auto;margin-top:8px}
+.cutoff-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid rgba(255,255,255,.18);border-radius:10px;overflow:hidden;font-size:.76rem}
+.cutoff-table th,.cutoff-table td{padding:7px 8px;border-bottom:1px solid rgba(255,255,255,.12);text-align:right}
+.cutoff-table th:first-child,.cutoff-table td:first-child{text-align:left}
+.cutoff-table th{background:rgba(255,255,255,.12);font-weight:800}
+.cutoff-table tr:last-child td{border-bottom:0}
+.notice-box{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.76rem;color:#713f12;margin-top:14px;display:flex;gap:8px;align-items:flex-start}
+.info-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px;font-size:.84rem;color:#475569;margin-top:14px}
+.info-card h2{font-size:1rem;font-weight:850;color:#0f172a;margin:0 0 10px}
+.info-card p{line-height:1.65;margin:0 0 10px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.info-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;background:#fff}
+.info-table th,.info-table td{padding:8px 9px;border-bottom:1px solid #eef2f7;font-size:.78rem;text-align:right}
+.info-table th:first-child,.info-table td:first-child{text-align:left}
+.info-table th{background:#f8fafc;color:#334155;font-weight:800}
+.info-table tr:last-child th,.info-table tr:last-child td{border-bottom:0}
+.compare-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.compare-item{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:8px;text-align:center}
+.compare-item strong{display:block;color:#1e3a8a;font-size:.9rem}
+.faq-list{display:grid;gap:10px}
+.faq-item{border-top:1px solid #e2e8f0;padding-top:10px}
+.faq-item:first-child{border-top:0;padding-top:0}
+.faq-q{font-weight:850;color:#0f172a;margin-bottom:4px}
+.helper-text{font-size:.75rem;color:#64748b;margin-top:5px}
+footer{background:#0f172a;color:rgba(255,255,255,.62);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}
+footer a{color:rgba(255,255,255,.75);text-decoration:none}
+@media(max-width:576px){
+  .main-layout{padding-top:12px}
+  .page-hero h1{font-size:1.22rem}
+  .page-hero p{font-size:.8rem}
+  .score-value{font-size:1.65rem}
+  .input-card-body{padding:14px}
+  .info-grid{grid-template-columns:1fr}
+  .compare-grid{grid-template-columns:1fr 1fr}
+}
+</style><meta name="robots" content="index, follow"><link rel="canonical" href="https://mycalc.co.kr/student/suneung/"><meta property="og:title" content="수능 등급컷 · 백분위 변환기 | mycalc"><meta property="og:description" content="수능 원점수와 표준점수를 입력하면 예상 등급과 백분위를 확인할 수 있습니다"><meta property="og:url" content="https://mycalc.co.kr/student/suneung/"><meta property="og:type" content="website"><meta property="og:site_name" content="마이캘크"><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"수능 등급컷 · 백분위 변환기","url":"https://mycalc.co.kr/student/suneung/","applicationCategory":"EducationalApplication","operatingSystem":"All","inLanguage":"ko","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}}</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7993189040408645" crossorigin="anonymous"></script></head><body><div class="mc-nav-wrap"><div class="mc-t1"><div class="container"><div class="mc-row"><a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a><ul class="mc-t1-ul"><li><a href="../../tax/index.html">세금</a></li><li><a href="../../work/index.html">급여·노동</a></li><li><a href="../../tools/index.html">도구</a></li><li><a href="../../realestate/index.html" >부동산</a></li><li><a href="../../money/index.html" >금융·투자</a></li><li><a href="../../student/index.html" class="on">학생</a></li><li><a href="../../parent/index.html">학부모·육아</a></li><li><a href="../../life/index.html">생활</a></li></ul></div></div></div><div class="mc-t2"><div class="container"><ul class="mc-t2-ul"><li><a href="../gpa/index.html" class="mc-done">학점</a></li><li><a href="../naesin/index.html" class="mc-done">내신</a></li><li><a href="../military/index.html" class="mc-done">전역일</a></li><li><a href="index.html" class="on mc-done">수능등급컷</a></li></ul></div></div></div><div class="page-hero"><div class="container hero-content"><div class="breadcrumb-mini"><a href="../../index.html">홈</a><span>&gt;</span><a href="../index.html">학생</a><span>&gt;</span><span>수능 등급컷 변환기</span></div><div class="hero-badge">학생</div><h1>수능 등급컷 · 백분위 변환기</h1><p>수능 원점수와 표준점수를 입력하면 예상 등급과 백분위를 확인할 수 있습니다</p></div></div><div class="container"><div class="main-layout"><main><section class="input-card"><div class="input-card-header"><div class="input-card-title"><i class="bi bi-pencil-square"></i>수능 점수 입력</div></div><div class="input-card-body"><div class="row g-3"><div class="col-sm-6"><label class="form-label" for="subject">과목 선택</label><select class="form-select" id="subject"><option value="korean">국어</option><option value="math">수학</option><option value="english">영어</option><option value="history">한국사</option><option value="explore">탐구1</option><option value="explore">탐구2</option></select></div><div class="col-sm-6" id="stdWrap"><label class="form-label" for="standard">표준점수</label><input type="number" class="form-control" id="standard" value="131"></div><div class="col-sm-6 d-none" id="rawWrap"><label class="form-label" for="rawScore">원점수</label><input type="number" class="form-control" id="rawScore" value="85"></div><div class="col-sm-6 d-none" id="percentWrap"><label class="form-label" for="percentile">백분위</label><input type="number" class="form-control" id="percentile" value="96"></div></div></div></section><section class="input-card"><div class="input-card-header"><div class="input-card-title"><i class="bi bi-table"></i>전체 등급컷 표</div></div><div class="input-card-body"><table class="table table-sm"><tbody><tr><th>누적비율</th><td>4 / 11 / 23 / 40 / 60 / 77 / 89 / 96 / 100%</td></tr><tr><th>국어</th><td>1등급 131+, 2등급 124+, 3등급 113+ (2025 기준)</td></tr><tr><th>수학</th><td>1등급 134+, 2등급 129+, 3등급 122+ (2025 기준)</td></tr><tr><th>영어</th><td>90/80/70/60/50/40/30/20점 기준</td></tr><tr><th>한국사</th><td>40/35/30/25/20/15/10/5점 기준</td></tr></tbody></table></div></section><div class="notice-box notice-yellow"><i class="bi bi-info-circle"></i><div>등급컷은 매년 변동됩니다. 2025학년도 수능 기준 참고용입니다.</div></div></main><aside><div class="result-panel"><div class="result-title"><i class="bi bi-check2-circle"></i>변환 결과</div><div class="score-main"><div class="score-label">예상 등급</div><div class="score-value" id="grade">1등급</div><div class="score-sub" id="basis">국어 표준점수 기준</div></div><div class="result-row"><span>등급 판정 기준</span><strong id="cutText">131점 이상</strong></div><div class="result-row"><span>상위 누적 비율</span><strong id="cumRate">4%</strong></div></div></aside></div></div><footer><div class="container"><p style="margin-bottom:4px;font-size:.7rem"><a href="/privacy.html">개인정보처리방침</a> · <a href="/terms.html">이용약관</a> · <a href="/about.html">사이트 소개</a> · <a href="/contact.html">문의하기</a></p>© 2026 mycalc · 참고용 계산기입니다. | <a href="../../index.html">메인으로</a></div></footer><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script><script>const cuts=[4,11,23,40,60,77,89,96,100];function el(id){return document.getElementById(id)}function gradeFromPercent(p){for(let i=0;i<cuts.length;i++){if(100-p<=cuts[i])return i+1}return 9}function absGrade(score,arr){for(let i=0;i<arr.length;i++){if(score>=arr[i])return i+1}return 9}function calc(){const s=el('subject').value;el('stdWrap').classList.toggle('d-none',!['korean','math'].includes(s));el('rawWrap').classList.toggle('d-none',!['english','history'].includes(s));el('percentWrap').classList.toggle('d-none',s!=='explore');let g=1,b='',cum='4%';if(s==='english'){const v=+el('rawScore').value||0;g=absGrade(v,[90,80,70,60,50,40,30,20]);b=`${[90,80,70,60,50,40,30,20][g-1]||0}점 이상`}else if(s==='history'){const v=+el('rawScore').value||0;g=absGrade(v,[40,35,30,25,20,15,10,5]);b=`${[40,35,30,25,20,15,10,5][g-1]||0}점 이상`}else if(s==='explore'){const p=+el('percentile').value||0;g=gradeFromPercent(p);b=`백분위 ${p}`;}else{const v=+el('standard').value||0;const table=s==='korean'?[131,124,113,105,95,84,73,62]:[134,129,122,110,97,84,72,60];g=absGrade(v,table);b=`${table[g-1]||0}점 이상`}cum=cuts[g-1]+'%';el('grade').textContent=g+'등급';el('basis').textContent=el('subject').selectedOptions[0].text+' 기준';el('cutText').textContent=b;el('cumRate').textContent=cum}document.querySelectorAll('input,select').forEach(x=>x.addEventListener('input',calc));calc();</script><script>
+(function(){
+  var B=/bot|crawler|spider|crawling|googlebot|bingbot|yandexbot|baiduspider|slurp|duckduckbot|facebookexternalhit|ia_archiver|msnbot|scrapy|applebot|semrushbot|ahrefsbot|petalbot|bytespider/i;
+  if(B.test(navigator.userAgent))return;
+  var S='https://wblffwhxaqxtqjccmwig.supabase.co';
+  var K='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndibGZmd2h4YXF4dHFqY2Ntd2lnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4OTQzMDcsImV4cCI6MjA5MzQ3MDMwN30.9uGXG1zw3bF5ojMcfQnPr8zsirn3WejIjK60XOZfAcg';
+  var p=location.pathname;
+  var s=(p.replace(/^\//,'')||'').split('/')[0]||'main';
+  var r=document.referrer,t='direct';
+  if(r){try{var h=new URL(r).hostname;
+    if(/google\.(com|co\.kr)$/.test(h))t='google';
+    else if(/search\.naver\.com/.test(h))t='naver';
+    else if(/search\.daum\.net/.test(h))t='daum';
+    else if(/bing\.com/.test(h))t='bing';
+    else if(/(^|\.)t\.co$|twitter\.com|x\.com/.test(h))t='twitter';
+    else if(/facebook\.com/.test(h))t='facebook';
+    else if(/instagram\.com/.test(h))t='instagram';
+    else if(/youtube\.com/.test(h))t='youtube';
+    else if(/perplexity\.ai/.test(h))t='perplexity';
+    else if(/chatgpt\.com|chat\.openai\.com/.test(h))t='chatgpt';
+    else t='other';
+  }catch(e){t='other';}}
+  fetch(S+'/rest/v1/mycalc_page_views',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','apikey':K,'Authorization':'Bearer '+K,'Prefer':'return=minimal'},
+    body:JSON.stringify({page_path:p,page_title:document.title,subdomain:s,referrer:r,ref_type:t,user_agent:navigator.userAgent})
+  }).catch(function(){});
+})();
+</script>
+</body></html>
