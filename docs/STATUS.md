@@ -1,6 +1,6 @@
 # mycalc 완성 현황
 
-> 최종 업데이트: 2026-05-07 | 48개 완성, 50+ 준비중
+> 최종 업데이트: 2026-05-09 | 50개 완성, 50+ 준비중
 
 ## ① tax — 10완성 / 3준비중
 ✅ general-income (index, about, flow, penalty, penalty-calc, tax-rate)
@@ -38,9 +38,9 @@
 ✅ LTV·DTI·DSR | ✅ 임대수익
 ⬜ 주택담보대출 | ⬜ 경매수익률 | ⬜ 빌라수익률 | ⬜ 학군
 
-## ⑤ money — 4완성 / 5준비중
-✅ compound (index, about) | ✅ dividend (index, about) | ✅ average-down | ✅ 국민연금
-⬜ 대출상환 | ⬜ 은퇴자금 | ⬜ 공모주 | ⬜ 인플레이션 | ⬜ 환율
+## ⑤ money — 6완성 / 3준비중
+✅ compound (index, about) | ✅ dividend (index, about) | ✅ average-down | ✅ 국민연금 | ✅ 대출상환 | ✅ 은퇴자금
+⬜ 공모주 | ⬜ 인플레이션 | ⬜ 환율
 
 ## ⑥ student — 4완성 / 4준비중
 ✅ gpa | ✅ military | ✅ naesin | ✅ 수능등급컷

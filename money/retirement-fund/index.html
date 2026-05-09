@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>은퇴자금 고갈 시점 계산기 | mycalc</title>
+<meta name="description" content="은퇴 후 자산이 몇 년 동안 유지되는지 시뮬레이션합니다">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://mycalc.co.kr/money/retirement-fund/">
+<meta property="og:title" content="은퇴자금 고갈 시점 계산기 | mycalc">
+<meta property="og:description" content="은퇴 후 자산이 몇 년 동안 유지되는지 시뮬레이션합니다">
+<meta property="og:url" content="https://mycalc.co.kr/money/retirement-fund/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="마이캘크">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<style>
+*{box-sizing:border-box}body{font-family:'Pretendard',-apple-system,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}.mc-t1{background:#0f172a;min-height:46px}.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}.mc-brand span{color:#38bdf8}.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}.mc-t1-ul{justify-content:flex-end}.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}.page-hero{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 60%,#2563eb 100%);color:#fff;padding:1.75rem 0 1.5rem}.breadcrumb-nav{font-size:.75rem;color:rgba(255,255,255,.7);margin-bottom:.5rem}.breadcrumb-nav a{color:rgba(255,255,255,.8);text-decoration:none}.hero-badge{display:inline-block;background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.75rem;margin-bottom:.5rem}.page-hero h1{font-size:1.4rem;font-weight:800;margin:0 0 .3rem}.page-hero p{font-size:.83rem;opacity:.85;margin:0}.main-layout{display:grid;grid-template-columns:1fr;gap:16px;align-items:start;padding:16px 0 32px}.calc-card{background:#fff;border-radius:10px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden}.card-hd{display:flex;align-items:center;gap:10px;padding:14px 16px;background:#f0f7ff;border-bottom:1px solid #dbeafe}.card-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;background:#dbeafe;color:#1d4ed8}.card-title{font-weight:700;font-size:.9rem;color:#1e3a8a}.card-body{padding:16px}.form-label{font-weight:600;font-size:.8rem;color:#374151;margin-bottom:4px;display:block}.form-control{font-size:.85rem;border-color:#d1d5db;border-radius:7px}.input-group-text{background:#f1f5f9;border-color:#d1d5db;font-size:.8rem;color:#64748b;min-width:42px;justify-content:center}.result-panel{background:linear-gradient(160deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;color:#fff;padding:18px 20px;box-shadow:0 4px 20px rgba(30,58,138,.3)}.result-title{font-size:.88rem;font-weight:700;opacity:.85;margin-bottom:12px;display:flex;align-items:center;gap:6px}.result-final{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;padding-top:6px}.result-final-label{font-size:.82rem;opacity:.8}.result-final-val{font-size:1.35rem;font-weight:800;line-height:1.1;text-align:right}.side-row{border-top:1px solid rgba(255,255,255,.16);margin-top:10px;padding-top:9px;display:flex;justify-content:space-between;gap:12px;font-size:.78rem}.side-val{font-weight:800;text-align:right;color:#bfdbfe}.compare-table,.result-table{width:100%;border-collapse:collapse;font-size:.82rem}.compare-table th,.result-table th{background:#f8fafc;color:#475569;font-weight:700;border-bottom:1px solid #e2e8f0;padding:9px}.compare-table td,.result-table td{border-bottom:1px solid #f1f5f9;padding:9px;color:#334155}.money,.num{text-align:right;font-weight:800;color:#1e3a8a;white-space:nowrap}.chart-wrap{height:340px;margin-top:8px}.notice{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.75rem;color:#713f12;margin-top:16px;display:flex;gap:8px}footer{background:#1e3a8a;color:rgba(255,255,255,.65);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}footer a{color:rgba(255,255,255,.75);text-decoration:none}@media(min-width:992px){.main-layout{grid-template-columns:1fr 360px}.result-panel{position:sticky;top:96px}}@media(max-width:576px){.result-final{display:block}.result-final-val{display:block;margin-top:6px;font-size:1.12rem}.chart-wrap{height:270px}}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"은퇴자금 고갈 시점 계산기","url":"https://mycalc.co.kr/money/retirement-fund/","applicationCategory":"FinanceApplication","operatingSystem":"All","inLanguage":"ko","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}}</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7993189040408645" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="mc-nav-wrap"><div class="mc-t1"><div class="container"><div class="mc-row"><a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a><ul class="mc-t1-ul"><li><a href="../../tax/index.html">세금</a></li><li><a href="../../work/index.html">급여·노동</a></li><li><a href="../../tools/index.html">도구</a></li><li><a href="../../realestate/index.html">부동산</a></li><li><a href="../index.html" class="on">금융·투자</a></li><li><a href="../../student/index.html">학생</a></li><li><a href="../../parent/index.html">학부모·육아</a></li><li><a href="../../life/index.html">생활</a></li></ul></div></div></div><div class="mc-t2"><div class="container"><ul class="mc-t2-ul"><li><a href="../compound/index.html" class="mc-done">복리이자</a></li><li><a href="../loan/index.html" class="mc-done">대출상환</a></li><li><a href="../average-down/index.html" class="mc-done">물타기</a></li><li><a href="../dividend/index.html" class="mc-done">배당금</a></li><li><a href="index.html" class="on mc-done">은퇴자금</a></li><li><a href="../pension/index.html" class="mc-done">국민연금</a></li><li><span class="wip">공모주</span></li><li><span class="wip">인플레이션</span></li></ul></div></div></div>
+<div class="page-hero"><div class="container"><div class="breadcrumb-nav"><a href="../../index.html">홈</a> &gt; <a href="../index.html">금융·투자</a> &gt; 은퇴자금 고갈 시점 계산기</div><div class="hero-badge">금융·투자</div><h1><i class="bi bi-piggy-bank me-2"></i>은퇴자금 고갈 시점 계산기</h1><p>은퇴 후 자산이 몇 년 동안 유지되는지 시뮬레이션합니다</p></div></div>
+<div class="container"><div class="main-layout"><main>
+<section class="calc-card"><div class="card-hd"><span class="card-icon"><i class="bi bi-pencil-square"></i></span><span class="card-title">은퇴 조건 입력</span></div><div class="card-body"><div class="row g-3">
+<div class="col-sm-6"><label class="form-label" for="asset">은퇴 시 보유 자산</label><div class="input-group"><input type="text" class="form-control money-input" id="asset" value="500,000,000" inputmode="numeric"><span class="input-group-text">원</span></div></div>
+<div class="col-sm-6"><label class="form-label" for="expense">월 생활비</label><div class="input-group"><input type="text" class="form-control money-input" id="expense" value="3,000,000" inputmode="numeric"><span class="input-group-text">원</span></div></div>
+<div class="col-sm-6"><label class="form-label" for="returnRate">연간 투자 수익률</label><div class="input-group"><input type="number" class="form-control" id="returnRate" step="0.5" value="3" inputmode="decimal"><span class="input-group-text">%</span></div></div>
+<div class="col-sm-6"><label class="form-label" for="inflation">연간 인플레이션</label><div class="input-group"><input type="number" class="form-control" id="inflation" step="0.5" value="2.5" inputmode="decimal"><span class="input-group-text">%</span></div></div>
+<div class="col-sm-6"><label class="form-label" for="pension">국민연금 월 수령액</label><div class="input-group"><input type="text" class="form-control money-input" id="pension" value="1,000,000" inputmode="numeric"><span class="input-group-text">원</span></div></div>
+<div class="col-sm-3"><label class="form-label" for="retireAge">은퇴 나이</label><input type="number" class="form-control" id="retireAge" value="60" min="40" max="90"></div>
+<div class="col-sm-3"><label class="form-label" for="pensionAge">연금 수령 시작 나이</label><input type="number" class="form-control" id="pensionAge" value="65" min="40" max="100"></div>
+</div></div></section>
+<section class="calc-card mt-3"><div class="card-hd"><span class="card-icon"><i class="bi bi-graph-up"></i></span><span class="card-title">연도별 잔여 자산 추이</span></div><div class="card-body"><div class="chart-wrap"><canvas id="assetChart"></canvas></div></div></section>
+<section class="calc-card mt-3"><div class="card-hd"><span class="card-icon"><i class="bi bi-columns-gap"></i></span><span class="card-title">시나리오 비교</span></div><div class="table-responsive"><table class="compare-table"><thead><tr><th>시나리오</th><th class="text-end">고갈 시점</th><th class="text-end">변화</th></tr></thead><tbody id="scenarioBody"></tbody></table></div></section>
+<section class="calc-card mt-3"><div class="card-hd"><span class="card-icon"><i class="bi bi-table"></i></span><span class="card-title">핵심 지표</span></div><div class="table-responsive"><table class="result-table"><tbody><tr><th>고갈 시 나이</th><td class="money" id="depletionAgeRow">-</td></tr><tr><th>총 인출 금액</th><td class="money" id="totalWithdrawnRow">0원</td></tr><tr><th>총 연금 수령액</th><td class="money" id="totalPensionRow">0원</td></tr></tbody></table></div></section>
+<div class="notice"><i class="bi bi-info-circle"></i><div>매년 초 투자 수익률을 반영한 뒤 생활비와 연금을 적용하는 단순 시뮬레이션입니다. 세금, 건강보험료, 자산별 변동성, 연금 인상률은 반영하지 않습니다.</div></div>
+</main><aside><div class="result-panel"><div class="result-title"><i class="bi bi-check2-circle"></i>예상 결과</div><div class="result-final"><span class="result-final-label">자금 고갈 시점</span><span class="result-final-val" id="depletionLabel">-</span></div><div class="side-row"><span>고갈 시 나이</span><span class="side-val" id="depletionAge">-</span></div><div class="side-row"><span>총 인출 금액</span><span class="side-val" id="totalWithdrawn">0원</span></div><div class="side-row"><span>총 연금 수령액</span><span class="side-val" id="totalPension">0원</span></div></div></aside></div></div>
+<footer><div class="container"><p style="margin-bottom:4px;font-size:.7rem"><a href="/privacy.html">개인정보처리방침</a> · <a href="/terms.html">이용약관</a> · <a href="/about.html">사이트 소개</a> · <a href="/contact.html">문의하기</a></p>© 2026 mycalc · 참고용 계산기입니다. | <a href="../../index.html">메인으로</a></div></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+let assetChart;
+function el(id){return document.getElementById(id)}
+function money(id){return parseFloat(el(id).value.replace(/[^\d.-]/g,''))||0}
+function num(id){return parseFloat(el(id).value)||0}
+function won(v){return Math.round(v||0).toLocaleString('ko-KR')+'원'}
+function eok(v){return (v/100000000).toLocaleString('ko-KR',{maximumFractionDigits:1})+'억'}
+function syncMoneyInput(input){const n=input.value.replace(/[^\d]/g,'');input.value=n?Number(n).toLocaleString('ko-KR'):''}
+function simulate(opts){
+ let balance=opts.asset,rows=[{age:opts.retireAge,balance,withdrawn:0,pension:0}],totalWithdrawn=0,totalPension=0,depletion=null;
+ for(let y=0;y<50;y++){
+  const age=opts.retireAge+y+1;
+  const startBalance=balance*(1+opts.returnRate/100);
+  const expense=opts.monthlyExpense*12*Math.pow(1+opts.inflation/100,y);
+  const pension=age>=opts.pensionAge?opts.monthlyPension*12:0;
+  balance=startBalance-expense+pension;
+  totalWithdrawn+=expense;totalPension+=pension;
+  if(balance<=0 && !depletion){depletion={age,years:y+1}}
+  rows.push({age,balance:Math.max(0,balance),withdrawn:expense,pension});
+  if(balance<=0)break;
+ }
+ return {rows,totalWithdrawn,totalPension,depletion};
+}
+function labelDepletion(dep){return dep?`${dep.age}세 (은퇴 후 ${dep.years}년)`:'50년 이상 유지'}
+function scenarioLabel(dep){return dep?`${dep.age}세`:'50년+'}
+function calc(){
+ const opts={asset:money('asset'),monthlyExpense:money('expense'),returnRate:num('returnRate'),inflation:num('inflation'),monthlyPension:money('pension'),retireAge:num('retireAge'),pensionAge:num('pensionAge')};
+ const base=simulate(opts),dep=base.depletion;
+ el('depletionLabel').textContent=labelDepletion(dep);el('depletionAge').textContent=dep?dep.age+'세':'고갈 없음';el('depletionAgeRow').textContent=dep?dep.age+'세':'고갈 없음';
+ el('totalWithdrawn').textContent=won(base.totalWithdrawn);el('totalWithdrawnRow').textContent=won(base.totalWithdrawn);el('totalPension').textContent=won(base.totalPension);el('totalPensionRow').textContent=won(base.totalPension);
+ renderChart(base.rows,opts.pensionAge,dep);renderScenarios(opts,dep);
+}
+function renderScenarios(opts,baseDep){
+ const baseAge=baseDep?baseDep.age:null;
+ const scenarios=[
+  ['기준',opts],
+  ['수익률 +1%',{...opts,returnRate:opts.returnRate+1}],
+  ['수익률 -1%',{...opts,returnRate:opts.returnRate-1}],
+  ['생활비 +50만',{...opts,monthlyExpense:opts.monthlyExpense+500000}],
+  ['생활비 -50만',{...opts,monthlyExpense:Math.max(0,opts.monthlyExpense-500000)}]
+ ];
+ el('scenarioBody').innerHTML=scenarios.map(([name,o])=>{const d=simulate(o).depletion;let diff='-';if(name!=='기준'){if(!baseAge&&!d)diff='변화 없음';else if(!d)diff='50년 이상';else if(!baseAge)diff='고갈 발생';else diff=(d.age-baseAge>0?'+':'')+(d.age-baseAge)+'년'}return `<tr><td>${name}</td><td class="money">${scenarioLabel(d)}</td><td class="money">${diff}</td></tr>`}).join('');
+}
+const markerPlugin={id:'retirementMarkers',afterDatasetsDraw(chart,args,opts){const {ctx,chartArea:{top,bottom},scales:{x,y}}=chart;ctx.save();if(opts.pensionAge){const xPos=x.getPixelForValue(String(opts.pensionAge));ctx.strokeStyle='#f59e0b';ctx.lineWidth=2;ctx.setLineDash([5,5]);ctx.beginPath();ctx.moveTo(xPos,top);ctx.lineTo(xPos,bottom);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#92400e';ctx.font='12px Pretendard';ctx.fillText('연금 시작',xPos+6,top+16)}if(opts.depletion){const xD=x.getPixelForValue(String(opts.depletion.age));const row=opts.rows.find(r=>r.age===opts.depletion.age);const yD=y.getPixelForValue(row?row.balance:0);ctx.fillStyle='#dc2626';ctx.beginPath();ctx.arc(xD,yD,5,0,Math.PI*2);ctx.fill();ctx.fillText('고갈',xD+7,Math.max(top+18,yD-8))}ctx.restore()}};
+Chart.register(markerPlugin);
+function renderChart(rows,pensionAge,depletion){
+ if(assetChart)assetChart.destroy();
+ assetChart=new Chart(el('assetChart'),{type:'line',data:{labels:rows.map(r=>String(r.age)),datasets:[{label:'잔여 자산',data:rows.map(r=>r.balance/100000000),borderColor:'#1d4ed8',backgroundColor:'rgba(29,78,216,.14)',fill:true,tension:.25,pointRadius:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{retirementMarkers:{pensionAge,depletion,rows},tooltip:{callbacks:{label:c=>'잔여 자산: '+eok(c.parsed.y*100000000)}}},scales:{x:{title:{display:true,text:'나이'},ticks:{maxTicksLimit:12}},y:{title:{display:true,text:'잔여 자산(억 원)'},beginAtZero:true,ticks:{callback:v=>v+'억'}}}}});
+}
+document.querySelectorAll('input').forEach(x=>x.addEventListener('input',calc));
+document.querySelectorAll('.money-input').forEach(x=>x.addEventListener('input',()=>{syncMoneyInput(x);calc()}));
+calc();
+</script>
+<script>
+(function(){
+  var B=/bot|crawler|spider|crawling|googlebot|bingbot|yandexbot|baiduspider|slurp|duckduckbot|facebookexternalhit|ia_archiver|msnbot|scrapy|applebot|semrushbot|ahrefsbot|petalbot|bytespider/i;
+  if(B.test(navigator.userAgent))return;
+  var S='https://wblffwhxaqxtqjccmwig.supabase.co';
+  var K='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndibGZmd2h4YXF4dHFqY2Ntd2lnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4OTQzMDcsImV4cCI6MjA5MzQ3MDMwN30.9uGXG1zw3bF5ojMcfQnPr8zsirn3WejIjK60XOZfAcg';
+  var p=location.pathname;var s=(p.replace(/^\//,'')||'').split('/')[0]||'main';var r=document.referrer,t='direct';
+  if(r){try{var h=new URL(r).hostname;if(/google\.(com|co\.kr)$/.test(h))t='google';else if(/search\.naver\.com/.test(h))t='naver';else if(/search\.daum\.net/.test(h))t='daum';else if(/bing\.com/.test(h))t='bing';else if(/(^|\.)t\.co$|twitter\.com|x\.com/.test(h))t='twitter';else if(/facebook\.com/.test(h))t='facebook';else if(/instagram\.com/.test(h))t='instagram';else if(/youtube\.com/.test(h))t='youtube';else if(/perplexity\.ai/.test(h))t='perplexity';else if(/chatgpt\.com|chat\.openai\.com/.test(h))t='chatgpt';else t='other'}catch(e){t='other'}}
+  fetch(S+'/rest/v1/mycalc_page_views',{method:'POST',headers:{'Content-Type':'application/json','apikey':K,'Authorization':'Bearer '+K,'Prefer':'return=minimal'},body:JSON.stringify({page_path:p,page_title:document.title,subdomain:s,referrer:r,ref_type:t,user_agent:navigator.userAgent})}).catch(function(){});
+})();
+</script>
+</body>
+</html>

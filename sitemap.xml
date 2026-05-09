@@ -7,6 +7,7 @@
   <url><loc>https://mycalc.co.kr/money/compound/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/money/dividend/about.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/money/dividend/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://mycalc.co.kr/money/loan/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/money/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://mycalc.co.kr/parent/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://mycalc.co.kr/parent/vaccine/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
@@ -75,6 +76,7 @@
   <url><loc>https://mycalc.co.kr/parent/parental-leave/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/student/suneung/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/money/pension/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://mycalc.co.kr/money/retirement-fund/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/realestate/loan-limit/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/realestate/rental-yield/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mycalc.co.kr/privacy.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>

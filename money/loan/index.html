@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>대출 상환 시뮬레이터 | mycalc</title>
+<meta name="description" content="원리금균등, 원금균등, 만기일시 3가지 방식의 대출 상환 스케줄을 비교합니다">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://mycalc.co.kr/money/loan/">
+<meta property="og:title" content="대출 상환 시뮬레이터 | mycalc">
+<meta property="og:description" content="원리금균등, 원금균등, 만기일시 3가지 방식의 대출 상환 스케줄을 비교합니다">
+<meta property="og:url" content="https://mycalc.co.kr/money/loan/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="마이캘크">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<style>
+*{box-sizing:border-box}body{font-family:'Pretendard',-apple-system,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}.mc-t1{background:#0f172a;min-height:46px}.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}.mc-brand span{color:#38bdf8}.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}.mc-t1-ul{justify-content:flex-end}.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}.page-hero{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 60%,#2563eb 100%);color:#fff;padding:1.75rem 0 1.5rem}.breadcrumb-nav{font-size:.75rem;color:rgba(255,255,255,.7);margin-bottom:.5rem}.breadcrumb-nav a{color:rgba(255,255,255,.8);text-decoration:none}.hero-badge{display:inline-block;background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.75rem;margin-bottom:.5rem}.page-hero h1{font-size:1.4rem;font-weight:800;margin:0 0 .3rem}.page-hero p{font-size:.83rem;opacity:.85;margin:0}.main-layout{display:grid;grid-template-columns:1fr;gap:16px;align-items:start;padding:16px 0 32px}.calc-card{background:#fff;border-radius:10px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden}.card-hd{display:flex;align-items:center;gap:10px;padding:14px 16px;background:#f0f7ff;border-bottom:1px solid #dbeafe}.card-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;background:#dbeafe;color:#1d4ed8}.card-title{font-weight:700;font-size:.9rem;color:#1e3a8a}.card-body{padding:16px}.form-label{font-weight:600;font-size:.8rem;color:#374151;margin-bottom:4px;display:block}.form-control,.form-select{font-size:.85rem;border-color:#d1d5db;border-radius:7px}.input-group-text{background:#f1f5f9;border-color:#d1d5db;font-size:.8rem;color:#64748b;min-width:42px;justify-content:center}.method-group{display:flex;flex-wrap:wrap;gap:8px}.method-group label{border:1px solid #dbeafe;background:#f8fafc;border-radius:8px;padding:8px 12px;font-size:.82rem;font-weight:700;color:#334155;cursor:pointer}.method-group input{margin-right:5px}.result-panel{background:linear-gradient(160deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;color:#fff;padding:18px 20px;box-shadow:0 4px 20px rgba(30,58,138,.3)}.result-title{font-size:.88rem;font-weight:700;opacity:.85;margin-bottom:12px;display:flex;align-items:center;gap:6px}.result-final{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;padding-top:6px}.result-final-label{font-size:.82rem;opacity:.8}.result-final-val{font-size:1.35rem;font-weight:800;line-height:1.1;text-align:right}.side-row{border-top:1px solid rgba(255,255,255,.16);margin-top:10px;padding-top:9px;display:flex;justify-content:space-between;gap:12px;font-size:.78rem}.side-val{font-weight:800;text-align:right;color:#bfdbfe}.result-table,.compare-table,.schedule-table{width:100%;border-collapse:collapse;font-size:.82rem}.result-table th,.compare-table th,.schedule-table th{background:#f8fafc;color:#475569;font-weight:700;border-bottom:1px solid #e2e8f0;padding:9px}.result-table td,.compare-table td,.schedule-table td{border-bottom:1px solid #f1f5f9;padding:9px;color:#334155}.money,.num{text-align:right;font-weight:800;color:#1e3a8a;white-space:nowrap}.chart-wrap{height:300px;margin-top:8px}.notice{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.75rem;color:#713f12;margin-top:16px;display:flex;gap:8px}.details-toggle{width:100%;border:0;background:#f8fafc;color:#1e3a8a;font-weight:800;padding:12px;text-align:left}.table-scroll{max-height:420px;overflow:auto}footer{background:#1e3a8a;color:rgba(255,255,255,.65);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}footer a{color:rgba(255,255,255,.75);text-decoration:none}@media(min-width:992px){.main-layout{grid-template-columns:1fr 360px}.result-panel{position:sticky;top:96px}}@media(max-width:576px){.result-final{display:block}.result-final-val{display:block;margin-top:6px;font-size:1.12rem}.chart-wrap{height:250px}.method-group{display:grid}}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"대출 상환 시뮬레이터","url":"https://mycalc.co.kr/money/loan/","applicationCategory":"FinanceApplication","operatingSystem":"All","inLanguage":"ko","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}}</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7993189040408645" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="mc-nav-wrap"><div class="mc-t1"><div class="container"><div class="mc-row"><a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a><ul class="mc-t1-ul"><li><a href="../../tax/index.html">세금</a></li><li><a href="../../work/index.html">급여·노동</a></li><li><a href="../../tools/index.html">도구</a></li><li><a href="../../realestate/index.html">부동산</a></li><li><a href="../index.html" class="on">금융·투자</a></li><li><a href="../../student/index.html">학생</a></li><li><a href="../../parent/index.html">학부모·육아</a></li><li><a href="../../life/index.html">생활</a></li></ul></div></div></div><div class="mc-t2"><div class="container"><ul class="mc-t2-ul"><li><a href="../compound/index.html" class="mc-done">복리이자</a></li><li><a href="index.html" class="on mc-done">대출상환</a></li><li><a href="../average-down/index.html" class="mc-done">물타기</a></li><li><a href="../dividend/index.html" class="mc-done">배당금</a></li><li><a href="../retirement-fund/index.html" class="mc-done">은퇴자금</a></li><li><a href="../pension/index.html" class="mc-done">국민연금</a></li><li><span class="wip">공모주</span></li><li><span class="wip">인플레이션</span></li></ul></div></div></div>
+<div class="page-hero"><div class="container"><div class="breadcrumb-nav"><a href="../../index.html">홈</a> &gt; <a href="../index.html">금융·투자</a> &gt; 대출 상환 시뮬레이터</div><div class="hero-badge">금융·투자</div><h1><i class="bi bi-bank me-2"></i>대출 상환 시뮬레이터</h1><p>원리금균등, 원금균등, 만기일시 3가지 방식의 대출 상환 스케줄을 비교합니다</p></div></div>
+<div class="container"><div class="main-layout"><main>
+<section class="calc-card"><div class="card-hd"><span class="card-icon"><i class="bi bi-pencil-square"></i></span><span class="card-title">대출 조건 입력</span></div><div class="card-body"><div class="row g-3">
+<div class="col-sm-6"><label class="form-label" for="principal">대출 원금</label><div class="input-group"><input type="text" class="form-control money-input" id="principal" value="100,000,000" inputmode="numeric"><span class="input-group-text">원</span></div></div>
+<div class="col-sm-6"><label class="form-label" for="rate">연 이자율</label><div class="input-group"><input type="number" class="form-control" id="rate" min="0" step="0.1" value="4.5" inputmode="decimal"><span class="input-group-text">%</span></div></div>
+<div class="col-sm-6"><label class="form-label" for="years">대출 기간</label><select class="form-select" id="years"><option>1</option><option>3</option><option>5</option><option>10</option><option>15</option><option>20</option><option>25</option><option selected>30</option></select></div>
+<div class="col-sm-6"><label class="form-label" for="grace">거치 기간</label><select class="form-select" id="grace"><option value="0">없음</option><option>1</option><option>2</option><option>3</option><option>5</option></select></div>
+<div class="col-12"><span class="form-label">상환 방식</span><div class="method-group"><label><input type="radio" name="method" value="equalPayment" checked>원리금균등</label><label><input type="radio" name="method" value="equalPrincipal">원금균등</label><label><input type="radio" name="method" value="bullet">만기일시</label></div></div>
+</div></div></section>
+<section class="calc-card mt-3"><div class="card-hd"><span class="card-icon"><i class="bi bi-table"></i></span><span class="card-title">3가지 방식 비교</span></div><div class="table-responsive"><table class="compare-table"><thead><tr><th>상환 방식</th><th class="text-end">월상환액</th><th class="text-end">총이자</th><th class="text-end">총상환액</th></tr></thead><tbody id="compareBody"></tbody></table></div></section>
+<section class="calc-card mt-3"><div class="card-hd"><span class="card-icon"><i class="bi bi-graph-up"></i></span><span class="card-title">월별 상환액 추이</span></div><div class="card-body"><div class="chart-wrap"><canvas id="paymentChart"></canvas></div></div></section>
+<section class="calc-card mt-3"><div class="card-hd"><span class="card-icon"><i class="bi bi-activity"></i></span><span class="card-title">잔금 추이</span></div><div class="card-body"><div class="chart-wrap"><canvas id="balanceChart"></canvas></div></div></section>
+<section class="calc-card mt-3"><button class="details-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#scheduleWrap"><i class="bi bi-chevron-down me-1"></i>상환 스케줄 표 펼치기</button><div class="collapse" id="scheduleWrap"><div class="table-responsive table-scroll"><table class="schedule-table"><thead><tr><th>회차</th><th class="text-end">월상환액</th><th class="text-end">원금</th><th class="text-end">이자</th><th class="text-end">잔금</th></tr></thead><tbody id="scheduleBody"></tbody></table></div></div></section>
+<div class="notice"><i class="bi bi-info-circle"></i><div>거치 기간은 총 대출 기간 안에 포함해 계산합니다. 실제 대출은 중도상환수수료, 일할 이자, 금리 변동, 금융기관별 반올림 기준에 따라 달라질 수 있습니다.</div></div>
+</main><aside><div class="result-panel"><div class="result-title"><i class="bi bi-check2-circle"></i>선택 방식 결과</div><div class="result-final"><span class="result-final-label">월 상환액(첫 달)</span><span class="result-final-val" id="firstPayment">0원</span></div><div class="side-row"><span>총 상환액</span><span class="side-val" id="totalPayment">0원</span></div><div class="side-row"><span>총 이자</span><span class="side-val" id="totalInterest">0원</span></div><div class="side-row"><span>상환 회차</span><span class="side-val" id="monthsLabel">-</span></div></div></aside></div></div>
+<footer><div class="container"><p style="margin-bottom:4px;font-size:.7rem"><a href="/privacy.html">개인정보처리방침</a> · <a href="/terms.html">이용약관</a> · <a href="/about.html">사이트 소개</a> · <a href="/contact.html">문의하기</a></p>© 2026 mycalc · 참고용 계산기입니다. | <a href="../../index.html">메인으로</a></div></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+let paymentChart,balanceChart;
+const methodNames={equalPayment:'원리금균등',equalPrincipal:'원금균등',bullet:'만기일시'};
+function el(id){return document.getElementById(id)}
+function rawMoney(id){return parseFloat(el(id).value.replace(/[^\d.-]/g,''))||0}
+function num(id){return parseFloat(el(id).value)||0}
+function won(v){return Math.round(v||0).toLocaleString('ko-KR')+'원'}
+function compactWon(v){return Math.round((v||0)/10000).toLocaleString('ko-KR')+'만원'}
+function syncMoneyInput(input){const n=input.value.replace(/[^\d]/g,'');input.value=n?Number(n).toLocaleString('ko-KR'):''}
+function buildSchedule(method,P,annualRate,years,graceYears){
+ const r=annualRate/12/100,totalMonths=years*12,graceMonths=Math.min(graceYears*12,totalMonths-1),repayMonths=totalMonths-graceMonths;
+ let balance=P,rows=[];
+ for(let m=1;m<=totalMonths;m++){
+  let interest=balance*r,principalPay=0,payment=0;
+  if(m<=graceMonths){payment=interest}
+  else{
+   const k=m-graceMonths;
+   if(method==='equalPayment'){
+    const monthly=r===0?P/repayMonths:P*r*Math.pow(1+r,repayMonths)/(Math.pow(1+r,repayMonths)-1);
+    principalPay=k===repayMonths?balance:Math.min(balance,monthly-interest);
+    payment=principalPay+interest;
+   }else if(method==='equalPrincipal'){
+    principalPay=k===repayMonths?balance:Math.min(balance,P/repayMonths);
+    payment=principalPay+interest;
+   }else{
+    principalPay=k===repayMonths?balance:0;
+    payment=interest+principalPay;
+   }
+  }
+  balance=Math.max(0,balance-principalPay);
+  rows.push({month:m,payment,principal:principalPay,interest,balance});
+ }
+ return rows;
+}
+function summarize(rows){return {first:rows[0]?.payment||0,total:rows.reduce((s,r)=>s+r.payment,0),interest:rows.reduce((s,r)=>s+r.interest,0),rows}}
+function selectedMethod(){return document.querySelector('input[name="method"]:checked').value}
+function calc(){
+ const P=rawMoney('principal'),rate=num('rate'),years=parseInt(el('years').value,10),grace=parseInt(el('grace').value,10);
+ const summaries={};
+ Object.keys(methodNames).forEach(m=>summaries[m]=summarize(buildSchedule(m,P,rate,years,grace)));
+ const current=summaries[selectedMethod()];
+ el('firstPayment').textContent=won(current.first);el('totalPayment').textContent=won(current.total);el('totalInterest').textContent=won(current.interest);el('monthsLabel').textContent=`${years*12}개월`;
+ el('compareBody').innerHTML=Object.keys(methodNames).map(m=>`<tr><td>${methodNames[m]}</td><td class="money">${won(summaries[m].first)}</td><td class="money">${won(summaries[m].interest)}</td><td class="money">${won(summaries[m].total)}</td></tr>`).join('');
+ el('scheduleBody').innerHTML=current.rows.map(r=>`<tr><td>${r.month}</td><td class="money">${won(r.payment)}</td><td class="money">${won(r.principal)}</td><td class="money">${won(r.interest)}</td><td class="money">${won(r.balance)}</td></tr>`).join('');
+ renderCharts(current.rows);
+}
+function renderCharts(rows){
+ const labels=rows.map(r=>r.month),principal=rows.map(r=>Math.round(r.principal)),interest=rows.map(r=>Math.round(r.interest)),balance=rows.map(r=>Math.round(r.balance));
+ if(paymentChart)paymentChart.destroy(); if(balanceChart)balanceChart.destroy();
+ paymentChart=new Chart(el('paymentChart'),{type:'line',data:{labels,datasets:[{label:'원금',data:principal,borderColor:'#60a5fa',backgroundColor:'rgba(96,165,250,.22)',fill:true,stack:'pay',tension:.25,pointRadius:0},{label:'이자',data:interest,borderColor:'#1d4ed8',backgroundColor:'rgba(29,78,216,.20)',fill:true,stack:'pay',tension:.25,pointRadius:0}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${won(c.parsed.y)}`}}},scales:{x:{ticks:{maxTicksLimit:12}},y:{stacked:true,ticks:{callback:v=>compactWon(v)}}}}});
+ balanceChart=new Chart(el('balanceChart'),{type:'line',data:{labels,datasets:[{label:'잔금',data:balance,borderColor:'#0f766e',backgroundColor:'rgba(15,118,110,.12)',fill:true,tension:.25,pointRadius:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{tooltip:{callbacks:{label:c=>'잔금: '+won(c.parsed.y)}}},scales:{x:{ticks:{maxTicksLimit:12}},y:{ticks:{callback:v=>compactWon(v)}}}}});
+}
+document.querySelectorAll('input,select').forEach(x=>x.addEventListener('input',calc));
+document.querySelectorAll('.money-input').forEach(x=>x.addEventListener('input',()=>{syncMoneyInput(x);calc()}));
+calc();
+</script>
+<script>
+(function(){
+  var B=/bot|crawler|spider|crawling|googlebot|bingbot|yandexbot|baiduspider|slurp|duckduckbot|facebookexternalhit|ia_archiver|msnbot|scrapy|applebot|semrushbot|ahrefsbot|petalbot|bytespider/i;
+  if(B.test(navigator.userAgent))return;
+  var S='https://wblffwhxaqxtqjccmwig.supabase.co';
+  var K='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndibGZmd2h4YXF4dHFqY2Ntd2lnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4OTQzMDcsImV4cCI6MjA5MzQ3MDMwN30.9uGXG1zw3bF5ojMcfQnPr8zsirn3WejIjK60XOZfAcg';
+  var p=location.pathname;var s=(p.replace(/^\//,'')||'').split('/')[0]||'main';var r=document.referrer,t='direct';
+  if(r){try{var h=new URL(r).hostname;if(/google\.(com|co\.kr)$/.test(h))t='google';else if(/search\.naver\.com/.test(h))t='naver';else if(/search\.daum\.net/.test(h))t='daum';else if(/bing\.com/.test(h))t='bing';else if(/(^|\.)t\.co$|twitter\.com|x\.com/.test(h))t='twitter';else if(/facebook\.com/.test(h))t='facebook';else if(/instagram\.com/.test(h))t='instagram';else if(/youtube\.com/.test(h))t='youtube';else if(/perplexity\.ai/.test(h))t='perplexity';else if(/chatgpt\.com|chat\.openai\.com/.test(h))t='chatgpt';else t='other'}catch(e){t='other'}}
+  fetch(S+'/rest/v1/mycalc_page_views',{method:'POST',headers:{'Content-Type':'application/json','apikey':K,'Authorization':'Bearer '+K,'Prefer':'return=minimal'},body:JSON.stringify({page_path:p,page_title:document.title,subdomain:s,referrer:r,ref_type:t,user_agent:navigator.userAgent})}).catch(function(){});
+})();
+</script>
+</body>
+</html>
