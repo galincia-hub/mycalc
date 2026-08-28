@@ -1,8 +1,8 @@
 # mycalc 완성 현황
 
-> 최종 업데이트: 2026-05-09 | 50개 완성, 50+ 준비중
+> 최종 업데이트: 2026-08-28 | 51개 완성, 50+ 준비중
 
-## ① tax — 10완성 / 3준비중
+## ① tax — 11완성 / 2준비중
 ✅ general-income (index, about, flow, penalty, penalty-calc, tax-rate)
 ✅ freelancer
 ✅ vat
@@ -12,7 +12,8 @@
 ✅ capital-gains (index, stock, about)
 ✅ inheritance (index, gift, about)
 ✅ property (index, acquisition, holding, comprehensive, transfer)
-⬜ crypto | ⬜ prize | ⬜ yearend
+✅ yearend
+⬜ crypto | ⬜ prize
 
 ## ② work — 10완성 / 1준비중
 ✅ annual-salary
