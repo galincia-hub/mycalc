@@ -533,6 +533,7 @@ footer a{color:rgba(255,255,255,.7);text-decoration:none}
 </div>
 
 <div class="disclaimer mt-3"><i class="bi bi-info-circle flex-shrink-0 mt-1"></i><span>이 결과는 <strong>참고용 추정</strong>이며 국세청 연말정산 신고서·원천징수영수증을 대체하지 않습니다. 실제 세액은 비과세 항목, 맞벌이, 주택 요건, 신용카드 추가한도, 난임·미숙아 의료비 등 세부 요건에 따라 달라집니다.</span></div>
+<div class="mt-2 mb-2"><button type="button" class="btn btn-sm btn-outline-secondary" onclick="resetAll()"><i class="bi bi-arrow-counterclockwise me-1"></i>전체 초기화</button></div>
 </div>
 
 <div>
@@ -569,6 +570,7 @@ footer a{color:rgba(255,255,255,.7);text-decoration:none}
       <div class="metric-card"><div class="metric-lbl">과세표준</div><div class="metric-val" id="m-base">0</div></div>
     </div>
     <div class="breakdown" id="r-breakdown"></div>
+    <button type="button" class="btn btn-sm w-100 mt-3" style="background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.28)" onclick="resetAll()"><i class="bi bi-arrow-counterclockwise me-1"></i>전체 초기화</button>
   </div>
 
   <div class="rate-table-card mt-2">
@@ -577,10 +579,6 @@ footer a{color:rgba(255,255,255,.7);text-decoration:none}
       <thead><tr><th>과세표준</th><th>세율</th><th>누진공제</th></tr></thead>
       <tbody id="rateTableBody"></tbody>
     </table>
-  </div>
-
-  <div class="text-center mt-2">
-    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="resetAll()"><i class="bi bi-arrow-counterclockwise me-1"></i>전체 초기화</button>
   </div>
 </div>
 
