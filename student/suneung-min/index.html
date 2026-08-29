@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>수능 최저학력기준 계산기 – 2합4·3합6 충족 확인 | mycalc</title>
+<meta name="description" content="모평·수능 등급으로 수시 수능 최저학력기준을 바로 판정합니다. 2합4, 3합6 등 최저 패턴과 탐구 반영 방식을 넣어 충족 여부를 확인하세요.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://mycalc.co.kr/student/suneung-min/">
+<meta property="og:title" content="수능 최저학력기준 계산기 – 2합4·3합6 충족 확인 | mycalc">
+<meta property="og:description" content="모평·수능 등급으로 수시 수능 최저학력기준을 바로 판정합니다. 2합4, 3합6 등 최저 패턴과 탐구 반영 방식을 넣어 충족 여부를 확인하세요.">
+<meta property="og:url" content="https://mycalc.co.kr/student/suneung-min/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="마이캘크">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "수능 최저학력기준 계산기",
+  "url": "https://mycalc.co.kr/student/suneung-min/",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "All",
+  "inLanguage": "ko",
+  "isAccessibleForFree": true,
+  "description": "모평·수능 등급으로 수시 수능 최저학력기준(2합4, 3합6 등) 충족 여부를 판정하는 계산기입니다.",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "KRW"}
+}
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7993189040408645" crossorigin="anonymous"></script>
+<style>
+*{box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.page-hero{background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 100%);color:#fff;padding:1.8rem 0 1.45rem;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='72' height='72' viewBox='0 0 72 72' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.045'%3E%3Cpath d='M18 14h36v6H18zm0 14h28v6H18zm0 14h36v6H18z'/%3E%3C/g%3E%3C/svg%3E")}
+.hero-content{position:relative}
+.breadcrumb-mini{display:flex;align-items:center;gap:6px;font-size:.74rem;opacity:.82;margin-bottom:.45rem;flex-wrap:wrap}
+.breadcrumb-mini a{color:#fff;text-decoration:none}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.75rem;margin-bottom:.5rem}
+.page-hero h1{font-size:1.42rem;font-weight:800;margin:0 0 .3rem;letter-spacing:0}
+.page-hero p{font-size:.84rem;opacity:.86;margin:0}
+.main-layout{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start;padding:16px 0 32px}
+@media(max-width:991px){.main-layout{grid-template-columns:1fr}}
+.input-card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden;margin-bottom:14px}
+.input-card-header{padding:14px 16px;border-bottom:1px solid #dbeafe;background:#f0f7ff}
+.input-card-title{font-size:.9rem;font-weight:800;color:#0f172a;display:flex;align-items:center;gap:7px}
+.input-card-body{padding:16px}
+.form-label{font-weight:700;font-size:.8rem;color:#374151;margin-bottom:5px;display:block}
+.form-control,.form-select{font-size:.85rem;border-color:#d1d5db;border-radius:7px}
+.form-control:focus,.form-select:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.section-divider{border:none;border-top:1px solid #f1f5f9;margin:14px 0}
+.radio-pills{display:flex;gap:7px;flex-wrap:wrap}
+.radio-pill{position:relative}
+.radio-pill input{position:absolute;opacity:0;pointer-events:none}
+.radio-pill span{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:8px;border:1.5px solid #d1d5db;background:#fff;color:#475569;font-size:.8rem;font-weight:700;cursor:pointer}
+.radio-pill input:checked+span{border-color:#2563eb;background:#eff6ff;color:#1d4ed8}
+.grade-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:576px){.grade-grid{grid-template-columns:repeat(2,1fr)}}
+.helper-text{font-size:.75rem;color:#64748b;margin-top:5px}
+.check-row{display:flex;flex-wrap:wrap;gap:10px 16px}
+.check-row label{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;font-weight:700;color:#334155;margin:0}
+.preset-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+@media(min-width:700px){.preset-grid{grid-template-columns:repeat(4,1fr)}}
+.cond-card{border:1.5px solid #e2e8f0;border-radius:10px;padding:10px 11px;background:#fff;cursor:pointer;transition:border-color .15s,background .15s,box-shadow .15s;min-height:86px;display:flex;flex-direction:column;gap:4px}
+.cond-card:hover{border-color:#93c5fd}
+.cond-card.active{border-color:#2563eb;background:#f8fbff;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+.cond-card.pass{border-color:#16a34a;background:#f0fdf4}
+.cond-card.fail{border-color:#f59e0b;background:#fffbeb}
+.cond-card .cond-top{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.cond-card .cond-name{font-weight:850;font-size:.84rem;color:#0f172a}
+.cond-card .cond-formula{font-size:.72rem;color:#64748b;line-height:1.4}
+.badge-pass,.badge-fail,.badge-off,.badge-warn{display:inline-flex;align-items:center;gap:3px;border-radius:999px;padding:2px 7px;font-size:.68rem;font-weight:800;white-space:nowrap}
+.badge-pass{background:#dcfce7;color:#166534}
+.badge-fail{background:#fee2e2;color:#991b1b}
+.badge-off{background:#f1f5f9;color:#94a3b8}
+.badge-warn{background:#fef3c7;color:#92400e}
+.custom-card{border:1.5px solid #e2e8f0;border-radius:10px;padding:12px;background:#fff;margin-bottom:8px}
+.custom-card.pass{border-color:#16a34a;background:#f0fdf4}
+.custom-card.fail{border-color:#f59e0b;background:#fffbeb}
+.custom-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:4px}
+.icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid #e2e8f0;background:#fff;color:#64748b;display:inline-flex;align-items:center;justify-content:center}
+.icon-btn:hover{border-color:#fecaca;background:#fef2f2;color:#dc2626}
+.btn-primary{background:#1e3a8a;border-color:#1e3a8a;font-weight:800}
+.btn-primary:hover{background:#1d4ed8;border-color:#1d4ed8}
+.btn-outline-secondary,.btn-outline-primary{font-weight:700}
+.result-panel{background:linear-gradient(160deg,#1e3a8a 0%,#2563eb 100%);border-radius:12px;color:#fff;padding:18px 20px;position:sticky;top:88px;box-shadow:0 4px 20px rgba(30,58,138,.35)}
+.result-title{font-size:.9rem;font-weight:800;opacity:.9;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.score-main{background:rgba(255,255,255,.14);border-radius:12px;padding:14px;margin-bottom:10px}
+.score-label{font-size:.75rem;opacity:.78;margin-bottom:2px}
+.score-value{font-size:2rem;font-weight:900;line-height:1.05;color:#bfdbfe}
+.score-value.good{color:#bbf7d0}.score-value.mid{color:#bfdbfe}.score-value.warn{color:#fed7aa}.score-value.bad{color:#fecaca}
+.score-sub{font-size:.78rem;opacity:.78;margin-top:4px}
+.result-item{background:rgba(255,255,255,.1);border-radius:10px;padding:10px 11px;margin-bottom:8px}
+.result-item:last-child{margin-bottom:0}
+.result-item-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}
+.result-item-name{font-weight:800;font-size:.82rem}
+.result-item-detail{font-size:.73rem;opacity:.88;line-height:1.45}
+.result-item-hint{font-size:.72rem;opacity:.9;margin-top:4px;color:#fde68a}
+.metric-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px}
+.metric-card{background:rgba(255,255,255,.12);border-radius:8px;padding:8px;text-align:center}
+.metric-lbl{font-size:.65rem;opacity:.74;margin-bottom:2px}
+.metric-val{font-size:.9rem;font-weight:900}
+.notice-box{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.76rem;color:#713f12;margin-top:14px;display:flex;gap:8px;align-items:flex-start}
+.info-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px;font-size:.84rem;color:#475569;margin-top:14px}
+.info-card h2{font-size:1rem;font-weight:850;color:#0f172a;margin:0 0 10px}
+.info-card p{line-height:1.65;margin:0 0 10px}
+.info-card p:last-child{margin-bottom:0}
+.info-card a{color:#1d4ed8;font-weight:700;text-decoration:none}
+.info-card a:hover{text-decoration:underline}
+.info-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;background:#fff}
+.info-table th,.info-table td{padding:8px 9px;border-bottom:1px solid #eef2f7;font-size:.78rem;text-align:left}
+.info-table th{background:#f8fafc;color:#334155;font-weight:800}
+.info-table tr:last-child th,.info-table tr:last-child td{border-bottom:0}
+.faq-list{display:grid;gap:10px}
+.faq-item{border-top:1px solid #e2e8f0;padding-top:10px}
+.faq-item:first-child{border-top:0;padding-top:0}
+.faq-q{font-weight:850;color:#0f172a;margin-bottom:4px}
+footer{background:#0f172a;color:rgba(255,255,255,.62);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}
+footer a{color:rgba(255,255,255,.75);text-decoration:none}
+@media(max-width:576px){
+  .main-layout{padding-top:12px}
+  .page-hero h1{font-size:1.22rem}
+  .page-hero p{font-size:.8rem}
+  .score-value{font-size:1.65rem}
+  .input-card-body{padding:14px}
+}
+</style>
+</head>
+<body>
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../../tax/index.html">세금</a></li>
+<li><a href="../../work/index.html">급여·노동</a></li>
+<li><a href="../../tools/index.html">도구</a></li>
+<li><a href="../../realestate/index.html">부동산</a></li>
+<li><a href="../../money/index.html">금융·투자</a></li>
+<li><a href="../../student/index.html" class="on">학생</a></li>
+<li><a href="../../parent/index.html">학부모·육아</a></li>
+<li><a href="../../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="../gpa/index.html" class="mc-done">학점</a></li>
+<li><a href="../naesin/index.html" class="mc-done">내신</a></li>
+<li><a href="../military/index.html" class="mc-done">전역일</a></li>
+<li><a href="../suneung/index.html" class="mc-done">수능등급컷</a></li>
+<li><a href="index.html" class="on mc-done">수능최저</a></li>
+</ul></div></div>
+</div>
+
+<div class="page-hero">
+  <div class="container hero-content">
+    <div class="breadcrumb-mini"><a href="../../index.html">홈</a><span>&gt;</span><a href="../index.html">학생</a><span>&gt;</span><span>수능 최저학력기준</span></div>
+    <div class="hero-badge">학생 · 수시 최저</div>
+    <h1>수능 최저학력기준 계산기</h1>
+    <p>고3 수시 원서 전에, 모평 등급으로 최저부터 걸러보세요. 2합4·3합6 등 여러 전형을 한 번에 판정합니다.</p>
+  </div>
+</div>
+
+<div class="container">
+<div class="main-layout">
+<main>
+  <section class="input-card">
+    <div class="input-card-header"><div class="input-card-title"><i class="bi bi-pencil-square" style="color:#2563eb"></i>모평·수능 등급 입력</div></div>
+    <div class="input-card-body">
+      <div class="grade-grid">
+        <div>
+          <label class="form-label" for="gKorean">국어</label>
+          <select class="form-select" id="gKorean"></select>
+        </div>
+        <div>
+          <label class="form-label" for="gMath">수학</label>
+          <select class="form-select" id="gMath"></select>
+        </div>
+        <div>
+          <label class="form-label" for="gEnglish">영어</label>
+          <select class="form-select" id="gEnglish"></select>
+        </div>
+        <div>
+          <label class="form-label" for="gExp1">탐구1</label>
+          <select class="form-select" id="gExp1"></select>
+        </div>
+        <div>
+          <label class="form-label" for="gExp2">탐구2</label>
+          <select class="form-select" id="gExp2"></select>
+        </div>
+        <div>
+          <label class="form-label" for="gHistory">한국사 <span style="font-weight:600;color:#94a3b8">(선택)</span></label>
+          <select class="form-select" id="gHistory">
+            <option value="">미입력</option>
+          </select>
+        </div>
+      </div>
+
+      <hr class="section-divider">
+      <label class="form-label">탐구 반영 방식</label>
+      <div class="radio-pills">
+        <label class="radio-pill"><input type="radio" name="expMode" value="top1" checked><span>상위 1과목</span></label>
+        <label class="radio-pill"><input type="radio" name="expMode" value="avg"><span>2과목 평균</span></label>
+        <label class="radio-pill"><input type="radio" name="expMode" value="sum"><span>2과목 합</span></label>
+      </div>
+      <div id="avgRoundWrap" class="mt-2" style="display:none">
+        <label class="form-label">평균 소수점 처리</label>
+        <div class="radio-pills">
+          <label class="radio-pill"><input type="radio" name="avgRound" value="floor" checked><span>절사</span></label>
+          <label class="radio-pill"><input type="radio" name="avgRound" value="round"><span>반올림</span></label>
+        </div>
+        <div class="helper-text">예: 탐구 2·3등급 평균 2.5 → 절사 2등급, 반올림 3등급.</div>
+      </div>
+      <div class="helper-text" id="expModeHint">탐구 두 과목 중 좋은 등급 1개만 영역으로 반영합니다.</div>
+
+      <hr class="section-divider">
+      <label class="form-label">선택 제약 (모든 조건에 공통 적용)</label>
+      <div class="check-row">
+        <label><input type="checkbox" id="mustMath"> 수학 필수 포함</label>
+        <label><input type="checkbox" id="mustExplore"> 탐구 필수 포함</label>
+        <label><input type="checkbox" id="engCapOn"> 영어 별도 상한</label>
+        <span id="engCapWrap" style="display:none;align-items:center;gap:6px">
+          <label class="form-label mb-0" for="engCap">영어 ≤</label>
+          <select class="form-select form-select-sm" id="engCap" style="width:88px"></select>
+        </span>
+      </div>
+      <div class="helper-text">필수 포함은 N합M에서 해당 영역을 반드시 집어 넣습니다. 영어 상한은 합산과 별도로 영어 등급을 한 번 더 봅니다.</div>
+    </div>
+  </section>
+
+  <section class="input-card">
+    <div class="input-card-header"><div class="input-card-title"><i class="bi bi-ui-checks-grid" style="color:#2563eb"></i>최저 조건 카드</div></div>
+    <div class="input-card-body">
+      <p class="helper-text mt-0 mb-2">관심 전형 카드를 켜 두면 등급을 바꿀 때마다 동시에 판정됩니다. 기본값으로 2합4·3합6·각 3등급을 켰습니다.</p>
+      <div class="preset-grid" id="presetGrid"></div>
+
+      <hr class="section-divider">
+      <label class="form-label">직접 조건 만들기</label>
+      <div class="row g-2 align-items-end">
+        <div class="col-sm-5">
+          <label class="form-label" for="customType">유형</label>
+          <select class="form-select" id="customType">
+            <option value="sum">N개 합 ≤ M</option>
+            <option value="each">특정 영역 각각 ≤ K</option>
+            <option value="history">한국사 ≤ K</option>
+          </select>
+        </div>
+        <div class="col-6 col-sm-2" id="customNWrap">
+          <label class="form-label" for="customN">N개</label>
+          <select class="form-select" id="customN"></select>
+        </div>
+        <div class="col-6 col-sm-2" id="customMWrap">
+          <label class="form-label" for="customM">합 ≤ M</label>
+          <select class="form-select" id="customM"></select>
+        </div>
+        <div class="col-6 col-sm-3" id="customKWrap" style="display:none">
+          <label class="form-label" for="customK">K등급</label>
+          <select class="form-select" id="customK"></select>
+        </div>
+        <div class="col-sm-12" id="customAreaWrap" style="display:none">
+          <label class="form-label">영역 선택</label>
+          <div class="check-row">
+            <label><input type="checkbox" class="custom-area" value="korean" checked> 국어</label>
+            <label><input type="checkbox" class="custom-area" value="math" checked> 수학</label>
+            <label><input type="checkbox" class="custom-area" value="english" checked> 영어</label>
+            <label><input type="checkbox" class="custom-area" value="explore" checked> 탐구</label>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <button type="button" class="btn btn-primary btn-sm w-100" id="addCustom"><i class="bi bi-plus-lg me-1"></i>조건 추가</button>
+        </div>
+      </div>
+      <div id="customList" class="mt-3"></div>
+    </div>
+  </section>
+
+  <div class="notice-box">
+    <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1"></i>
+    <div>대학·전형별 모집요강이 최종입니다. 이 계산기는 흔한 수능 최저 패턴을 재현한 <strong>참고용 추정</strong>이며, 제2외국어/한문 대체, 탐구 변환표준점수, 특정 선택과목 지정 등은 반영하지 않습니다.</div>
+  </div>
+
+  <section class="info-card">
+    <h2>수능 최저, 어떻게 계산하나요?</h2>
+    <p><strong>N합M</strong>은 반영 영역 N개의 등급을 더했을 때 M 이하이면 충족입니다. 예: 국2+수1+영2=5 → 3합6 충족. 등급 숫자가 작을수록 유리하므로, 제약이 없으면 가장 좋은(낮은) 등급부터 집어 넣습니다.</p>
+    <table class="info-table">
+      <thead><tr><th>표기</th><th>의미</th></tr></thead>
+      <tbody>
+        <tr><td>2합4</td><td>가장 좋은 2개 영역 합 ≤ 4</td></tr>
+        <tr><td>3합6</td><td>가장 좋은 3개 영역 합 ≤ 6</td></tr>
+        <tr><td>4합7</td><td>4개 영역 합 ≤ 7</td></tr>
+        <tr><td>각 N등급 이내</td><td>반영 영역(국·수·영·탐) 각각이 N등급 이하</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="info-card">
+    <h2>이 계산기의 가정</h2>
+    <p>영역 후보는 국어·수학·영어·탐구입니다. 한국사는 N합M에 넣지 않고, 「한국사 ≤ K」 조건에서만 봅니다.</p>
+    <p>탐구 <strong>상위 1과목</strong>은 두 과목 중 좋은 등급 1개를 탐구 영역으로 씁니다. <strong>2과목 평균</strong>은 평균을 절사 또는 반올림해 탐구 1개 영역으로 씁니다. <strong>2과목 합</strong>은 탐구1·탐구2를 서로 다른 영역으로 보고 N개를 고릅니다.</p>
+    <p>수학/탐구 필수면 해당 영역을 먼저 고정한 뒤 나머지를 채웁니다. 2과목 합 + 탐구 필수일 때는 더 좋은 탐구 1과목을 먼저 넣습니다.</p>
+    <p>원점수·표준점수 → 등급 변환은 <a href="../suneung/index.html">수능 등급컷 · 백분위 변환기</a>를 사용하세요. 이 페이지는 이미 나온 등급으로 최저만 판정합니다.</p>
+  </section>
+
+  <section class="info-card">
+    <h2>자주 묻는 질문</h2>
+    <div class="faq-list">
+      <div class="faq-item"><div class="faq-q">영어는 합산에 들어가나요?</div><div>기본은 국어·수학과 같이 영역 후보입니다. 「영어 별도 상한」을 켜면 합산과 별개로 영어 ≤ N도 통과해야 합니다. 상한을 켜도 영어 등급이 좋으면 합산 과목으로 쓰일 수 있습니다.</div></div>
+      <div class="faq-item"><div class="faq-q">탐구 평균 2.5는 몇 등급인가요?</div><div>대학마다 다릅니다. 이 계산기는 절사(2)와 반올림(3)을 고를 수 있습니다. 모집요강의 소수점 처리를 그대로 맞추세요.</div></div>
+      <div class="faq-item"><div class="faq-q">대학 이름을 넣으면 자동으로 맞춰 주나요?</div><div>아닙니다. 전형 데이터베이스 매칭은 제공하지 않습니다. 요강의 최저 문구(3합6, 수학 포함 등)를 카드로 옮겨 여러 전형을 비교하세요.</div></div>
+    </div>
+  </section>
+</main>
+
+<aside>
+  <div class="result-panel">
+    <div class="result-title"><i class="bi bi-clipboard-check"></i>최저 판정</div>
+    <div class="score-main">
+      <div class="score-label">켠 조건 중 충족</div>
+      <div class="score-value" id="mainScore">-</div>
+      <div class="score-sub" id="mainSub">조건을 선택하면 바로 판정됩니다</div>
+    </div>
+    <div id="resultList"></div>
+    <div class="metric-row">
+      <div class="metric-card"><div class="metric-lbl">반영 탐구</div><div class="metric-val" id="metricExp">-</div></div>
+      <div class="metric-card"><div class="metric-lbl">평가 조건</div><div class="metric-val" id="metricCount">0개</div></div>
+    </div>
+  </div>
+</aside>
+</div>
+</div>
+
+<footer><div class="container">
+  <p style="margin-bottom:4px;font-size:.7rem"><a href="/privacy.html">개인정보처리방침</a> · <a href="/terms.html">이용약관</a> · <a href="/about.html">사이트 소개</a> · <a href="/contact.html">문의하기</a></p>
+  © 2026 mycalc · 수능 최저 판정은 참고용입니다. 모집요강이 최종입니다. | <a href="../../index.html">메인으로</a>
+</div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const SHORT = {korean:'국', math:'수', english:'영', explore:'탐', explore1:'탐1', explore2:'탐2', history:'한'};
+  const FULL = {korean:'국어', math:'수학', english:'영어', explore:'탐구', explore1:'탐구1', explore2:'탐구2', history:'한국사'};
+  const PRESETS = [
+    {id:'p24', type:'sum', n:2, m:4, label:'2합4', on:true},
+    {id:'p25', type:'sum', n:2, m:5, label:'2합5', on:false},
+    {id:'p35', type:'sum', n:3, m:5, label:'3합5', on:false},
+    {id:'p36', type:'sum', n:3, m:6, label:'3합6', on:true},
+    {id:'p37', type:'sum', n:3, m:7, label:'3합7', on:false},
+    {id:'p47', type:'sum', n:4, m:7, label:'4합7', on:false},
+    {id:'p48', type:'sum', n:4, m:8, label:'4합8', on:false},
+    {id:'peach', type:'all', k:3, label:'각 N등급 이내', on:true}
+  ];
+  const presetOn = {};
+  PRESETS.forEach(p => { presetOn[p.id] = p.on; });
+  let eachK = 3;
+  let customRules = [];
+  let customSeq = 1;
+
+  function fillGradeSelect(sel, selected, includeBlank){
+    const cur = selected == null ? '' : String(selected);
+    sel.innerHTML = includeBlank ? '<option value="">미입력</option>' : '';
+    for(let i=1;i<=9;i++){
+      const opt = document.createElement('option');
+      opt.value = String(i);
+      opt.textContent = i + '등급';
+      if(String(i) === cur) opt.selected = true;
+      sel.appendChild(opt);
+    }
+  }
+  function fillRange(sel, from, to, selected){
+    sel.innerHTML = '';
+    for(let i=from;i<=to;i++){
+      const opt = document.createElement('option');
+      opt.value = String(i);
+      opt.textContent = String(i);
+      if(i === selected) opt.selected = true;
+      sel.appendChild(opt);
+    }
+  }
+  function num(id){ const v = $(id).value; return v === '' ? null : Number(v); }
+  function isExploreKey(key){ return key === 'explore' || key === 'explore1' || key === 'explore2'; }
+
+  function getGrades(){
+    return {
+      korean: num('gKorean'),
+      math: num('gMath'),
+      english: num('gEnglish'),
+      explore1: num('gExp1'),
+      explore2: num('gExp2'),
+      history: num('gHistory')
+    };
+  }
+  function getOptions(){
+    return {
+      expMode: document.querySelector('input[name="expMode"]:checked').value,
+      avgRound: document.querySelector('input[name="avgRound"]:checked').value,
+      mustMath: $('mustMath').checked,
+      mustExplore: $('mustExplore').checked,
+      engCapOn: $('engCapOn').checked,
+      engCap: Number($('engCap').value) || 2
+    };
+  }
+
+  function reflectExplore(grades, opt){
+    const a = grades.explore1;
+    const b = grades.explore2;
+    if(opt.expMode === 'sum'){
+      const list = [];
+      if(a != null) list.push({key:'explore1', grade:a});
+      if(b != null) list.push({key:'explore2', grade:b});
+      return {areas:list, label: list.map(x => SHORT[x.key] + x.grade).join('·') || '-'};
+    }
+    if(a == null && b == null) return {areas:[], label:'-'};
+    if(opt.expMode === 'top1'){
+      const grade = (a == null) ? b : (b == null) ? a : Math.min(a, b);
+      const which = (b == null || (a != null && a <= b)) ? '탐구1' : '탐구2';
+      return {areas:[{key:'explore', grade}], label: grade + '등급(' + which + ')'};
+    }
+    if(a == null || b == null) return {areas:[], label:'평균 불가'};
+    const raw = (a + b) / 2;
+    const grade = opt.avgRound === 'round' ? Math.round(raw) : Math.floor(raw);
+    return {areas:[{key:'explore', grade}], label: grade + '등급(평균 ' + raw.toFixed(1) + ')'};
+  }
+
+  function buildAreas(grades, opt){
+    const areas = [];
+    if(grades.korean != null) areas.push({key:'korean', grade:grades.korean});
+    if(grades.math != null) areas.push({key:'math', grade:grades.math});
+    if(grades.english != null) areas.push({key:'english', grade:grades.english});
+    const exp = reflectExplore(grades, opt);
+    exp.areas.forEach(x => areas.push(x));
+    return {areas, expLabel: exp.label};
+  }
+
+  function formula(selected){
+    if(!selected || !selected.length) return '-';
+    const body = selected.map(s => {
+      if(s.key === 'explore1' || s.key === 'explore2') return SHORT[s.key] + '(' + s.grade + ')';
+      return SHORT[s.key] + s.grade;
+    }).join('+');
+    const sum = selected.reduce((t,s) => t + s.grade, 0);
+    return body + '=' + sum;
+  }
+
+  function applyEnglishCap(result, grades, opt){
+    if(!opt.engCapOn) return result;
+    if(grades.english == null){
+      return Object.assign({}, result, {pass:false, reason:'영어 등급이 필요합니다', extra:'영어 별도 상한을 쓰려면 영어 등급을 입력하세요.'});
+    }
+    if(grades.english > opt.engCap){
+      return Object.assign({}, result, {pass:false, extra:'영어 ' + grades.english + '등급 > 상한 ' + opt.engCap + '등급'});
+    }
+    return result;
+  }
+
+  function pickBest(areas, n, opt){
+    if(n < 1) return {ok:false, reason:'반영 과목 수가 올바르지 않습니다'};
+    let rest = areas.slice();
+    const locked = [];
+    if(opt.mustMath){
+      const math = rest.find(a => a.key === 'math');
+      if(!math) return {ok:false, reason:'수학 등급이 필요합니다'};
+      locked.push(math);
+      rest = rest.filter(a => a.key !== 'math');
+    }
+    if(opt.mustExplore){
+      const explores = rest.filter(a => isExploreKey(a.key)).sort((a,b) => a.grade - b.grade);
+      if(!explores.length) return {ok:false, reason:'탐구 등급이 필요합니다'};
+      locked.push(explores[0]);
+      rest = rest.filter(a => a !== explores[0]);
+    }
+    if(locked.length > n) return {ok:false, reason:'필수 영역이 반영 과목 수보다 많습니다'};
+    rest.sort((a,b) => a.grade - b.grade || a.key.localeCompare(b.key));
+    const need = n - locked.length;
+    if(rest.length < need) return {ok:false, reason:'반영할 영역이 부족합니다'};
+    const selected = locked.concat(rest.slice(0, need));
+    const order = {korean:1, math:2, english:3, explore:4, explore1:5, explore2:6};
+    selected.sort((a,b) => (order[a.key]||9) - (order[b.key]||9));
+    const sum = selected.reduce((t,s) => t + s.grade, 0);
+    return {ok:true, selected, sum};
+  }
+
+  function evalSum(n, m, grades, opt){
+    const built = buildAreas(grades, opt);
+    const picked = pickBest(built.areas, n, opt);
+    if(!picked.ok) return {pass:false, detail:picked.reason, selected:[], sum:null};
+    const result = {
+      pass: picked.sum <= m,
+      detail: formula(picked.selected) + '  (기준 ' + n + '합' + m + ')',
+      selected: picked.selected,
+      sum: picked.sum
+    };
+    return applyEnglishCap(result, grades, opt);
+  }
+
+  function evalAll(k, grades, opt){
+    const built = buildAreas(grades, opt);
+    if(!built.areas.length) return {pass:false, detail:'입력된 영역이 없습니다', selected:[]};
+    const overs = built.areas.filter(a => a.grade > k);
+    const result = {
+      pass: overs.length === 0,
+      detail: overs.length
+        ? overs.map(a => SHORT[a.key] + a.grade).join(', ') + ' > ' + k + '등급'
+        : built.areas.map(a => SHORT[a.key] + a.grade).join(' · ') + ' 모두 ' + k + '등급 이내',
+      selected: built.areas
+    };
+    return applyEnglishCap(result, grades, opt);
+  }
+
+  function evalEach(keys, k, grades, opt){
+    const built = buildAreas(grades, opt);
+    const chosen = [];
+    keys.forEach(key => {
+      if(key === 'explore'){
+        built.areas.filter(a => isExploreKey(a.key)).forEach(a => chosen.push(a));
+      } else {
+        const hit = built.areas.find(a => a.key === key);
+        if(hit) chosen.push(hit);
+        else chosen.push({key, grade:null});
+      }
+    });
+    const missing = chosen.filter(a => a.grade == null);
+    if(missing.length){
+      return {pass:false, detail:missing.map(a => FULL[a.key] || a.key).join(', ') + ' 등급이 필요합니다', selected:[]};
+    }
+    const overs = chosen.filter(a => a.grade > k);
+    const result = {
+      pass: overs.length === 0,
+      detail: overs.length
+        ? overs.map(a => SHORT[a.key] + a.grade).join(', ') + ' > ' + k + '등급'
+        : chosen.map(a => SHORT[a.key] + a.grade).join(' · ') + ' 각각 ' + k + '등급 이내',
+      selected: chosen
+    };
+    return applyEnglishCap(result, grades, opt);
+  }
+
+  function evalHistory(k, grades){
+    if(grades.history == null) return {pass:false, detail:'한국사 등급을 입력하세요', selected:[]};
+    const pass = grades.history <= k;
+    return {
+      pass,
+      detail: '한국사 ' + grades.history + '등급 ' + (pass ? '≤' : '>') + ' ' + k + '등급',
+      selected: [{key:'history', grade:grades.history}]
+    };
+  }
+
+  function evaluate(cond, grades, opt){
+    if(cond.type === 'sum') return evalSum(cond.n, cond.m, grades, opt);
+    if(cond.type === 'all') return evalAll(cond.k, grades, opt);
+    if(cond.type === 'each') return evalEach(cond.areas || [], cond.k, grades, opt);
+    if(cond.type === 'history') return evalHistory(cond.k, grades);
+    return {pass:false, detail:'알 수 없는 조건'};
+  }
+
+  function cloneGrades(g){ return {korean:g.korean, math:g.math, english:g.english, explore1:g.explore1, explore2:g.explore2, history:g.history}; }
+
+  function hintsFor(cond, grades, opt){
+    const base = evaluate(cond, grades, opt);
+    if(base.pass) return [];
+    const keys = cond.type === 'history' ? ['history'] : ['korean','math','english','explore1','explore2'];
+    const found = [];
+    keys.forEach(key => {
+      const cur = grades[key];
+      if(cur == null || cur <= 1) return;
+      for(let step=1; step<cur; step++){
+        const trial = cloneGrades(grades);
+        trial[key] = cur - step;
+        if(evaluate(cond, trial, opt).pass){
+          found.push({key, step, from:cur, to:cur-step});
+          break;
+        }
+      }
+    });
+    found.sort((a,b) => a.step - b.step);
+    return found.slice(0, 2).map(h => FULL[h.key] + '를 ' + h.step + '등급 올리면 충족 (' + h.from + '→' + h.to + ')');
+  }
+
+  function conditionLabel(cond){
+    if(cond.type === 'sum') return cond.n + '합' + cond.m;
+    if(cond.type === 'all') return '각 ' + cond.k + '등급 이내';
+    if(cond.type === 'each'){
+      const names = (cond.areas || []).map(k => FULL[k] || k).join('·');
+      return names + ' 각각 ' + cond.k + '등급 이내';
+    }
+    if(cond.type === 'history') return '한국사 ≤ ' + cond.k + '등급';
+    return cond.label || '조건';
+  }
+
+  function getActiveConditions(){
+    const list = [];
+    PRESETS.forEach(p => {
+      if(!presetOn[p.id]) return;
+      if(p.type === 'all') list.push({id:p.id, type:'all', k:eachK, label:'각 N등급 이내'});
+      else list.push({id:p.id, type:p.type, n:p.n, m:p.m, label:p.label});
+    });
+    customRules.forEach(r => list.push(r));
+    return list;
+  }
+
+  function badgeHtml(res, on){
+    if(!on) return '<span class="badge-off">꺼짐</span>';
+    if(res.pass) return '<span class="badge-pass"><i class="bi bi-check-circle-fill"></i>충족</span>';
+    return '<span class="badge-fail"><i class="bi bi-x-circle-fill"></i>미충족</span>';
+  }
+
+  function renderPresets(){
+    const grades = getGrades();
+    const opt = getOptions();
+    $('presetGrid').innerHTML = PRESETS.map(p => {
+      const cond = p.type === 'all'
+        ? {type:'all', k:eachK}
+        : {type:p.type, n:p.n, m:p.m};
+      const on = presetOn[p.id];
+      const res = on ? evaluate(cond, grades, opt) : null;
+      const cls = ['cond-card'];
+      if(on) cls.push('active');
+      if(on && res.pass) cls.push('pass');
+      if(on && !res.pass) cls.push('fail');
+      const nField = p.type === 'all'
+        ? '<div class="d-flex align-items-center gap-1 mt-1"><span style="font-size:.72rem;color:#64748b">N=</span><select class="form-select form-select-sm" id="eachN" style="width:70px">' +
+          [1,2,3,4,5,6,7,8,9].map(v => '<option value="'+v+'"'+(v===eachK?' selected':'')+'>'+v+'</option>').join('') +
+          '</select></div>'
+        : '';
+      return '<div class="'+cls.join(' ')+'" data-preset="'+p.id+'" role="button" tabindex="0">' +
+        '<div class="cond-top"><div class="cond-name">'+p.label+'</div>'+badgeHtml(res,on)+'</div>' +
+        (nField) +
+        '<div class="cond-formula">'+(on ? (res.detail + (res.extra ? ' · '+res.extra : '')) : '클릭해서 판정에 넣기')+'</div>' +
+        '</div>';
+    }).join('');
+    $('presetGrid').querySelectorAll('.cond-card').forEach(card => {
+      card.addEventListener('click', ev => {
+        if(ev.target.closest('select')) return;
+        const id = card.getAttribute('data-preset');
+        presetOn[id] = !presetOn[id];
+        refresh();
+      });
+      card.addEventListener('keydown', ev => {
+        if(ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); card.click(); }
+      });
+    });
+    const eachN = $('eachN');
+    if(eachN){
+      eachN.addEventListener('click', ev => ev.stopPropagation());
+      eachN.addEventListener('change', () => { eachK = Number(eachN.value) || 3; refresh(); });
+    }
+  }
+
+  function renderCustoms(){
+    const grades = getGrades();
+    const opt = getOptions();
+    if(!customRules.length){
+      $('customList').innerHTML = '';
+      return;
+    }
+    $('customList').innerHTML = customRules.map(r => {
+      const res = evaluate(r, grades, opt);
+      const hints = res.pass ? [] : hintsFor(r, grades, opt);
+      return '<div class="custom-card '+(res.pass?'pass':'fail')+'">' +
+        '<div class="custom-card-head"><div><strong>'+conditionLabel(r)+'</strong> '+badgeHtml(res,true)+
+        '<div class="cond-formula mt-1">'+res.detail+(res.extra?' · '+res.extra:'')+'</div>' +
+        (hints.length ? '<div class="helper-text">'+hints.join(' · ')+'</div>' : '') +
+        '</div><button type="button" class="icon-btn" data-del="'+r.id+'" aria-label="조건 삭제"><i class="bi bi-x-lg"></i></button></div></div>';
+    }).join('');
+    $('customList').querySelectorAll('[data-del]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        customRules = customRules.filter(r => r.id !== btn.getAttribute('data-del'));
+        refresh();
+      });
+    });
+  }
+
+  function renderResult(){
+    const grades = getGrades();
+    const opt = getOptions();
+    const conds = getActiveConditions();
+    const rows = conds.map(c => {
+      const res = evaluate(c, grades, opt);
+      const hints = res.pass ? [] : hintsFor(c, grades, opt);
+      return {c, res, hints};
+    });
+    const passN = rows.filter(r => r.res.pass).length;
+    const failN = rows.length - passN;
+    const main = $('mainScore');
+    if(!rows.length){
+      main.textContent = '-';
+      main.className = 'score-value mid';
+      $('mainSub').textContent = '조건을 하나 이상 켜 주세요';
+    } else {
+      main.textContent = passN + ' / ' + rows.length;
+      main.className = 'score-value ' + (failN === 0 ? 'good' : passN === 0 ? 'bad' : 'warn');
+      $('mainSub').textContent = failN === 0 ? '켠 조건을 모두 충족' : passN + '개 충족 · ' + failN + '개 미충족';
+    }
+    $('resultList').innerHTML = rows.map(r => {
+      const badge = r.res.pass
+        ? '<span class="badge-pass">충족</span>'
+        : '<span class="badge-fail">미충족</span>';
+      const hint = r.hints.length ? '<div class="result-item-hint">'+r.hints.join('<br>')+'</div>' : '';
+      const extra = r.res.extra ? '<div class="result-item-detail">'+r.res.extra+'</div>' : '';
+      return '<div class="result-item"><div class="result-item-top"><span class="result-item-name">'+conditionLabel(r.c)+'</span>'+badge+'</div>' +
+        '<div class="result-item-detail">'+r.res.detail+'</div>'+extra+hint+'</div>';
+    }).join('');
+    const exp = reflectExplore(grades, opt);
+    $('metricExp').textContent = exp.label;
+    $('metricCount').textContent = rows.length + '개';
+  }
+
+  function syncExpUI(){
+    const mode = document.querySelector('input[name="expMode"]:checked').value;
+    $('avgRoundWrap').style.display = mode === 'avg' ? '' : 'none';
+    $('expModeHint').textContent = mode === 'top1'
+      ? '탐구 두 과목 중 좋은 등급 1개만 영역으로 반영합니다.'
+      : mode === 'avg'
+        ? '탐구 2과목 평균을 하나의 탐구 영역으로 반영합니다.'
+        : '탐구1·탐구2를 각각 영역으로 보고 N개를 고릅니다.';
+    $('engCapWrap').style.display = $('engCapOn').checked ? 'inline-flex' : 'none';
+  }
+
+  function syncCustomUI(){
+    const t = $('customType').value;
+    $('customNWrap').style.display = t === 'sum' ? '' : 'none';
+    $('customMWrap').style.display = t === 'sum' ? '' : 'none';
+    $('customKWrap').style.display = t === 'sum' ? 'none' : '';
+    $('customAreaWrap').style.display = t === 'each' ? '' : 'none';
+  }
+
+  function refresh(){
+    syncExpUI();
+    renderPresets();
+    renderCustoms();
+    renderResult();
+  }
+
+  function addCustom(){
+    const t = $('customType').value;
+    if(t === 'sum'){
+      customRules.push({id:'c'+customSeq++, type:'sum', n:Number($('customN').value), m:Number($('customM').value)});
+    } else if(t === 'each'){
+      const areas = [...document.querySelectorAll('.custom-area:checked')].map(x => x.value);
+      if(!areas.length) return;
+      customRules.push({id:'c'+customSeq++, type:'each', areas, k:Number($('customK').value)});
+    } else {
+      customRules.push({id:'c'+customSeq++, type:'history', k:Number($('customK').value)});
+    }
+    refresh();
+  }
+
+  fillGradeSelect($('gKorean'), 2, false);
+  fillGradeSelect($('gMath'), 2, false);
+  fillGradeSelect($('gEnglish'), 3, false);
+  fillGradeSelect($('gExp1'), 3, false);
+  fillGradeSelect($('gExp2'), 4, false);
+  fillGradeSelect($('gHistory'), '', true);
+  fillRange($('engCap'), 1, 9, 2);
+  fillRange($('customN'), 1, 5, 3);
+  fillRange($('customM'), 2, 20, 6);
+  fillRange($('customK'), 1, 9, 3);
+
+  ['gKorean','gMath','gEnglish','gExp1','gExp2','gHistory','engCap','mustMath','mustExplore','engCapOn'].forEach(id => {
+    $(id).addEventListener('change', refresh);
+  });
+  document.querySelectorAll('input[name="expMode"],input[name="avgRound"]').forEach(el => el.addEventListener('change', refresh));
+  $('customType').addEventListener('change', syncCustomUI);
+  $('addCustom').addEventListener('click', addCustom);
+
+  syncCustomUI();
+  refresh();
+})();
+</script>
+<script>
+(function(){
+  var B=/bot|crawler|spider|crawling|googlebot|bingbot|yandexbot|baiduspider|slurp|duckduckbot|facebookexternalhit|ia_archiver|msnbot|scrapy|applebot|semrushbot|ahrefsbot|petalbot|bytespider/i;
+  if(B.test(navigator.userAgent))return;
+  var S='https://wblffwhxaqxtqjccmwig.supabase.co';
+  var K='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndibGZmd2h4YXF4dHFqY2Ntd2lnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4OTQzMDcsImV4cCI6MjA5MzQ3MDMwN30.9uGXG1zw3bF5ojMcfQnPr8zsirn3WejIjK60XOZfAcg';
+  var p=location.pathname;
+  var s=(p.replace(/^\//,'')||'').split('/')[0]||'main';
+  var r=document.referrer,t='direct';
+  if(r){try{var h=new URL(r).hostname;
+    if(/google\.(com|co\.kr)$/.test(h))t='google';
+    else if(/search\.naver\.com/.test(h))t='naver';
+    else if(/search\.daum\.net/.test(h))t='daum';
+    else if(/bing\.com/.test(h))t='bing';
+    else if(/(^|\.)t\.co$|twitter\.com|x\.com/.test(h))t='twitter';
+    else if(/facebook\.com/.test(h))t='facebook';
+    else if(/instagram\.com/.test(h))t='instagram';
+    else if(/youtube\.com/.test(h))t='youtube';
+    else if(/perplexity\.ai/.test(h))t='perplexity';
+    else if(/chatgpt\.com|chat\.openai\.com/.test(h))t='chatgpt';
+    else t='other';
+  }catch(e){t='other';}}
+  fetch(S+'/rest/v1/mycalc_page_views',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','apikey':K,'Authorization':'Bearer '+K,'Prefer':'return=minimal'},
+    body:JSON.stringify({page_path:p,page_title:document.title,subdomain:s,referrer:r,ref_type:t,user_agent:navigator.userAgent})
+  }).catch(function(){});
+})();
+</script>
+</body>
+</html>
