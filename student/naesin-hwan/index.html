@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>교과 내신 환산 계산기 – 요강 반영비율로 비교 | mycalc</title>
+<meta name="description" content="내 교과 성적에 대학 요강의 반영비율·등급점수표를 직접 넣어 환산점수를 비교합니다. 대학 DB·합격예측·입결 없음. 단순 단위가중·비율 계산기.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://mycalc.co.kr/student/naesin-hwan/">
+<meta property="og:title" content="교과 내신 환산 계산기 – 요강 반영비율로 비교 | mycalc">
+<meta property="og:description" content="내 교과 성적에 대학 요강의 반영비율·등급점수표를 직접 넣어 환산점수를 비교합니다. 대학 DB·합격예측·입결 없음.">
+<meta property="og:url" content="https://mycalc.co.kr/student/naesin-hwan/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="마이캘크">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "교과 내신 환산 계산기",
+  "url": "https://mycalc.co.kr/student/naesin-hwan/",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "All",
+  "inLanguage": "ko",
+  "isAccessibleForFree": true,
+  "description": "학생 교과 성적과 대학 요강의 반영방법을 입력해 교과 환산점수를 비교하는 계산기입니다. 대학 목록·합격예측은 제공하지 않습니다.",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "KRW"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "왜 대학 목록이 없나요?", "acceptedAnswer": {"@type": "Answer", "text": "대학·전형 DB를 운영하지 않습니다. 모집요강의 반영비율과 등급점수표를 직접 옮겨 적으면, 같은 성적으로 식 A와 식 B를 비교할 수 있습니다."}},
+    {"@type": "Question", "name": "진로선택 과목·성취도는 왜 없나요?", "acceptedAnswer": {"@type": "Answer", "text": "v1은 석차등급(1~9)과 이수단위만 다룹니다. 진로선택 성취도(A/B/C) 환산, 출결·봉사 가산점, 소수 절사 방식은 대학마다 달라 넣지 않았습니다."}},
+    {"@type": "Question", "name": "단위가중이 무엇인가요?", "acceptedAnswer": {"@type": "Answer", "text": "과목 환산점수에 이수단위를 곱해 더한 뒤, 단위 합으로 나눈 평균입니다. 단위가 큰 과목이 평균에 더 많이 반영됩니다."}}
+  ]
+}
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7993189040408645" crossorigin="anonymous"></script>
+<style>
+*{box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,sans-serif;background:#f1f5f9;font-size:14px;color:#1e293b;margin:0}
+.mc-nav-wrap{position:sticky;top:0;z-index:1100;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.mc-t1{background:#0f172a;min-height:46px}
+.mc-t2{background:#1e3a8a;min-height:36px;border-top:1px solid rgba(255,255,255,.12)}
+.mc-row{display:flex;align-items:center;padding:0 12px;min-height:inherit}
+.mc-brand{color:#fff;font-weight:800;font-size:.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;padding:8px 0;margin-right:10px}
+.mc-brand span{color:#38bdf8}
+.mc-t1-ul,.mc-t2-ul{list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:2px 0;overflow-x:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none}
+.mc-t1-ul::-webkit-scrollbar,.mc-t2-ul::-webkit-scrollbar{display:none}
+.mc-t1-ul li a{color:rgba(255,255,255,.62);text-decoration:none;padding:5px 9px;border-radius:5px;font-size:.78rem;white-space:nowrap;transition:all .15s;display:block}
+.mc-t1-ul li a:hover,.mc-t1-ul li a.on{color:#fff;background:rgba(255,255,255,.15);font-weight:600}
+.mc-t2-ul li a,.mc-t2-ul li .wip{display:inline-block;color:rgba(255,255,255,.72);text-decoration:none;padding:4px 10px;border-radius:4px 4px 0 0;font-size:.78rem;white-space:nowrap;transition:background .15s}
+.mc-t2-ul li a:hover{color:#fff;background:rgba(255,255,255,.15)}
+.mc-t2-ul li a.on{color:#fff;background:rgba(255,255,255,.2);font-weight:700;border-bottom:2px solid rgba(255,255,255,.75)}
+.mc-t2-ul li .wip{opacity:.45;cursor:default;font-size:.75rem}
+.mc-done::after{content:'';display:inline-block;width:4px;height:4px;background:#86efac;border-radius:50%;margin-left:3px;vertical-align:middle}
+.page-hero{background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 100%);color:#fff;padding:1.8rem 0 1.45rem;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='72' height='72' viewBox='0 0 72 72' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.045'%3E%3Cpath d='M18 14h36v6H18zm0 14h28v6H18zm0 14h36v6H18z'/%3E%3C/g%3E%3C/svg%3E")}
+.hero-content{position:relative}
+.breadcrumb-mini{display:flex;align-items:center;gap:6px;font-size:.74rem;opacity:.82;margin-bottom:.45rem;flex-wrap:wrap}
+.breadcrumb-mini a{color:#fff;text-decoration:none}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.75rem;margin-bottom:.5rem}
+.page-hero h1{font-size:1.42rem;font-weight:800;margin:0 0 .3rem;letter-spacing:0}
+.page-hero p{font-size:.84rem;opacity:.86;margin:0}
+.main-layout{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start;padding:16px 0 32px}
+@media(max-width:991px){.main-layout{grid-template-columns:1fr}}
+.input-card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden;margin-bottom:14px}
+.input-card-header{padding:14px 16px;border-bottom:1px solid #dbeafe;background:#f0f7ff}
+.input-card-title{font-size:.9rem;font-weight:800;color:#0f172a;display:flex;align-items:center;gap:7px}
+.input-card-body{padding:16px}
+.form-label{font-weight:700;font-size:.8rem;color:#374151;margin-bottom:5px;display:block}
+.form-control,.form-select{font-size:.85rem;border-color:#d1d5db;border-radius:7px}
+.form-control:focus,.form-select:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.section-divider{border:none;border-top:1px solid #f1f5f9;margin:14px 0}
+.helper-text{font-size:.75rem;color:#64748b;margin-top:5px;line-height:1.5}
+.radio-pills{display:flex;gap:7px;flex-wrap:wrap}
+.radio-pill{position:relative}
+.radio-pill input{position:absolute;opacity:0;pointer-events:none}
+.radio-pill span{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:8px;border:1.5px solid #d1d5db;background:#fff;color:#475569;font-size:.8rem;font-weight:700;cursor:pointer}
+.radio-pill input:checked+span{border-color:#2563eb;background:#eff6ff;color:#1d4ed8}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.toolbar .spacer{flex:1}
+.sample-banner{display:none;background:#fff7ed;border:1px solid #fdba74;color:#9a3412;border-radius:8px;padding:8px 12px;font-size:.76rem;font-weight:700;margin-bottom:10px}
+.sample-banner.on{display:flex;gap:8px;align-items:flex-start}
+.subject-table-wrap{overflow-x:auto;border:1px solid #e2e8f0;border-radius:10px}
+.subject-table{width:100%;min-width:680px;margin:0;border-collapse:separate;border-spacing:0}
+.subject-table th{background:#f8fafc;color:#475569;font-size:.75rem;font-weight:800;padding:9px;border-bottom:1px solid #e2e8f0;text-align:center}
+.subject-table td{padding:7px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+.subject-table tr:last-child td{border-bottom:0}
+.icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid #e2e8f0;background:#fff;color:#64748b;display:inline-flex;align-items:center;justify-content:center}
+.icon-btn:hover{border-color:#fecaca;background:#fef2f2;color:#dc2626}
+.btn-primary{background:#1e3a8a;border-color:#1e3a8a;font-weight:800}
+.btn-primary:hover{background:#1d4ed8;border-color:#1d4ed8}
+.btn-outline-secondary,.btn-outline-primary{font-weight:700}
+.formula-card{border:1.5px solid #e2e8f0;border-radius:12px;padding:14px;background:#fff;margin-bottom:12px}
+.formula-card:last-child{margin-bottom:0}
+.formula-head{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.formula-tag{flex-shrink:0;background:#1e3a8a;color:#fff;border-radius:8px;padding:4px 8px;font-size:.72rem;font-weight:800}
+.weight-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media(max-width:700px){.weight-grid{grid-template-columns:repeat(2,1fr)}}
+.weight-cell{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:8px}
+.weight-cell.dim{opacity:.45}
+.weight-cell label{font-size:.72rem;font-weight:800;color:#334155;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center}
+.score-grid{display:grid;grid-template-columns:repeat(9,1fr);gap:5px}
+@media(max-width:700px){.score-grid{grid-template-columns:repeat(3,1fr)}}
+.score-cell{text-align:center}
+.score-cell .lbl{font-size:.65rem;font-weight:800;color:#64748b;margin-bottom:3px}
+.sum-chip{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:3px 9px;font-size:.72rem;font-weight:800;white-space:nowrap}
+.sum-ok{background:#dcfce7;color:#166534}
+.sum-bad{background:#fee2e2;color:#991b1b}
+.exclude-row{display:flex;flex-wrap:wrap;gap:8px 14px}
+.exclude-row label{display:inline-flex;align-items:center;gap:5px;font-size:.78rem;font-weight:700;color:#334155;margin:0}
+.result-panel{background:linear-gradient(160deg,#1e3a8a 0%,#2563eb 100%);border-radius:12px;color:#fff;padding:18px 20px;position:sticky;top:88px;box-shadow:0 4px 20px rgba(30,58,138,.35)}
+.result-title{font-size:.9rem;font-weight:800;opacity:.9;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.score-main{background:rgba(255,255,255,.14);border-radius:12px;padding:14px;margin-bottom:10px}
+.score-label{font-size:.75rem;opacity:.78;margin-bottom:2px}
+.score-value{font-size:2rem;font-weight:900;line-height:1.05;color:#bfdbfe}
+.score-value.good{color:#bbf7d0}.score-value.mid{color:#bfdbfe}.score-value.warn{color:#fed7aa}.score-value.bad{color:#fecaca}
+.score-sub{font-size:.78rem;opacity:.78;margin-top:4px}
+.result-item{background:rgba(255,255,255,.1);border-radius:10px;padding:10px 11px;margin-bottom:8px}
+.result-item:last-child{margin-bottom:0}
+.result-item-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}
+.result-item-name{font-weight:800;font-size:.82rem}
+.result-item-detail{font-size:.73rem;opacity:.88;line-height:1.45}
+.result-item-hint{font-size:.72rem;opacity:.95;margin-top:4px;color:#fde68a}
+.metric-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px}
+.metric-card{background:rgba(255,255,255,.12);border-radius:8px;padding:8px;text-align:center}
+.metric-lbl{font-size:.65rem;opacity:.74;margin-bottom:2px}
+.metric-val{font-size:.9rem;font-weight:900}
+.group-avg{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.group-pill{background:rgba(255,255,255,.14);border-radius:6px;padding:2px 6px;font-size:.68rem;font-weight:700}
+.notice-box{background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:.76rem;color:#713f12;margin-top:14px;display:flex;gap:8px;align-items:flex-start}
+.info-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px;font-size:.84rem;color:#475569;margin-top:14px}
+.info-card h2{font-size:1rem;font-weight:850;color:#0f172a;margin:0 0 10px}
+.info-card p{line-height:1.65;margin:0 0 10px}
+.info-card p:last-child{margin-bottom:0}
+.info-card a{color:#1d4ed8;font-weight:700;text-decoration:none}
+.info-card a:hover{text-decoration:underline}
+.info-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;background:#fff}
+.info-table th,.info-table td{padding:8px 9px;border-bottom:1px solid #eef2f7;font-size:.78rem;text-align:left}
+.info-table th{background:#f8fafc;color:#334155;font-weight:800}
+.info-table tr:last-child th,.info-table tr:last-child td{border-bottom:0}
+.faq-list{display:grid;gap:10px}
+.faq-item{border-top:1px solid #e2e8f0;padding-top:10px}
+.faq-item:first-child{border-top:0;padding-top:0}
+.faq-q{font-weight:850;color:#0f172a;margin-bottom:4px}
+.link-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.link-pill{display:inline-flex;align-items:center;gap:6px;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;border-radius:999px;padding:5px 11px;font-size:.76rem;font-weight:800;text-decoration:none}
+.link-pill:hover{background:#dbeafe;color:#1e40af}
+footer{background:#0f172a;color:rgba(255,255,255,.62);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}
+footer a{color:rgba(255,255,255,.75);text-decoration:none}
+@media(max-width:576px){
+  .main-layout{padding-top:12px}
+  .page-hero h1{font-size:1.22rem}
+  .page-hero p{font-size:.8rem}
+  .score-value{font-size:1.65rem}
+  .input-card-body{padding:14px}
+}
+</style>
+</head>
+<body>
+<div class="mc-nav-wrap">
+<div class="mc-t1"><div class="container"><div class="mc-row">
+<a href="../../index.html" class="mc-brand"><i class="bi bi-calculator-fill me-1"></i>my<span>calc</span></a>
+<ul class="mc-t1-ul">
+<li><a href="../../tax/index.html">세금</a></li>
+<li><a href="../../work/index.html">급여·노동</a></li>
+<li><a href="../../tools/index.html">도구</a></li>
+<li><a href="../../realestate/index.html">부동산</a></li>
+<li><a href="../../money/index.html">금융·투자</a></li>
+<li><a href="../../student/index.html" class="on">학생</a></li>
+<li><a href="../../parent/index.html">학부모·육아</a></li>
+<li><a href="../../life/index.html">생활</a></li>
+</ul>
+</div></div></div>
+<div class="mc-t2"><div class="container"><ul class="mc-t2-ul">
+<li><a href="../gpa/index.html" class="mc-done">학점</a></li>
+<li><a href="../naesin/index.html" class="mc-done">내신</a></li>
+<li><a href="index.html" class="on mc-done">내신환산</a></li>
+<li><a href="../military/index.html" class="mc-done">전역일</a></li>
+<li><a href="../suneung/index.html" class="mc-done">수능등급컷</a></li>
+<li><a href="../suneung-min/index.html" class="mc-done">수능최저</a></li>
+<li><a href="../susi-6/index.html" class="mc-done">수시6회</a></li>
+</ul></div></div>
+</div>
+
+<div class="page-hero">
+  <div class="container hero-content">
+    <div class="breadcrumb-mini"><a href="../../index.html">홈</a><span>&gt;</span><a href="../index.html">학생</a><span>&gt;</span><span>교과 내신 환산</span></div>
+    <div class="hero-badge">학생 · 교과 전형 비교</div>
+    <h1>교과 내신 환산 계산기</h1>
+    <p>평균 내신이 아니라, 요강에 적힌 반영비율로 다시 환산합니다. 대학 목록·합격예측은 없습니다.</p>
+  </div>
+</div>
+
+<div class="container">
+<div class="main-layout">
+<main>
+  <section class="input-card">
+    <div class="input-card-header"><div class="input-card-title"><i class="bi bi-journal-text" style="color:#2563eb"></i>내 교과 성적</div></div>
+    <div class="input-card-body">
+      <p class="helper-text mt-0 mb-2"><a href="../naesin/index.html">내신 평균 계산기</a>는 단위가중 <strong>평균 등급</strong>입니다. 이 페이지는 같은 성적에 대학 요강의 <strong>반영비율·등급점수표</strong>를 씌워 환산점(100점 만점)을 냅니다.</p>
+      <div class="toolbar">
+        <div>
+          <label class="form-label mb-1" for="semesterFilter">학기 필터</label>
+          <select class="form-select form-select-sm" id="semesterFilter" style="width:140px">
+            <option value="">전체 학기</option>
+            <option value="1-1">1-1</option>
+            <option value="1-2">1-2</option>
+            <option value="2-1">2-1</option>
+            <option value="2-2">2-2</option>
+            <option value="3-1">3-1</option>
+          </select>
+        </div>
+        <div class="spacer"></div>
+        <button type="button" class="btn btn-outline-primary btn-sm" id="btnAdd"><i class="bi bi-plus-lg me-1"></i>과목 추가</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm" id="btnSample"><i class="bi bi-magic me-1"></i>예시 성적</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm" id="btnReset">초기화</button>
+      </div>
+      <div class="sample-banner" id="sampleBanner"><i class="bi bi-info-circle-fill flex-shrink-0 mt-1"></i><div>지금은 <strong>예시 성적</strong>입니다. 본인 과목으로 바꾸거나 초기화하세요. 대학 이름은 넣지 않았습니다.</div></div>
+      <div class="subject-table-wrap">
+        <table class="subject-table">
+          <thead>
+            <tr>
+              <th>과목명</th>
+              <th style="width:132px">교과군</th>
+              <th style="width:88px">이수단위</th>
+              <th style="width:96px">석차등급</th>
+              <th style="width:92px">학기</th>
+              <th style="width:48px"></th>
+            </tr>
+          </thead>
+          <tbody id="subjectBody"></tbody>
+        </table>
+      </div>
+      <div class="helper-text">학기 라벨은 선택입니다. 비워 두면 전체 필터에 포함됩니다. 성적·반영방법은 이 브라우저에만 저장됩니다.</div>
+    </div>
+  </section>
+
+  <section class="input-card">
+    <div class="input-card-header"><div class="input-card-title"><i class="bi bi-sliders" style="color:#2563eb"></i>반영방법 (요강에서 직접 입력)</div></div>
+    <div class="input-card-body">
+      <p class="helper-text mt-0 mb-3">대학이 아니라 <strong>식</strong>입니다. 요강의 교과 반영비율·등급점수표를 옮겨 적으세요. 같은 성적으로 식 A와 식 B를 비교합니다.</p>
+      <div id="formulaList"></div>
+    </div>
+  </section>
+
+  <div class="notice-box">
+    <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1"></i>
+    <div>
+      <strong>모집요강이 원본입니다.</strong> 이 도구는 석차등급 → 점수 변환 후 <strong>단위가중·교과 비율</strong>만 계산합니다. 출결·봉사 가산점, 진로선택 성취도 환산, 소수 절사·반올림, 학년별 가중, 특정 과목 지정은 대학마다 달라 넣지 않았습니다.
+      <strong>합격 보장이 아니며 입결·경쟁률도 없습니다.</strong>
+    </div>
+  </div>
+
+  <section class="info-card">
+    <h2>이 계산기가 하는 일 / 하지 않는 일</h2>
+    <p><strong>하는 일:</strong> 과목 단위·석차등급과, 학생이 옮겨 적은 반영비율로 100점 만점 환산점수를 냅니다. 두 식을 같은 성적에 씌워 차이를 봅니다.</p>
+    <p><strong>하지 않는 일:</strong> 대학 카탈로그, 어디가 입결, 합격 예측, 학생부 업로드, 학교명·주민번호 수집이 없습니다. 원서 자리는 <a href="../susi-6/index.html">수시 6회 체크리스트</a>, 최저 판정은 <a href="../suneung-min/index.html">수능 최저 계산기</a>를 쓰세요.</p>
+  </section>
+
+  <section class="info-card">
+    <h2>기본 반영 방식</h2>
+    <p>기본값은 <strong>교과군별 단위가중 평균 후 비율 적용</strong>입니다. 국어 과목만으로 국어 평균을 만들고, 그 평균에 국어 반영비율을 곱합니다. 단위가 많은 군이 점수를 더 가져가지 않습니다.</p>
+    <p><strong>전교과 단위가중 × 비율</strong>은 과목마다 (환산점수 × 단위 × 그 군의 비율)을 합산한 뒤, (단위 × 비율) 합으로 나눕니다. 같은 비율이어도 단위가 많은 군이 더 크게 반영됩니다. 요강 문구가 「전 교과 반영」에 가깝면 이쪽을 고르세요.</p>
+    <table class="info-table">
+      <thead><tr><th>등급</th><th>예시 표 (요강에서 확인)</th><th>선형 100→64</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>100</td><td>100</td></tr>
+        <tr><td>2</td><td>96</td><td>96</td></tr>
+        <tr><td>3</td><td>89</td><td>92</td></tr>
+        <tr><td>4</td><td>82</td><td>88</td></tr>
+        <tr><td>5</td><td>75</td><td>84</td></tr>
+        <tr><td>6</td><td>68</td><td>80</td></tr>
+        <tr><td>7</td><td>61</td><td>76</td></tr>
+        <tr><td>8</td><td>54</td><td>72</td></tr>
+        <tr><td>9</td><td>47</td><td>64</td></tr>
+      </tbody>
+    </table>
+    <p class="mb-0 mt-2">예시 표는 1등급 100, 2등급 96, 이후 7점 간격인 <strong>흔한 형태</strong>일 뿐 특정 대학 표가 아닙니다. 선형은 1~8등급 4점 간격(100→72), 9등급 64입니다. 반드시 요강 표로 바꾸세요.</p>
+  </section>
+
+  <section class="info-card">
+    <h2>자주 묻는 질문</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q">왜 대학 목록이 없나요?</div>
+        <div>대학·전형 데이터베이스를 운영하지 않습니다. 요강이 바뀌면 잘못된 숫자를 줄 수 있고, 특정 대학을 추천하는 것처럼 보이기 쉽습니다. 비율은 학생이 옮겨 적습니다.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">진로선택·성취도(A/B/C)는 왜 없나요?</div>
+        <div>v1에서는 제외합니다. 성취도를 몇 점으로 볼지, 상위 N과목만 볼지가 대학마다 다릅니다. 지금은 석차등급 1~9와 이수단위만 계산합니다.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">단위가중이 무엇인가요?</div>
+        <div>Σ(환산점수 × 이수단위) ÷ Σ(이수단위)입니다. 4단위 2등급과 1단위 1등급이 있으면 4단위 쪽이 평균을 더 많이 당깁니다.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">내신 평균 계산기와 뭐가 다른가요?</div>
+        <div><a href="../naesin/index.html">내신 등급 계산기</a>는 평균 <em>등급</em>(예: 2.34등급)입니다. 여기서는 등급을 점수로 바꾼 뒤 교과 비율을 곱한 <em>환산점</em>입니다. 같은 2등급이라도 대학 표와 국·수 비중에 따라 점수가 달라집니다.</div>
+      </div>
+    </div>
+    <div class="link-row">
+      <a class="link-pill" href="../naesin/index.html"><i class="bi bi-bar-chart-line"></i>내신 평균</a>
+      <a class="link-pill" href="../susi-6/index.html"><i class="bi bi-card-checklist"></i>수시 6회</a>
+      <a class="link-pill" href="../suneung-min/index.html"><i class="bi bi-check2-square"></i>수능 최저</a>
+      <a class="link-pill" href="https://www.adiga.kr/" target="_blank" rel="noopener noreferrer"><i class="bi bi-box-arrow-up-right"></i>어디가 (adiga.kr)</a>
+    </div>
+  </section>
+</main>
+
+<aside>
+  <div class="result-panel">
+    <div class="result-title"><i class="bi bi-calculator"></i>환산 결과</div>
+    <div class="score-main">
+      <div class="score-label" id="mainLabel">비교 환산점수</div>
+      <div class="score-value mid" id="mainScore">-</div>
+      <div class="score-sub" id="mainSub">과목과 반영비율을 입력하면 계산됩니다</div>
+    </div>
+    <div id="resultList"></div>
+    <div class="metric-row">
+      <div class="metric-card"><div class="metric-lbl">반영 과목</div><div class="metric-val" id="metricN">0과목</div></div>
+      <div class="metric-card"><div class="metric-lbl">단위 합계</div><div class="metric-val" id="metricU">0</div></div>
+    </div>
+  </div>
+</aside>
+</div>
+</div>
+
+<footer><div class="container">
+  <p style="margin-bottom:4px;font-size:.7rem"><a href="/privacy.html">개인정보처리방침</a> · <a href="/terms.html">이용약관</a> · <a href="/about.html">사이트 소개</a> · <a href="/contact.html">문의하기</a></p>
+  © 2026 mycalc · 교과 환산은 참고용입니다. 모집요강이 최종입니다. | <a href="../../index.html">메인으로</a>
+</div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function(){
+  const LS_KEY = 'mycalc-naesin-hwan-v1';
+  const GROUPS = [
+    {id:'korean', label:'국어', short:'국'},
+    {id:'math', label:'수학', short:'수'},
+    {id:'english', label:'영어', short:'영'},
+    {id:'social', label:'사회', short:'사'},
+    {id:'science', label:'과학', short:'과'},
+    {id:'history', label:'한국사', short:'한'},
+    {id:'foreign', label:'제2외·한문', short:'외'},
+    {id:'other', label:'기타', short:'기'}
+  ];
+  const TABLES = {
+    common: {label:'예시 표 (요강에서 확인)', scores:[100,96,89,82,75,68,61,54,47]},
+    linear: {label:'선형 100→64', scores:[100,96,92,88,84,80,76,72,64]}
+  };
+  const SAMPLE = [
+    {name:'국어', group:'korean', units:4, grade:2, semester:'1-1'},
+    {name:'수학', group:'math', units:4, grade:3, semester:'1-1'},
+    {name:'영어', group:'english', units:4, grade:2, semester:'1-1'},
+    {name:'한국사', group:'history', units:3, grade:3, semester:'1-1'},
+    {name:'통합사회', group:'social', units:3, grade:2, semester:'1-1'},
+    {name:'통합과학', group:'science', units:3, grade:3, semester:'1-1'},
+    {name:'국어', group:'korean', units:4, grade:2, semester:'1-2'},
+    {name:'수학', group:'math', units:4, grade:2, semester:'1-2'}
+  ];
+
+  const $ = id => document.getElementById(id);
+  function uid(){ return 'r' + Math.random().toString(36).slice(2, 9); }
+  function esc(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function emptyWeights(){
+    const o = {};
+    GROUPS.forEach(g => { o[g.id] = 0; });
+    return o;
+  }
+  function emptyExclude(){
+    const o = {};
+    GROUPS.forEach(g => { o[g.id] = false; });
+    return o;
+  }
+  function emptyRow(){
+    return {id:uid(), name:'', group:'korean', units:4, grade:3, semester:''};
+  }
+  function defaultFormulas(){
+    return [
+      {
+        id:'f1', name:'식 A', method:'group', table:'common',
+        customScores: TABLES.common.scores.slice(),
+        weights: Object.assign(emptyWeights(), {korean:30, math:30, english:25, social:15}),
+        exclude: emptyExclude()
+      },
+      {
+        id:'f2', name:'식 B', method:'group', table:'common',
+        customScores: TABLES.common.scores.slice(),
+        weights: Object.assign(emptyWeights(), {korean:20, math:40, english:20, science:20}),
+        exclude: emptyExclude()
+      }
+    ];
+  }
+  function defaultState(){
+    return {subjects:[emptyRow(), emptyRow()], formulas:defaultFormulas(), semester:'', sampleOn:false};
+  }
+
+  let state = defaultState();
+
+  function load(){
+    try{
+      const raw = localStorage.getItem(LS_KEY);
+      if(!raw) return;
+      const saved = JSON.parse(raw);
+      if(!saved || !Array.isArray(saved.subjects) || !Array.isArray(saved.formulas)) return;
+      state.subjects = saved.subjects.map(s => ({
+        id: s.id || uid(),
+        name: String(s.name || ''),
+        group: GROUPS.some(g => g.id === s.group) ? s.group : 'other',
+        units: Number(s.units) || 0,
+        grade: Math.min(9, Math.max(1, Number(s.grade) || 3)),
+        semester: ['1-1','1-2','2-1','2-2','3-1'].indexOf(s.semester) >= 0 ? s.semester : ''
+      }));
+      if(!state.subjects.length) state.subjects = [emptyRow(), emptyRow()];
+      state.formulas = saved.formulas.slice(0, 2).map((f, i) => {
+        const base = defaultFormulas()[i] || defaultFormulas()[0];
+        const weights = emptyWeights();
+        GROUPS.forEach(g => { weights[g.id] = Number(f.weights && f.weights[g.id]) || 0; });
+        const exclude = emptyExclude();
+        GROUPS.forEach(g => { exclude[g.id] = !!(f.exclude && f.exclude[g.id]); });
+        const customScores = Array.isArray(f.customScores) && f.customScores.length === 9
+          ? f.customScores.map(n => Number(n))
+          : TABLES.common.scores.slice();
+        return {
+          id: f.id || base.id,
+          name: String(f.name || base.name),
+          method: f.method === 'all' ? 'all' : 'group',
+          table: f.table === 'linear' || f.table === 'custom' ? f.table : 'common',
+          customScores,
+          weights,
+          exclude
+        };
+      });
+      while(state.formulas.length < 2) state.formulas.push(defaultFormulas()[state.formulas.length]);
+      state.semester = saved.semester || '';
+      state.sampleOn = !!saved.sampleOn;
+    }catch(e){ state = defaultState(); }
+  }
+  function save(){
+    try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){}
+  }
+
+  function scoresOf(formula){
+    if(formula.table === 'custom') return formula.customScores;
+    return (TABLES[formula.table] || TABLES.common).scores;
+  }
+  function gradeScore(grade, formula){
+    const t = scoresOf(formula);
+    return Number(t[grade - 1]);
+  }
+  function weightSum(formula){
+    let s = 0;
+    GROUPS.forEach(g => {
+      if(formula.exclude[g.id]) return;
+      s += Number(formula.weights[g.id]) || 0;
+    });
+    return s;
+  }
+  function activeSubjects(formula){
+    const sem = state.semester;
+    return state.subjects.filter(s => {
+      const units = Number(s.units);
+      const grade = Number(s.grade);
+      if(!String(s.name || '').trim()) return false;
+      if(!(units > 0) || !(grade >= 1 && grade <= 9)) return false;
+      if(sem && s.semester && s.semester !== sem) return false;
+      if(formula.exclude[s.group]) return false;
+      return true;
+    });
+  }
+
+  function calcFormula(formula){
+    const errors = [];
+    const wsum = weightSum(formula);
+    if(Math.abs(wsum - 100) > 0.1){
+      errors.push('반영비율 합이 ' + (Math.round(wsum * 10) / 10) + '%입니다. 100%(±0.1)가 되어야 계산합니다.');
+    }
+    const rows = activeSubjects(formula);
+    const groupAvgs = {};
+    GROUPS.forEach(g => {
+      const list = rows.filter(s => s.group === g.id);
+      const units = list.reduce((t, s) => t + Number(s.units), 0);
+      const weighted = list.reduce((t, s) => t + gradeScore(Number(s.grade), formula) * Number(s.units), 0);
+      groupAvgs[g.id] = {n:list.length, units, avg: units ? weighted / units : null};
+    });
+
+    const usedGroups = GROUPS.filter(g => !formula.exclude[g.id] && (Number(formula.weights[g.id]) || 0) > 0);
+    let used = [];
+    if(formula.method === 'group'){
+      usedGroups.forEach(g => {
+        rows.filter(s => s.group === g.id).forEach(s => used.push(s));
+      });
+    } else {
+      used = rows.filter(s => (Number(formula.weights[s.group]) || 0) > 0);
+    }
+
+    if(!used.length){
+      errors.push('반영할 과목이 없습니다. 과목 단위·등급을 넣고, 비율이 있는 교과군과 맞추세요.');
+    }
+    if(formula.method === 'group'){
+      usedGroups.forEach(g => {
+        if(!groupAvgs[g.id].n){
+          errors.push(g.label + ' 비율이 있지만 해당 과목이 없습니다.');
+        }
+      });
+    }
+    if(errors.length){
+      return {ok:false, errors, groupAvgs, used, units: used.reduce((t,s)=>t+Number(s.units),0), n:used.length, score:null};
+    }
+
+    let score = 0;
+    if(formula.method === 'group'){
+      usedGroups.forEach(g => {
+        const w = Number(formula.weights[g.id]) || 0;
+        score += groupAvgs[g.id].avg * (w / 100);
+      });
+    } else {
+      let num = 0, den = 0;
+      used.forEach(s => {
+        const w = Number(formula.weights[s.group]) || 0;
+        num += gradeScore(Number(s.grade), formula) * Number(s.units) * w;
+        den += Number(s.units) * w;
+      });
+      score = num / den;
+    }
+    return {ok:true, errors:[], groupAvgs, used, units: used.reduce((t,s)=>t+Number(s.units),0), n:used.length, score};
+  }
+
+  function groupOptions(selected){
+    return GROUPS.map(g => '<option value="'+g.id+'"'+(g.id===selected?' selected':'')+'>'+g.label+'</option>').join('');
+  }
+  function gradeOptions(selected){
+    let h = '';
+    for(let i=1;i<=9;i++) h += '<option value="'+i+'"'+(i===Number(selected)?' selected':'')+'>'+i+'등급</option>';
+    return h;
+  }
+  function semOptions(selected){
+    const list = [['','-'],['1-1','1-1'],['1-2','1-2'],['2-1','2-1'],['2-2','2-2'],['3-1','3-1']];
+    return list.map(x => '<option value="'+x[0]+'"'+(x[0]===selected?' selected':'')+'>'+x[1]+'</option>').join('');
+  }
+
+  function renderSubjects(){
+    $('subjectBody').innerHTML = state.subjects.map((s, i) =>
+      '<tr data-i="'+i+'">' +
+        '<td><input class="form-control form-control-sm js-name" type="text" maxlength="40" placeholder="예: 국어" value="'+esc(s.name)+'"></td>' +
+        '<td><select class="form-select form-select-sm js-group">'+groupOptions(s.group)+'</select></td>' +
+        '<td><input class="form-control form-control-sm js-units" type="number" min="0" max="20" step="0.5" value="'+esc(s.units)+'"></td>' +
+        '<td><select class="form-select form-select-sm js-grade">'+gradeOptions(s.grade)+'</select></td>' +
+        '<td><select class="form-select form-select-sm js-sem">'+semOptions(s.semester)+'</select></td>' +
+        '<td class="text-center"><button type="button" class="icon-btn js-del" aria-label="과목 삭제"><i class="bi bi-x-lg"></i></button></td>' +
+      '</tr>'
+    ).join('');
+    $('sampleBanner').classList.toggle('on', !!state.sampleOn);
+    $('semesterFilter').value = state.semester;
+  }
+
+  function formulaCardHtml(f, idx){
+    const tag = idx === 0 ? '식 A' : '식 B';
+    const wsum = weightSum(f);
+    const ok = Math.abs(wsum - 100) <= 0.1;
+    const scores = scoresOf(f);
+    const weightCells = GROUPS.map(g => {
+      const dim = f.exclude[g.id] ? ' dim' : '';
+      return '<div class="weight-cell'+dim+'" data-group="'+g.id+'">' +
+        '<label>'+g.label+'<span>'+(f.exclude[g.id]?'제외':'%')+'</span></label>' +
+        '<input class="form-control form-control-sm js-w" data-group="'+g.id+'" type="number" min="0" max="100" step="0.1" value="'+esc(f.weights[g.id])+'"'+(f.exclude[g.id]?' disabled':'')+'>' +
+      '</div>';
+    }).join('');
+    const scoreCells = scores.map((n, i) =>
+      '<div class="score-cell"><div class="lbl">'+(i+1)+'등급</div>' +
+      '<input class="form-control form-control-sm js-sc" data-g="'+(i+1)+'" type="number" min="0" max="100" step="0.1" value="'+esc(n)+'"'+(f.table==='custom'?'':' readonly')+'></div>'
+    ).join('');
+    const excl = GROUPS.map(g =>
+      '<label><input type="checkbox" class="js-ex" data-group="'+g.id+'"'+(f.exclude[g.id]?' checked':'')+'> '+g.label+'</label>'
+    ).join('');
+    return '<div class="formula-card" data-fi="'+idx+'">' +
+      '<div class="formula-head">' +
+        '<span class="formula-tag">'+tag+'</span>' +
+        '<input class="form-control form-control-sm js-fname" type="text" maxlength="30" placeholder="이름 (예: 인문형 요강)" value="'+esc(f.name)+'">' +
+        '<span class="sum-chip '+(ok?'sum-ok':'sum-bad')+'" data-sum>'+(ok?'합 100%':'합 '+(Math.round(wsum*10)/10)+'%')+'</span>' +
+      '</div>' +
+      '<label class="form-label">반영 방식</label>' +
+      '<div class="radio-pills mb-2">' +
+        '<label class="radio-pill"><input type="radio" name="method'+idx+'" class="js-method" value="group"'+(f.method==='group'?' checked':'')+'><span>교과군별 평균 후 비율</span></label>' +
+        '<label class="radio-pill"><input type="radio" name="method'+idx+'" class="js-method" value="all"'+(f.method==='all'?' checked':'')+'><span>전교과 단위가중 × 비율</span></label>' +
+      '</div>' +
+      '<div class="helper-text mt-0 mb-3 js-method-hint">'+(f.method==='group'
+        ? '각 교과군 안에서만 단위가중 평균을 구한 뒤, 그 평균에 비율을 곱합니다. (기본)'
+        : '모든 반영 과목을 (점수×단위×그 군 비율)로 합산합니다. 단위가 많은 군이 더 크게 반영됩니다.')+'</div>' +
+      '<label class="form-label">교과군별 반영비율 %</label>' +
+      '<div class="weight-grid mb-2">'+weightCells+'</div>' +
+      '<div class="helper-text mt-0 mb-3">쓰지 않는 군은 0. 켜진 비율의 합이 100이어야 환산합니다.</div>' +
+      '<label class="form-label">등급 → 점수 표</label>' +
+      '<div class="radio-pills mb-2">' +
+        '<label class="radio-pill"><input type="radio" name="table'+idx+'" class="js-table" value="common"'+(f.table==='common'?' checked':'')+'><span>예시 표 (요강에서 확인)</span></label>' +
+        '<label class="radio-pill"><input type="radio" name="table'+idx+'" class="js-table" value="linear"'+(f.table==='linear'?' checked':'')+'><span>선형 100→64</span></label>' +
+        '<label class="radio-pill"><input type="radio" name="table'+idx+'" class="js-table" value="custom"'+(f.table==='custom'?' checked':'')+'><span>직접 입력</span></label>' +
+      '</div>' +
+      '<div class="score-grid mb-3">'+scoreCells+'</div>' +
+      '<label class="form-label">미반영 교과군</label>' +
+      '<div class="exclude-row">'+excl+'</div>' +
+      '<div class="helper-text">체크한 군의 과목은 평균에서 빼고, 그 비율은 합산에서 제외합니다.</div>' +
+    '</div>';
+  }
+
+  function renderFormulas(){
+    $('formulaList').innerHTML = state.formulas.map((f, i) => formulaCardHtml(f, i)).join('');
+  }
+
+  function updateFormulaChrome(idx){
+    const card = document.querySelector('.formula-card[data-fi="'+idx+'"]');
+    if(!card) return;
+    const f = state.formulas[idx];
+    const wsum = weightSum(f);
+    const ok = Math.abs(wsum - 100) <= 0.1;
+    const chip = card.querySelector('[data-sum]');
+    chip.className = 'sum-chip ' + (ok ? 'sum-ok' : 'sum-bad');
+    chip.textContent = ok ? '합 100%' : '합 ' + (Math.round(wsum * 10) / 10) + '%';
+    GROUPS.forEach(g => {
+      const cell = card.querySelector('.weight-cell[data-group="'+g.id+'"]');
+      const input = card.querySelector('.js-w[data-group="'+g.id+'"]');
+      if(!cell || !input) return;
+      cell.classList.toggle('dim', !!f.exclude[g.id]);
+      input.disabled = !!f.exclude[g.id];
+      cell.querySelector('label span').textContent = f.exclude[g.id] ? '제외' : '%';
+    });
+    const scores = scoresOf(f);
+    card.querySelectorAll('.js-sc').forEach((el, i) => {
+      el.readOnly = f.table !== 'custom';
+      if(document.activeElement !== el) el.value = scores[i];
+    });
+    const hint = card.querySelector('.js-method-hint');
+    if(hint){
+      hint.textContent = f.method === 'group'
+        ? '각 교과군 안에서만 단위가중 평균을 구한 뒤, 그 평균에 비율을 곱합니다. (기본)'
+        : '모든 반영 과목을 (점수×단위×그 군 비율)로 합산합니다. 단위가 많은 군이 더 크게 반영됩니다.';
+    }
+  }
+
+  function fmt(n, d){
+    if(n == null || isNaN(n)) return '-';
+    return n.toFixed(d);
+  }
+  function groupAvgHtml(res){
+    return GROUPS.filter(g => res.groupAvgs[g.id].n).map(g =>
+      '<span class="group-pill">'+g.short+' '+fmt(res.groupAvgs[g.id].avg, 2)+'</span>'
+    ).join('');
+  }
+
+  function renderResult(){
+    const results = state.formulas.map(f => ({f, res: calcFormula(f)}));
+    const okOnes = results.filter(x => x.res.ok);
+    const main = $('mainScore');
+    if(!okOnes.length){
+      main.textContent = '-';
+      main.className = 'score-value warn';
+      $('mainLabel').textContent = '비교 환산점수';
+      const firstErr = results[0] && results[0].res.errors[0];
+      $('mainSub').textContent = firstErr || '과목과 반영비율을 입력하면 계산됩니다';
+    } else if(okOnes.length === 1){
+      main.textContent = fmt(okOnes[0].res.score, 3);
+      main.className = 'score-value good';
+      $('mainLabel').textContent = (okOnes[0].f.name || '식') + ' · 100점 만점';
+      $('mainSub').textContent = '다른 식의 비율 합 또는 과목을 확인하세요';
+    } else {
+      const a = results[0].res.score;
+      const b = results[1].res.score;
+      const d = a - b;
+      main.textContent = (d >= 0 ? '+' : '') + fmt(d, 3);
+      main.className = 'score-value ' + (Math.abs(d) < 0.001 ? 'mid' : 'good');
+      $('mainLabel').textContent = '두 식 차이 (점)';
+      $('mainSub').textContent = (results[0].f.name || '식 A') + ' ' + fmt(a, 3) + '  vs  ' +
+        (results[1].f.name || '식 B') + ' ' + fmt(b, 3);
+    }
+
+    $('resultList').innerHTML = results.map((x, i) => {
+      const name = esc(x.f.name || (i===0?'식 A':'식 B'));
+      if(!x.res.ok){
+        return '<div class="result-item"><div class="result-item-top"><span class="result-item-name">'+name+'</span><span style="font-size:.75rem;font-weight:800;color:#fed7aa">계산 안 함</span></div>' +
+          '<div class="result-item-hint">'+x.res.errors.map(esc).join('<br>')+'</div></div>';
+      }
+      return '<div class="result-item"><div class="result-item-top"><span class="result-item-name">'+name+'</span><strong>'+fmt(x.res.score, 3)+'</strong></div>' +
+        '<div class="result-item-detail">교과군 단위가중 평균</div>' +
+        '<div class="group-avg">'+groupAvgHtml(x.res)+'</div>' +
+        '<div class="result-item-detail mt-1">반영 '+x.res.n+'과목 · 단위 '+fmt(x.res.units, 1)+' · '+(x.f.method==='group'?'군평균 후 비율':'전교과 × 비율')+'</div></div>';
+    }).join('');
+
+    const any = okOnes[0] ? okOnes[0].res : results[0].res;
+    $('metricN').textContent = (any.n || 0) + '과목';
+    $('metricU').textContent = fmt(any.units || 0, 1);
+  }
+
+  function readSubjectsFromDom(){
+    const rows = $('subjectBody').querySelectorAll('tr');
+    rows.forEach((tr, i) => {
+      if(!state.subjects[i]) return;
+      state.subjects[i].name = tr.querySelector('.js-name').value;
+      state.subjects[i].group = tr.querySelector('.js-group').value;
+      state.subjects[i].units = Number(tr.querySelector('.js-units').value);
+      state.subjects[i].grade = Number(tr.querySelector('.js-grade').value);
+      state.subjects[i].semester = tr.querySelector('.js-sem').value;
+    });
+  }
+  function readFormulaFromDom(idx){
+    const card = document.querySelector('.formula-card[data-fi="'+idx+'"]');
+    if(!card) return;
+    const f = state.formulas[idx];
+    f.name = card.querySelector('.js-fname').value;
+    const method = card.querySelector('.js-method:checked');
+    if(method) f.method = method.value;
+    const table = card.querySelector('.js-table:checked');
+    if(table) f.table = table.value;
+    card.querySelectorAll('.js-w').forEach(el => {
+      f.weights[el.getAttribute('data-group')] = Number(el.value) || 0;
+    });
+    card.querySelectorAll('.js-ex').forEach(el => {
+      f.exclude[el.getAttribute('data-group')] = el.checked;
+    });
+    if(f.table === 'custom'){
+      f.customScores = [...card.querySelectorAll('.js-sc')].map(el => Number(el.value));
+    } else {
+      f.customScores = TABLES[f.table].scores.slice();
+    }
+  }
+
+  function afterChange(){
+    save();
+    state.formulas.forEach((_, i) => updateFormulaChrome(i));
+    renderResult();
+  }
+
+  function bind(){
+    $('subjectBody').addEventListener('input', () => { readSubjectsFromDom(); state.sampleOn = false; $('sampleBanner').classList.remove('on'); afterChange(); });
+    $('subjectBody').addEventListener('change', () => { readSubjectsFromDom(); afterChange(); });
+    $('subjectBody').addEventListener('click', ev => {
+      const btn = ev.target.closest('.js-del');
+      if(!btn) return;
+      const tr = btn.closest('tr');
+      const i = Number(tr.getAttribute('data-i'));
+      if(state.subjects.length <= 1) return;
+      state.subjects.splice(i, 1);
+      state.sampleOn = false;
+      renderSubjects();
+      afterChange();
+    });
+    $('btnAdd').addEventListener('click', () => {
+      readSubjectsFromDom();
+      state.subjects.push(emptyRow());
+      state.sampleOn = false;
+      renderSubjects();
+      afterChange();
+    });
+    $('btnSample').addEventListener('click', () => {
+      state.subjects = SAMPLE.map(s => Object.assign({id:uid()}, s));
+      state.sampleOn = true;
+      renderSubjects();
+      afterChange();
+    });
+    $('btnReset').addEventListener('click', () => {
+      if(!confirm('입력한 성적과 반영방법을 모두 지울까요?')) return;
+      try{ localStorage.removeItem(LS_KEY); }catch(e){}
+      state = defaultState();
+      renderSubjects();
+      renderFormulas();
+      afterChange();
+    });
+    $('semesterFilter').addEventListener('change', () => {
+      state.semester = $('semesterFilter').value;
+      afterChange();
+    });
+    $('formulaList').addEventListener('input', ev => {
+      const card = ev.target.closest('.formula-card');
+      if(!card) return;
+      const idx = Number(card.getAttribute('data-fi'));
+      if(ev.target.classList.contains('js-table') || ev.target.classList.contains('js-method')) return;
+      readFormulaFromDom(idx);
+      afterChange();
+    });
+    $('formulaList').addEventListener('change', ev => {
+      const card = ev.target.closest('.formula-card');
+      if(!card) return;
+      const idx = Number(card.getAttribute('data-fi'));
+      const f = state.formulas[idx];
+      if(ev.target.classList.contains('js-table')){
+        f.table = ev.target.value;
+        if(f.table !== 'custom') f.customScores = TABLES[f.table].scores.slice();
+        readFormulaFromDom(idx);
+        f.table = ev.target.value;
+        if(f.table !== 'custom'){
+          f.customScores = TABLES[f.table].scores.slice();
+          card.querySelectorAll('.js-sc').forEach((el, i) => { el.value = f.customScores[i]; });
+        }
+      } else {
+        readFormulaFromDom(idx);
+      }
+      afterChange();
+    });
+  }
+
+  load();
+  renderSubjects();
+  renderFormulas();
+  bind();
+  renderResult();
+})();
+</script>
+<script>
+(function(){
+  var B=/bot|crawler|spider|crawling|googlebot|bingbot|yandexbot|baiduspider|slurp|duckduckbot|facebookexternalhit|ia_archiver|msnbot|scrapy|applebot|semrushbot|ahrefsbot|petalbot|bytespider/i;
+  if(B.test(navigator.userAgent))return;
+  var S='https://wblffwhxaqxtqjccmwig.supabase.co';
+  var K='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndibGZmd2h4YXF4dHFqY2Ntd2lnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4OTQzMDcsImV4cCI6MjA5MzQ3MDMwN30.9uGXG1zw3bF5ojMcfQnPr8zsirn3WejIjK60XOZfAcg';
+  var p=location.pathname;
+  var s=(p.replace(/^\//,'')||'').split('/')[0]||'main';
+  var r=document.referrer,t='direct';
+  if(r){try{var h=new URL(r).hostname;
+    if(/google\.(com|co\.kr)$/.test(h))t='google';
+    else if(/search\.naver\.com/.test(h))t='naver';
+    else if(/search\.daum\.net/.test(h))t='daum';
+    else if(/bing\.com/.test(h))t='bing';
+    else if(/(^|\.)t\.co$|twitter\.com|x\.com/.test(h))t='twitter';
+    else if(/facebook\.com/.test(h))t='facebook';
+    else if(/instagram\.com/.test(h))t='instagram';
+    else if(/youtube\.com/.test(h))t='youtube';
+    else if(/perplexity\.ai/.test(h))t='perplexity';
+    else if(/chatgpt\.com|chat\.openai\.com/.test(h))t='chatgpt';
+    else t='other';
+  }catch(e){t='other';}}
+  fetch(S+'/rest/v1/mycalc_page_views',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','apikey':K,'Authorization':'Bearer '+K,'Prefer':'return=minimal'},
+    body:JSON.stringify({page_path:p,page_title:document.title,subdomain:s,referrer:r,ref_type:t,user_agent:navigator.userAgent})
+  }).catch(function(){});
+})();
+</script>
+</body>
+</html>
