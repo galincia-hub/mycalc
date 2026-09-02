@@ -506,9 +506,9 @@ footer a{color:rgba(255,255,255,.75);text-decoration:none}
     }
 
     if(!used.length){
-      errors.push('반영할 과목이 없습니다. 과목 단위·등급을 넣고, 비율이 있는 교과군과 맞추세요.');
+      errors.push('반영할 과목이 없습니다. 과목명·단위·등급을 넣고, 비율이 있는 교과군과 맞추세요.');
     }
-    if(formula.method === 'group'){
+    if(formula.method === 'group' && rows.length){
       usedGroups.forEach(g => {
         if(!groupAvgs[g.id].n){
           errors.push(g.label + ' 비율이 있지만 해당 과목이 없습니다.');
@@ -652,8 +652,8 @@ footer a{color:rgba(255,255,255,.75);text-decoration:none}
     if(n == null || isNaN(n)) return '-';
     return n.toFixed(d);
   }
-  function groupAvgHtml(res){
-    return GROUPS.filter(g => res.groupAvgs[g.id].n).map(g =>
+  function groupAvgHtml(res, formula){
+    return GROUPS.filter(g => !formula.exclude[g.id] && (Number(formula.weights[g.id]) || 0) > 0 && res.groupAvgs[g.id].n).map(g =>
       '<span class="group-pill">'+g.short+' '+fmt(res.groupAvgs[g.id].avg, 2)+'</span>'
     ).join('');
   }
@@ -692,7 +692,7 @@ footer a{color:rgba(255,255,255,.75);text-decoration:none}
       }
       return '<div class="result-item"><div class="result-item-top"><span class="result-item-name">'+name+'</span><strong>'+fmt(x.res.score, 3)+'</strong></div>' +
         '<div class="result-item-detail">교과군 단위가중 평균</div>' +
-        '<div class="group-avg">'+groupAvgHtml(x.res)+'</div>' +
+        '<div class="group-avg">'+groupAvgHtml(x.res, x.f)+'</div>' +
         '<div class="result-item-detail mt-1">반영 '+x.res.n+'과목 · 단위 '+fmt(x.res.units, 1)+' · '+(x.f.method==='group'?'군평균 후 비율':'전교과 × 비율')+'</div></div>';
     }).join('');
 
