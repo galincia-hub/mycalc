@@ -155,6 +155,12 @@ body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,sans-serif;backgr
 .empty-pool{background:#f8fafc;border:1px dashed #cbd5e1;border-radius:10px;padding:16px;color:#475569;font-size:.82rem;line-height:1.6}
 .qa-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px;padding-top:10px;border-top:1px dashed #e2e8f0}
 .qa-note{font-size:.72rem;color:#94a3b8}
+.file-bar{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px;margin-top:12px}
+.file-bar .file-bar-title{font-weight:800;font-size:.84rem;color:#0f172a;margin-bottom:4px}
+.file-msg{margin-top:8px;font-size:.78rem;line-height:1.55;border-radius:8px;padding:8px 10px}
+.file-msg.is-ok{background:#ecfdf5;border:1px solid #86efac;color:#14532d}
+.file-msg.is-err{background:#fef2f2;border:1px solid #fecaca;color:#7f1d1d}
+.share-fallback{margin-top:8px;background:#fff;border:1px dashed #cbd5e1;border-radius:8px;padding:8px 10px;font-size:.76rem;color:#334155;white-space:pre-wrap;word-break:break-word}
 .confirmed-banner{background:#ecfdf5;border:1px solid #86efac;border-radius:10px;padding:12px;color:#14532d;font-size:.82rem;margin-bottom:12px}
 .print-sheet{display:none}
 footer{background:#0f172a;color:rgba(255,255,255,.62);text-align:center;padding:1rem;font-size:.75rem;margin-top:2rem}
@@ -375,6 +381,19 @@ footer a{color:rgba(255,255,255,.75);text-decoration:none}
       </div>
       <div id="comboWarn" class="mt-2"></div>
 
+      <div class="file-bar no-print" data-qa="file-bar">
+        <div class="file-bar-title">파일로 저장 · 불러오기 · 공유</div>
+        <p class="helper-text mt-0 mb-2">6장 확정 전에도 됩니다. 로그인·서버 저장은 없습니다. 브라우저가 바뀌면 파일이 있어야 이어갈 수 있습니다.</p>
+        <div class="d-flex flex-wrap gap-2">
+          <button type="button" class="btn btn-outline-primary btn-sm" data-file-act="export" data-qa="btn-export">파일로 저장</button>
+          <button type="button" class="btn btn-outline-secondary btn-sm" data-file-act="import" data-qa="btn-import">파일 불러오기</button>
+          <button type="button" class="btn btn-outline-secondary btn-sm" data-file-act="share" data-qa="btn-share">공유하기</button>
+        </div>
+        <input type="file" id="fileImport" accept=".json,application/json" hidden data-qa="file-import">
+        <div id="fileMsg" class="file-msg" hidden data-qa="file-msg"></div>
+        <pre id="shareFallback" class="share-fallback" hidden data-qa="share-fallback"></pre>
+      </div>
+
       <div class="qa-bar no-print">
         <button type="button" class="btn btn-outline-secondary btn-sm" id="btnQaFill" data-qa="btn-qa-fill">검수 예시 채우기</button>
         <span class="qa-note">허구</span>
@@ -387,6 +406,11 @@ footer a{color:rgba(255,255,255,.75);text-decoration:none}
     <div class="input-card-header"><div class="input-card-title"><i class="bi bi-5-circle" style="color:#4f46e5"></i>스텝 4. 접수 직전 5분</div></div>
     <div class="input-card-body">
       <p class="helper-text mt-0">여기서부터는 계산이 아니라 절차입니다. 순서대로 확인하세요.</p>
+      <div class="d-flex flex-wrap gap-2 mb-3 no-print">
+        <button type="button" class="btn btn-outline-primary btn-sm" data-file-act="export">파일로 저장</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm" data-file-act="import">파일 불러오기</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm" data-file-act="share">공유하기</button>
+      </div>
       <div class="check-list" id="checkList">
         <label><input type="checkbox" data-check="0"> 카드마다 접수 사이트를 확인했다 (대학마다 한 곳만 쓰는 경우가 많습니다)</label>
         <label><input type="checkbox" data-check="1"> 유웨이어플라이 / 진학어플라이 중 해당 사이트에 회원가입·본인인증을 마쳤다</label>
@@ -415,7 +439,7 @@ footer a{color:rgba(255,255,255,.75);text-decoration:none}
       <div class="faq-item"><div class="faq-q">최저 못 맞춰도?</div>지원은 가능. 미충족이면 다른 평가와 무관하게 탈락. 몇 장을 그렇게 쓸지 계획.</div>
       <div class="faq-item"><div class="faq-q">가나다 군?</div>정시 개념. 수시는 군 없고 6회만.</div>
       <div class="faq-item"><div class="faq-q">논술 고사 겹치면?</div>한쪽만 응시. 접수 전 조합 변경이 낫다.</div>
-      <div class="faq-item"><div class="faq-q">저장?</div>브라우저만. 서버 전송 없음. 생기부 안 받음. 기기 바꾸면 사라지니 인쇄.</div>
+      <div class="faq-item"><div class="faq-q">저장?</div>브라우저에 남고, JSON 파일로도 저장할 수 있습니다. 서버로 보내지 않고 주소창에도 성적을 넣지 않습니다. 생기부는 받지 않습니다. 다른 기기에서는 파일을 불러오세요. 인쇄도 됩니다.</div>
     </div>
   </section>
 
@@ -564,6 +588,206 @@ footer a{color:rgba(255,255,255,.75);text-decoration:none}
   }
   function save(){
     try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+  }
+
+  function exportFilename(){
+    return 'susi-6jang-'+todayStr().replace(/-/g,'')+'.json';
+  }
+  function buildExport(){
+    return {
+      v:1,
+      diag: state.diag,
+      cards: state.cards,
+      comboA: state.comboA,
+      comboB: state.comboB,
+      confirmed: state.confirmed,
+      checklist: state.checklist,
+      sortMode: state.sortMode,
+      showExcluded: state.showExcluded,
+      frozenDate: state.frozenDate,
+      nextId: state.nextId,
+      compareOpen: state.compareOpen,
+      qaFilled: state.qaFilled
+    };
+  }
+  function triggerDownload(blob, filename){
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  }
+  function exportBlob(){
+    const text = JSON.stringify(buildExport(), null, 2);
+    return new Blob([text], {type:'application/json'});
+  }
+  function showFileMsg(text, kind){
+    const el = $('fileMsg');
+    if(!el) return;
+    el.hidden = !text;
+    el.textContent = text || '';
+    el.className = 'file-msg'+(kind==='err'?' is-err':kind==='ok'?' is-ok':'');
+  }
+  function hideShareFallback(){
+    const el = $('shareFallback');
+    if(!el) return;
+    el.hidden = true;
+    el.textContent = '';
+  }
+  function exportHub(){
+    hideShareFallback();
+    triggerDownload(exportBlob(), exportFilename());
+    showFileMsg('JSON 파일을 저장했습니다. 다른 브라우저에서는 파일 불러오기로 이어서 보세요.', 'ok');
+  }
+  function isValidImport(data){
+    if(!data || typeof data!=='object' || Array.isArray(data)) return false;
+    if(data.v!==1) return false;
+    if(!Array.isArray(data.cards)) return false;
+    if(data.comboA!=null && !Array.isArray(data.comboA)) return false;
+    if(data.comboB!=null && !Array.isArray(data.comboB)) return false;
+    if(data.confirmed!=null && !Array.isArray(data.confirmed)) return false;
+    if(data.diag!=null && (typeof data.diag!=='object' || Array.isArray(data.diag))) return false;
+    if(data.checklist!=null && !Array.isArray(data.checklist)) return false;
+    if(data.cards.some(c => !c || typeof c!=='object')) return false;
+    return true;
+  }
+  function normalizeCard(raw){
+    if(!raw || typeof raw!=='object') return null;
+    const id = Number(raw.id);
+    if(!id) return null;
+    const base = emptyCard(id);
+    const minHas = ['있음','없음','모름'].indexOf(raw.minHas)>=0 ? raw.minHas : '없음';
+    const minJudge = ['충족','미충족','모름'].indexOf(raw.minJudge)>=0 ? raw.minJudge : '모름';
+    const label = ['상향','적정','안정'].indexOf(raw.label)>=0 ? raw.label : '';
+    return Object.assign(base, {
+      name: String(raw.name||''),
+      type: String(raw.type||''),
+      deadline: String(raw.deadline||''),
+      minHas: minHas,
+      minJudge: minJudge,
+      examHas: !!raw.examHas,
+      exam: String(raw.exam||''),
+      label: label,
+      excluded: !!raw.excluded
+    });
+  }
+  function applyImport(data){
+    const next = emptyState();
+    next.diag = Object.assign(emptyState().diag, data.diag && typeof data.diag==='object' ? data.diag : {});
+    next.cards = data.cards.map(normalizeCard).filter(Boolean);
+    if(data.cards.length && !next.cards.length) return false;
+    const ids = {};
+    next.cards.forEach(c => { ids[c.id]=true; });
+    const keep = arr => (arr||[]).map(Number).filter(n => ids[n]);
+    next.comboA = keep(data.comboA);
+    next.comboB = keep(data.comboB);
+    next.confirmed = keep(data.confirmed);
+    next.checklist = emptyState().checklist.map((_,i) => !!(data.checklist && data.checklist[i]));
+    if(data.sortMode==='added' || data.sortMode==='deadline') next.sortMode = data.sortMode;
+    next.showExcluded = data.showExcluded!==false;
+    next.frozenDate = data.frozenDate ? String(data.frozenDate) : null;
+    next.compareOpen = !!data.compareOpen;
+    next.qaFilled = !!data.qaFilled;
+    const maxId = next.cards.reduce((m,c)=>Math.max(m,c.id),0);
+    next.nextId = Math.max(Number(data.nextId)||1, maxId+1);
+    state = next;
+    writeDiag();
+    const hint = $('diagHint');
+    if(hint){ hint.classList.remove('show'); hint.innerHTML=''; }
+    refresh();
+    return true;
+  }
+  function importError(){
+    showFileMsg('이 파일은 불러올 수 없습니다. JSON 형식이 아니거나 수시 6장 파일이 아닙니다. 지금 내용은 그대로 둡니다.', 'err');
+  }
+  function onImportFile(file){
+    if(!file) return;
+    if(!confirm('지금 내용을 이 파일로 바꿀까요?')){
+      showFileMsg('불러오기를 취소했습니다. 지금 내용은 그대로입니다.', 'ok');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onerror = function(){ importError(); };
+    reader.onload = function(){
+      let data;
+      try{ data = JSON.parse(String(reader.result||'')); }
+      catch(e){ importError(); return; }
+      if(!isValidImport(data) || !applyImport(data)){ importError(); return; }
+      hideShareFallback();
+      showFileMsg('파일을 불러왔습니다. 후보와 조합이 이 파일 기준으로 바뀌었습니다.', 'ok');
+    };
+    reader.readAsText(file, 'UTF-8');
+  }
+  function minStatusText(c){
+    if(c.minHas==='있음' && c.minJudge==='충족') return '최저 충족';
+    if(c.minHas==='있음' && c.minJudge==='미충족') return '최저 미충족';
+    if(c.minHas==='있음' || c.minHas==='모름') return '최저 확인 필요';
+    return '최저 없음';
+  }
+  function shareList(){
+    if(state.confirmed.length) return comboCards(state.confirmed);
+    return state.cards.filter(isFilled);
+  }
+  function buildShareSummary(){
+    const lines = [];
+    lines.push('수시 6장 정리 · mycalc');
+    lines.push('6장 확정: '+(state.confirmed.length===6?'예':'아니요'));
+    lines.push('');
+    const cards = shareList();
+    if(!cards.length){
+      lines.push('아직 적은 후보가 없습니다.');
+      return lines.join('\n');
+    }
+    cards.forEach((c,i) => {
+      const dl = fmtWhen(c.deadline)||'마감 미입력';
+      const label = c.label || '라벨 없음';
+      lines.push((i+1)+'. '+((c.name||'').trim()||'이름 없음')+' · 마감 '+dl+' · '+minStatusText(c)+' · '+label);
+    });
+    return lines.join('\n');
+  }
+  function showShareFallback(summary, copied){
+    const el = $('shareFallback');
+    if(el){
+      el.hidden = false;
+      el.textContent = summary;
+    }
+    showFileMsg(copied
+      ? 'JSON 파일을 저장했고, 요약을 복사했습니다. 카카오톡에 붙여 넣으세요. 주소창에는 내용을 넣지 않습니다.'
+      : 'JSON 파일을 저장했습니다. 아래 요약을 복사해 카카오톡에 보내세요. 주소창에는 내용을 넣지 않습니다.', 'ok');
+  }
+  async function shareHub(){
+    hideShareFallback();
+    const filename = exportFilename();
+    const blob = exportBlob();
+    const summary = buildShareSummary();
+    let file = null;
+    try{ file = new File([blob], filename, {type:'application/json'}); }catch(e){ file = null; }
+    try{
+      if(file && navigator.share && typeof navigator.canShare==='function' && navigator.canShare({files:[file]})){
+        await navigator.share({
+          title: '수시 6장 정리',
+          text: '수시 6장 정리 파일입니다. 예측이 아니라 정리입니다.',
+          files: [file]
+        });
+        showFileMsg('공유 창을 열었습니다.', 'ok');
+        return;
+      }
+    }catch(e){
+      if(e && e.name==='AbortError') return;
+    }
+    triggerDownload(blob, filename);
+    let copied = false;
+    try{
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        await navigator.clipboard.writeText(summary);
+        copied = true;
+      }
+    }catch(e){}
+    showShareFallback(summary, copied);
   }
 
   function fillGradeSelects(){
@@ -976,11 +1200,7 @@ footer a{color:rgba(255,255,255,.75);text-decoration:none}
     const cards = comboCards(state.confirmed);
     $('printSheet').innerHTML = '<table class="compare-table"><thead><tr><th>대학명</th><th>마감 시각</th><th>최저 상태</th></tr></thead><tbody>'+
       cards.map(c => {
-        let min = '최저 없음';
-        if(c.minHas==='있음' && c.minJudge==='충족') min='최저 충족';
-        else if(c.minHas==='있음' && c.minJudge==='미충족') min='최저 미충족';
-        else if(c.minHas==='있음' || c.minHas==='모름') min='최저 확인 필요';
-        return '<tr><td>'+esc(c.name)+'</td><td>'+esc(fmtWhen(c.deadline)||'—')+'</td><td>'+esc(min)+'</td></tr>';
+        return '<tr><td>'+esc(c.name)+'</td><td>'+esc(fmtWhen(c.deadline)||'—')+'</td><td>'+esc(minStatusText(c))+'</td></tr>';
       }).join('')+'</tbody></table>';
   }
 
@@ -1105,7 +1325,25 @@ footer a{color:rgba(255,255,255,.75);text-decoration:none}
       writeDiag();
       $('diagHint').classList.remove('show');
       $('diagHint').innerHTML='';
+      showFileMsg('');
+      hideShareFallback();
       refresh();
+    });
+    document.querySelectorAll('[data-file-act]').forEach(btn => {
+      btn.addEventListener('click', function(){
+        const act = this.getAttribute('data-file-act');
+        if(act==='export') exportHub();
+        else if(act==='import'){
+          const input = $('fileImport');
+          if(input){ input.value=''; input.click(); }
+        }
+        else if(act==='share') shareHub();
+      });
+    });
+    $('fileImport').addEventListener('change', function(){
+      const file = this.files && this.files[0];
+      this.value = '';
+      onImportFile(file);
     });
     $('btnPrint').addEventListener('click', function(){ window.print(); });
     $('btnDoConfirm').addEventListener('click', doConfirm);
