@@ -1,6 +1,6 @@
 # mycalc 완성 현황
 
-> 최종 업데이트: 2026-09-02 | 54개 완성, 50+ 준비중
+> 최종 업데이트: 2026-09-03 | 55개 완성, 50+ 준비중
 
 ## ① tax — 11완성 / 2준비중
 ✅ general-income (index, about, flow, penalty, penalty-calc, tax-rate)
@@ -43,8 +43,8 @@
 ✅ compound (index, about) | ✅ dividend (index, about) | ✅ average-down | ✅ 국민연금 | ✅ 대출상환 | ✅ 은퇴자금
 ⬜ 공모주 | ⬜ 인플레이션 | ⬜ 환율
 
-## ⑥ student — 7완성 / 3준비중
-✅ gpa | ✅ military | ✅ naesin | ✅ naesin-hwan | ✅ 수능등급컷 | ✅ suneung-min | ✅ susi-6
+## ⑥ student — 8완성 / 3준비중
+✅ gpa | ✅ military | ✅ naesin | ✅ naesin-hwan | ✅ 수능등급컷 | ✅ suneung-min | ✅ susi-6 | ✅ susi-confirm
 ⬜ 출결 | ⬜ 학자금대출 | ⬜ 장학금
 
 ## ⑦ parent — 4완성 / 7준비중

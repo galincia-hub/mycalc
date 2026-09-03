@@ -1,0 +1,10 @@
+{
+  "name": "susi-confirm-qa",
+  "private": true,
+  "scripts": {
+    "test": "playwright test --config=playwright.config.js"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0"
+  }
+}
