@@ -107,4 +107,87 @@ test.describe('susi-confirm QA', () => {
     await expect(page.getByText('6장이 확정되었습니다. 이제 접수만 남았습니다.').first()).toBeVisible();
     await expect(page.locator('[data-qa="count-6"]')).toHaveAttribute('data-counted', '6');
   });
+
+  test('파일로 저장이 JSON을 받고, 공유 폴백에 유리·확률·추천이 없다', async ({ page }) => {
+    await page.goto('/student/susi-confirm/');
+    await page.locator('[data-qa="btn-qa-fill"]').click();
+    await expect(page.locator('[data-qa="pool"] .cand-card')).toHaveCount(10);
+
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page.locator('[data-qa="btn-export"]').click(),
+    ]);
+    expect(download.suggestedFilename()).toMatch(/^susi-6jang-\d{8}\.json$/);
+    const exportPath = await download.path();
+    const fs = require('fs');
+    const exported = JSON.parse(fs.readFileSync(exportPath, 'utf8'));
+    expect(exported.v).toBe(1);
+    expect(exported.cards).toHaveLength(10);
+    expect(exported.comboA).toEqual([1, 2, 3, 4, 6, 7]);
+    expect(exported.comboB).toEqual([1, 3, 5, 6, 8, 9]);
+
+    await page.evaluate(() => {
+      try { delete navigator.share; } catch (e) {}
+      Object.defineProperty(navigator, 'share', { value: undefined, configurable: true });
+    });
+
+    const [shareDownload] = await Promise.all([
+      page.waitForEvent('download'),
+      page.locator('[data-qa="btn-share"]').click(),
+    ]);
+    expect(shareDownload.suggestedFilename()).toMatch(/^susi-6jang-\d{8}\.json$/);
+    const fallback = page.locator('[data-qa="share-fallback"]');
+    await expect(fallback).toBeVisible();
+    const shareText = await fallback.innerText();
+    expect(shareText).toContain('대학A');
+    expect(shareText).toContain('6장 확정: 아니요');
+    expect(shareText).toContain('최저');
+    expect(shareText).toMatch(/상향|적정|안정/);
+    expect(shareText).not.toMatch(/유리|확률|추천/);
+    expect(page.url()).not.toMatch(/[#?][^=]*=.*대학/);
+  });
+
+  test('픽스처 JSON을 불러오면 검수 예시 10장이 복원된다', async ({ page }) => {
+    await page.goto('/student/susi-confirm/');
+    await expect(page.locator('[data-qa="pool"] .cand-card')).toHaveCount(0);
+
+    page.once('dialog', dialog => {
+      expect(dialog.message()).toBe('지금 내용을 이 파일로 바꿀까요?');
+      dialog.accept();
+    });
+    const input = page.locator('[data-qa="file-import"]');
+    await input.setInputFiles('fixtures/susi-6jang-qa.json');
+
+    await expect(page.locator('[data-qa="pool"] .cand-card')).toHaveCount(10);
+    await expect(page.locator('[data-qa="card-1"]')).toContainText('대학A');
+    await expect(page.locator('[data-qa="card-10"]')).toContainText('대학J');
+    await expect(page.locator('[data-qa="card-10"]')).toHaveAttribute('data-excluded', '1');
+    await expect(page.locator('[data-qa="tray-a"]')).toContainText('대학A');
+    await expect(page.locator('[data-qa="tray-a"]')).toContainText('대학G');
+    await expect(page.locator('[data-qa="tray-b"]')).toContainText('대학E');
+    await expect(page.locator('[data-qa="tray-b"]')).toContainText('대학I');
+    await expect(page.locator('[data-qa="compare-table"]')).toBeVisible();
+    await expect(page.locator('[data-qa="count-6"]')).toHaveAttribute('data-counted', '9');
+    await expect(page.locator('[data-qa="file-msg"]')).toContainText('파일을 불러왔습니다');
+  });
+
+  test('잘못된 JSON은 한국어 오류만 보이고 내용을 지우지 않는다', async ({ page }) => {
+    const path = require('path');
+    const os = require('os');
+    const fs = require('fs');
+    const bad = path.join(os.tmpdir(), 'susi-6jang-bad.json');
+    fs.writeFileSync(bad, '{not-json', 'utf8');
+
+    await page.goto('/student/susi-confirm/');
+    await page.locator('[data-qa="btn-qa-fill"]').click();
+    await expect(page.locator('[data-qa="pool"] .cand-card')).toHaveCount(10);
+
+    page.once('dialog', dialog => dialog.accept());
+    await page.locator('[data-qa="file-import"]').setInputFiles(bad);
+    await expect(page.locator('[data-qa="file-msg"]')).toContainText('이 파일은 불러올 수 없습니다');
+    await expect(page.locator('[data-qa="file-msg"]')).toContainText('지금 내용은 그대로 둡니다');
+    await expect(page.locator('[data-qa="pool"] .cand-card')).toHaveCount(10);
+    await expect(page.locator('[data-qa="card-1"]')).toContainText('대학A');
+    await expect(page.locator('[data-qa="tray-a"]')).toContainText('대학A');
+  });
 });

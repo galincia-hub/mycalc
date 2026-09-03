@@ -1,0 +1,36 @@
+{
+  "v": 1,
+  "diag": {
+    "gKorean": "2",
+    "gMath": "2",
+    "gEnglish": "3",
+    "gExp1": "3",
+    "gExp2": "4",
+    "mock": "sept",
+    "prefer": "subject",
+    "todayDl": "yes",
+    "poolSize": "high"
+  },
+  "cards": [
+    {"id":1,"name":"대학A","type":"교과","deadline":"2026-09-07T18:00","minHas":"없음","minJudge":"모름","examHas":false,"exam":"","label":"상향","excluded":false},
+    {"id":2,"name":"대학B","type":"교과","deadline":"2026-09-07T18:00","minHas":"있음","minJudge":"모름","examHas":false,"exam":"","label":"적정","excluded":false},
+    {"id":3,"name":"대학C","type":"교과","deadline":"2026-09-08T18:00","minHas":"있음","minJudge":"충족","examHas":false,"exam":"","label":"적정","excluded":false},
+    {"id":4,"name":"대학D","type":"교과","deadline":"2026-09-09T18:00","minHas":"없음","minJudge":"모름","examHas":false,"exam":"","label":"적정","excluded":false},
+    {"id":5,"name":"대학E","type":"교과","deadline":"2026-09-09T18:00","minHas":"있음","minJudge":"미충족","examHas":false,"exam":"","label":"상향","excluded":false},
+    {"id":6,"name":"대학F","type":"교과","deadline":"2026-09-10T18:00","minHas":"없음","minJudge":"모름","examHas":false,"exam":"","label":"안정","excluded":false},
+    {"id":7,"name":"대학G","type":"교과","deadline":"2026-09-10T18:00","minHas":"없음","minJudge":"모름","examHas":true,"exam":"2026-10-15T10:00","label":"안정","excluded":false},
+    {"id":8,"name":"대학H","type":"논술","deadline":"2026-09-09T18:00","minHas":"없음","minJudge":"모름","examHas":true,"exam":"2026-10-20T14:00","label":"상향","excluded":false},
+    {"id":9,"name":"대학I","type":"논술","deadline":"2026-09-10T18:00","minHas":"없음","minJudge":"모름","examHas":true,"exam":"2026-10-20T14:00","label":"상향","excluded":false},
+    {"id":10,"name":"대학J","type":"교과","deadline":"2026-09-11T18:00","minHas":"없음","minJudge":"모름","examHas":false,"exam":"","label":"적정","excluded":true}
+  ],
+  "comboA": [1, 2, 3, 4, 6, 7],
+  "comboB": [1, 3, 5, 6, 8, 9],
+  "confirmed": [],
+  "checklist": [false, false, false, false, false, false, false, false],
+  "sortMode": "deadline",
+  "showExcluded": true,
+  "frozenDate": "2026-09-07",
+  "nextId": 11,
+  "compareOpen": true,
+  "qaFilled": true
+}
