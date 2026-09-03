@@ -34,12 +34,13 @@ test.describe('susi-confirm QA', () => {
     await expect(page.locator('body')).toHaveAttribute('data-frozen-date', '2026-09-07');
     await expect(page.locator('[data-qa="banner"]')).toContainText('오늘 원서접수 시작입니다');
 
-    await expect(page.locator('[data-warn="deadline-today"]')).toContainText('오늘 마감 카드 2장');
-    await expect(page.locator('[data-warn="min-unknown"]')).toContainText('최저 모름 카드가 1장');
-    await expect(page.locator('[data-warn="min-fail"]')).toContainText('최저 미충족으로 표시한 카드가 1장');
-    await expect(page.locator('[data-warn="exam-clash"]')).toContainText('대학별 고사가 2건 겹칩니다');
-    await expect(page.locator('[data-warn="exam-clash"]')).toContainText('대학H');
-    await expect(page.locator('[data-warn="exam-clash"]')).toContainText('대학I');
+    const pool = page.locator('#poolWarn');
+    await expect(pool.locator('[data-warn="deadline-today"]')).toContainText('오늘 마감 카드 2장');
+    await expect(pool.locator('[data-warn="min-unknown"]')).toContainText('최저 모름 카드가 1장');
+    await expect(pool.locator('[data-warn="min-fail"]')).toContainText('최저 미충족으로 표시한 카드가 1장');
+    await expect(pool.locator('[data-warn="exam-clash"]')).toContainText('대학별 고사가 2건 겹칩니다');
+    await expect(pool.locator('[data-warn="exam-clash"]')).toContainText('대학H');
+    await expect(pool.locator('[data-warn="exam-clash"]')).toContainText('대학I');
 
     await expect(page.locator('[data-qa="count-6"]')).toHaveAttribute('data-counted', '9');
     await expect(page.locator('[data-qa="card-10"]')).toHaveAttribute('data-excluded', '1');
