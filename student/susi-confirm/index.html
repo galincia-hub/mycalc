@@ -352,14 +352,15 @@ footer a{color:rgba(255,255,255,.75);text-decoration:none}
         <div class="col-md-6">
           <div class="small fw-bold mb-1">조합 A</div>
           <div class="combo-tray" id="trayA" data-qa="tray-a"></div>
-          <button type="button" class="btn btn-primary btn-sm mt-2" data-confirm="A">이 조합으로 6장 확정</button>
+          <button type="button" class="btn btn-primary btn-sm mt-2" data-confirm="A" data-qa="confirm-a">이 조합으로 6장 확정</button>
         </div>
         <div class="col-md-6">
           <div class="small fw-bold mb-1">조합 B</div>
           <div class="combo-tray" id="trayB" data-qa="tray-b"></div>
-          <button type="button" class="btn btn-primary btn-sm mt-2" data-confirm="B">이 조합으로 6장 확정</button>
+          <button type="button" class="btn btn-primary btn-sm mt-2" data-confirm="B" data-qa="confirm-b">이 조합으로 6장 확정</button>
         </div>
       </div>
+      <div id="confirmGateMsg" class="warn warn-orange mt-2" hidden data-qa="confirm-gate"></div>
       <div class="d-flex flex-wrap gap-2 mt-2">
         <button type="button" class="btn btn-outline-primary btn-sm" id="btnCompare">A ↔ B 나란히 보기</button>
         <button type="button" class="btn btn-outline-secondary btn-sm" id="btnCopyAB">A를 B로 복사</button>
@@ -707,6 +708,8 @@ footer a{color:rgba(255,255,255,.75);text-decoration:none}
       if(c.excluded) chips.push('<span class="chip chip-ex">6회 제외(본인 확인)</span>');
       const inA = state.comboA.indexOf(c.id)>=0;
       const inB = state.comboB.indexOf(c.id)>=0;
+      const aFull = !inA && state.comboA.length>=6;
+      const bFull = !inB && state.comboB.length>=6;
       return '<article class="cand-card'+(c.excluded?' is-excluded':'')+'" data-id="'+c.id+'" data-qa="card-'+c.id+'" data-excluded="'+(c.excluded?'1':'0')+'">'+
         '<div class="cand-top"><div class="cand-name">'+(isFilled(c)?esc(c.name):'')+'</div>'+
         '<button type="button" class="btn btn-sm btn-outline-secondary py-0" data-del="'+c.id+'" aria-label="remove">×</button></div>'+
@@ -740,8 +743,8 @@ footer a{color:rgba(255,255,255,.75);text-decoration:none}
             '</div></div>'+
         '</div>'+
         '<div class="d-flex flex-wrap gap-2 mt-2">'+
-          '<button type="button" class="btn btn-sm '+(inA?'btn-primary':'btn-outline-primary')+'" data-add="A" data-id="'+c.id+'">조합 A에 담기</button>'+
-          '<button type="button" class="btn btn-sm '+(inB?'btn-primary':'btn-outline-primary')+'" data-add="B" data-id="'+c.id+'">조합 B에 담기</button>'+
+          '<button type="button" class="btn btn-sm '+(inA?'btn-primary':'btn-outline-primary')+'" data-add="A" data-id="'+c.id+'"'+(aFull?' disabled':'')+'>'+(aFull?'6장 한도':'조합 A에 담기')+'</button>'+
+          '<button type="button" class="btn btn-sm '+(inB?'btn-primary':'btn-outline-primary')+'" data-add="B" data-id="'+c.id+'"'+(bFull?' disabled':'')+'>'+(bFull?'6장 한도':'조합 B에 담기')+'</button>'+
         '</div>'+
       '</article>';
     }).join('');
@@ -870,6 +873,32 @@ footer a{color:rgba(255,255,255,.75);text-decoration:none}
     return '충족 '+a.minPass.length+' / 미충족 '+a.minFail.length+' / 모름 '+a.minUnk.length;
   }
 
+  function isCountedFilled(c){
+    return !!(c && isFilled(c) && !c.excluded);
+  }
+
+  function isConfirmableCombo(ids){
+    if(!ids || ids.length !== 6) return false;
+    return ids.every(id => isCountedFilled(cardById(id)));
+  }
+
+  function showConfirmGate(msg){
+    const el = $('confirmGateMsg');
+    if(!el) return;
+    el.hidden = !msg;
+    el.textContent = msg || '';
+  }
+
+  function updateConfirmButtons(){
+    const okA = isConfirmableCombo(state.comboA);
+    const okB = isConfirmableCombo(state.comboB);
+    document.querySelectorAll('[data-confirm="A"]').forEach(btn => { btn.disabled = !okA; });
+    document.querySelectorAll('[data-confirm="B"]').forEach(btn => { btn.disabled = !okB; });
+    const incomplete = (state.comboA.length>0 && !okA) || (state.comboB.length>0 && !okB);
+    if(incomplete) showConfirmGate('확정은 6회를 채운 조합만 가능합니다.');
+    else if(!state.confirmed.length) showConfirmGate('');
+  }
+
   function renderTrays(){
     const draw = (el, ids) => {
       if(!ids.length){ el.innerHTML = ''; return; }
@@ -900,6 +929,7 @@ footer a{color:rgba(255,255,255,.75);text-decoration:none}
     if(state.comboA.length===6) comboBits.push(...warnHtmlFrom(analyzeSet(comboCards(state.comboA)), true));
     if(state.comboB.length===6) comboBits.push(...warnHtmlFrom(analyzeSet(comboCards(state.comboB)), true));
     renderWarns($('comboWarn'), comboBits);
+    updateConfirmButtons();
   }
 
   function renderPoolWarn(){
@@ -1025,8 +1055,13 @@ footer a{color:rgba(255,255,255,.75);text-decoration:none}
   }
 
   function openConfirm(which){
-    pendingConfirm = which;
     const ids = which==='A' ? state.comboA : state.comboB;
+    if(!isConfirmableCombo(ids)){
+      showConfirmGate('확정은 6회를 채운 조합만 가능합니다.');
+      return;
+    }
+    showConfirmGate('');
+    pendingConfirm = which;
     const bits = warnHtmlFrom(analyzeSet(comboCards(ids)), true);
     const n = countWarns(bits);
     $('confirmBody').textContent = '남은 경고: 빨강 '+n.red+'건 · 주황 '+n.orange+'건';
@@ -1038,8 +1073,13 @@ footer a{color:rgba(255,255,255,.75);text-decoration:none}
 
   function doConfirm(){
     const ids = pendingConfirm==='A' ? state.comboA.slice() : state.comboB.slice();
-    if(!ids.length) return;
+    if(!isConfirmableCombo(ids)){
+      bootstrap.Modal.getOrCreateInstance($('confirmModal')).hide();
+      showConfirmGate('확정은 6회를 채운 조합만 가능합니다.');
+      return;
+    }
     state.confirmed = ids;
+    showConfirmGate('');
     bootstrap.Modal.getOrCreateInstance($('confirmModal')).hide();
     refresh();
     const el = $('step4');

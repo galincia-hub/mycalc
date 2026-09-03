@@ -77,4 +77,34 @@ test.describe('susi-confirm QA', () => {
     await expect(page.locator('body')).not.toHaveAttribute('data-frozen-date');
     await expect(page.locator('[data-qa="banner"]')).toContainText('원서접수 D-4');
   });
+
+  test('확정은 counted 6장만 가능', async ({ page }) => {
+    await page.goto('/student/susi-confirm/');
+    await page.locator('[data-qa="btn-qa-fill"]').click();
+
+    // 가득 찬 조합 A에는 7번째를 담을 수 없음
+    await expect(page.locator('[data-qa="card-5"] [data-add="A"]')).toBeDisabled();
+    await expect(page.locator('[data-qa="card-5"] [data-add="A"]')).toHaveText('6장 한도');
+
+    // 조합 A에서 1장 빼 → 5장: 확정 불가
+    await page.locator('[data-qa="card-7"] [data-add="A"]').click();
+    await expect(page.locator('[data-qa="confirm-a"]')).toBeDisabled();
+    await expect(page.locator('[data-qa="confirm-gate"]')).toContainText('확정은 6회를 채운 조합만 가능합니다.');
+    await page.locator('[data-qa="confirm-a"]').click({ force: true });
+    await expect(page.locator('#confirmModal')).not.toBeVisible();
+    await expect(page.getByText('6장이 확정되었습니다. 이제 접수만 남았습니다.')).toHaveCount(0);
+
+    // 다시 6장(counted) → 확정 가능
+    await page.locator('[data-qa="card-7"] [data-add="A"]').click();
+    await expect(page.locator('[data-qa="confirm-a"]')).toBeEnabled();
+    await page.locator('[data-qa="confirm-a"]').click();
+    await expect(page.locator('#confirmModal')).toBeVisible();
+    const redWrap = page.locator('#confirmRedWrap');
+    if (await redWrap.isVisible()) {
+      await page.locator('#ackRed').check();
+    }
+    await page.locator('#btnDoConfirm').click();
+    await expect(page.getByText('6장이 확정되었습니다. 이제 접수만 남았습니다.').first()).toBeVisible();
+    await expect(page.locator('[data-qa="count-6"]')).toHaveAttribute('data-counted', '6');
+  });
 });
